@@ -1,0 +1,359 @@
+<template>
+    <div class="main-window-chat">
+        <BannerUpComp @showOrHideSettingChatId="showHideSettingChatId"></BannerUpComp>
+        <BannerBottomComp @sendMessage="add_message" @add_file_messageFunction="add_file_message"></BannerBottomComp>
+        <MiniListLastChatsComp></MiniListLastChatsComp>
+
+        <div class="content-win-chat">
+            
+            <div class="chat-window">
+
+                <Transition name="fade-comp-settChatId-v">
+                    <SettingsMenuChatIdComp v-if="showSettingsChatId"></SettingsMenuChatIdComp>
+                </Transition>
+
+                <div class="generl-list-messages">
+                    <div class="outer-container">
+                        <div v-show="showDialogWindow" class="container-hide-box" id="query1">
+                            <h5  class="mess-content-example" style="color: white;" id="q1"></h5>
+                            <h5  class="mess-content-example" style="color: white;" id="q2"></h5>
+                            <h5  class="mess-content-example" style="color: white;" id="q3"></h5>
+                            <h5  class="mess-content-example" style="color: white;" id="q4"></h5>
+                            <h5  class="mess-content-example" style="color: white;" id="q5"></h5>
+                        </div>
+                        <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container">
+                            <div class="message-bubble">
+                                <div class="image-content" v-if="n.img_url">
+                                    <img :src="n.img_url" alt="" :style="n.fromId === user_id ? {'float' : 'right'} : {'float' : 'left'}">
+                                </div>
+                                <h6 v-else
+                                    class="im-message-content"
+                                    oncontextmenu="alert('boy');return false"
+                                    @mouseover="showDetailDataMessage($event, n.id)"
+                                    @mouseout="hideDetailDataMessage($event)"
+                                    v-bind:style="n.fromId===user_id?{'float':'right'}:{'float':'left'}"
+                                >{{n.content}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</template>
+
+<script>
+import BannerUpComp from '@/components/BannerUpComp.vue'
+import BannerBottomComp from '@/components/BannerBottomComp.vue'
+import SettingsMenuChatIdComp from '@/components/SettingsMenuChatIdComp.vue'
+import MiniListLastChatsComp from '@/components/ModalWindows/MiniListLastChatsComp.vue'
+import { MessagesApi } from '@/firebase-config/MessagesController'
+
+
+export default {
+    data() {
+        return {
+            showSettingsChatId: false,
+            user_id: localStorage.getItem('user-id') ? localStorage.getItem('user-id') : null,
+            showDialogWindow: false,
+            message_lst: []
+        }
+    },
+
+    mounted() {
+
+    
+    },
+
+    props: {
+        user_to_id: {}
+    },
+
+
+    watch: {
+        user_to_id: {
+            async handler() {
+                const data_ = {
+                    message_lst: this.message_lst,
+                    toId: this.user_to_id,
+                    fromId: this.user_id,
+                }
+                await MessagesApi.getAllMessage(data_).then(arr => {
+                    this.message_lst = arr
+
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        },
+        deep: true
+    },
+
+
+    methods: {
+        // dropDown() {
+        //     alert('bbbbbeeeee')
+        //     return false
+        // },
+
+        showHideProfile(result) {
+            console.log(result, 'res')
+            this.showUserInfo_model = result
+        },
+
+        showHideSettingChatId(result) {
+            this.showSettingsChatId = result
+        },
+
+        showDetailDataMessage(event, id) {            
+            let message = document.getElementById('query1');
+            let q1 = document.getElementById('q1');
+            let q2 = document.getElementById('q2');
+            let q3 = document.getElementById('q3');
+            let q4 = document.getElementById('q4');
+            let coords = event.target.getBoundingClientRect()
+            let mess_OnId = 0
+
+
+            message.style = "position:fixed";
+
+            this.showDialogWindow = true
+
+            mess_OnId = this.message_lst.filter(mess => {
+                return mess.id === id
+            })
+
+            q1.innerHTML = mess_OnId[0].result !== 'Success' 
+            ? "result" + " : " + "<font color=#00cec7>"+mess_OnId[0].result+"</font>" 
+            : "result" + " : " + "<font color=red>"+mess_OnId[0].result+"</font>"
+
+            // q2.innerText = "time" + " : " + mess_OnId[0].atCreated.split(',')[1]
+            q2.innerText = "time" + " : " + mess_OnId[0].atCreated
+            q3.innerText = "size" + " : " + mess_OnId[0].size + 'kb'
+            q4.innerText = "view" + " : " + mess_OnId[0].view
+
+            if(event.target.style.float === 'left') {
+                if(this.message_lst.findIndex(i => i.id === mess_OnId[0].id) === this.message_lst.length - 1) {
+                    console.log('Это последний элемент', new Date().toLocaleString())
+                    message.style.left = coords.right + 'px'
+                    message.style.top = coords.bottom  - coords.height*2.5 + 'px'
+                    return
+                }
+                message.style.left = coords.right + 'px'
+                message.style.top = coords.bottom + 'px'
+            } else {
+                if(this.message_lst.findIndex(i => i.id === mess_OnId[0].id) === this.message_lst.length - 1) {
+                    console.log('Это последний элемент')
+                    message.style.right = coords.width + 20 + 'px'
+                    if(coords.height < 50) {
+                        message.style.top = coords.bottom  - coords.height*2 + 'px'
+                        return
+                    }
+                    message.style.top = coords.bottom  - coords.height + 'px'
+                    return
+                }
+                message.style.right = coords.width + 25 + 'px'
+                message.style.top = coords.bottom + 'px'
+            }
+        },
+
+        hideDetailDataMessage() {
+            this.showDialogWindow = false
+        },
+
+        add_file_message(file) {
+            if(file) {
+                const data_ = {
+                    message_lst: this.message_lst,
+                    toId: this.user_to_id,
+                    fromId: this.user_id,
+                }
+                MessagesApi.uploadImageMessage(file, localStorage.getItem('user-id'), data_).then(({file_path, file_url}) => {
+                    MessagesApi.createMessage( {
+                        content: null,
+                        fromId: localStorage.getItem('user-id'),
+                        toId: this.user_to_id != null && this.user_to_id != 0 ? this.user_to_id : false,
+                        size: null,
+                        result: null,
+                        atCreated: new Date().toLocaleString(),
+                        atUpdated: new Date().toLocaleString(),
+                        view: null,
+                        img_url: file_url,
+                        img_name: file_path,
+                    }, data_).then(data => {
+                        this.message_lst = data
+                    })
+                    console.log(file, 'adddada121212', file_path)
+                })
+            }
+        },
+
+        async add_message(text) {
+            const data_ = {
+                message_lst: this.message_lst,
+                toId: this.user_to_id,
+                fromId: this.user_id,
+            }
+
+            await MessagesApi.createMessage({
+                content: text,
+                fromId: localStorage.getItem('user-id'),
+                toId: this.user_to_id != null && this.user_to_id != 0 ? this.user_to_id : false,
+                size: new Blob([text]).size,
+                result: true,
+                atCreated: new Date().toLocaleString(),
+                atUpdated: new Date().toLocaleString(),
+                view: false,
+                img_url: null,
+                img_name: null,
+            }, data_).then(data => {
+                this.message_lst = data
+                // let collectionMessages = document.getElementsByClassName('message-bubble')
+                // let lastElement = collectionMessages[collectionMessages.length - 1]
+
+                // let options = {
+                //     rootMargin: '5px',
+                //     threshold: 0.5
+                // }
+                // let callback = function(entries, observer){
+                //     console.log('Просмотренно', entries, observer)
+                // }
+                // let observer_ = new IntersectionObserver(callback, options)
+                // observer_.observe(lastElement)
+                // let moreVoice = new Audio()
+
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+    },
+
+
+    components: {
+        BannerUpComp,
+        BannerBottomComp,
+        SettingsMenuChatIdComp,
+        MiniListLastChatsComp
+    }
+}
+</script>
+
+<style scoped lang="scss">
+
+$color-back: rgba(0, 0, 0, 0.4);
+$color-back-message-bubble: rgba(0, 0, 0, 0.9);
+$color-back-trans: none;
+$color-back-gray: rgba(41, 41, 41, 0.7);
+$color-back-blue: rgba(12, 22, 44, 0.7);
+
+$color-text: #4e5f7d;
+$color-text-yellow: #ff6600;
+$color-text-teal: #00cec7;
+$color-text-izumrud: #00ff80;
+
+$cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
+
+.main-window-chat{
+    width: 100%;
+    height: 100%;
+
+    .content-win-chat {
+        .chat-window {
+            width: 100%;
+            height: 100vh;
+        // background-color:$color-back;
+            padding-top: 40px;
+            padding-bottom: 40px;
+
+        .generl-list-messages {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            height: 100%;
+            overflow:scroll;
+            overflow-x: hidden;
+
+            .outer-container{
+                padding: 10px;
+                width: 100%;
+                height: auto;
+                .container-hide-box {
+                    padding: 10px;
+                    width: auto;
+                    height: auto;
+                    // background: linear-gradient(45deg, #ff216d, #2196f3);
+
+                    background: rgba(10, 10, 10, 0.65);
+                    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(4.2px);
+                    -webkit-backdrop-filter: blur(4.2px);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                }
+
+                .inner-container {
+                    display: grid;
+                    // background-color: #00cec7;
+                    width: 100%;
+                    
+                    padding: 8px;
+                    margin-top: 10px;
+                    
+                    .message-bubble {
+                        height: auto;
+                        // background-color:$color-back-message-bubble;
+
+                    }
+
+
+                    .image-content {
+                        right: 0;
+
+                        img{ 
+                            width: 200px;
+                            height: 250px;
+                            float: right;
+
+                        }
+                    }
+                }
+
+
+                #addresator {
+                        color: $color-text;
+                    }
+                
+                .im-message-content:hover {
+                    cursor:default;
+                }
+                .im-message-content {
+                    border-radius: 15px;
+
+                    float: right;
+                    color: rgb(232, 230, 230);
+                    font-size: 15px;
+                    // background-color:#ff6600;
+                    background-color:$color-back-message-bubble;
+                    word-wrap: break-word;
+                    width: auto;
+                    max-width: 47%;
+                    height: auto;
+                    padding: 10px;
+                    }
+            }
+        }
+    }
+    }
+}
+
+
+.fade-comp-settChatId-v-enter-active,
+.fade-comp-settChatId-v-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-comp-settChatId-v-enter-from,
+.fade-comp-settChatId-v-leave-to {
+  opacity: 0;
+}
+</style>

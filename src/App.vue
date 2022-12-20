@@ -1,26 +1,65 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <router-view></router-view>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
 
 export default {
   name: 'App',
+  data() {
+    return {
+
+    }
+  },
+
   components: {
-    HelloWorld
-  }
+  },
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  background-image: url(./assets/RedSpringSpirit.jpeg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.2) inset;
+  background-color: #1b1b1b;
+
+
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(0, 0%, 20%);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%,
+  /* color-stop(.5, rgba(255, 255, 255, .25)), */
+  color-stop(.5, transparent), to(transparent));
+  border-radius: 15%;
+
 }
 </style>
