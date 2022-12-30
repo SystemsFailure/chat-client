@@ -6,6 +6,7 @@
         <div class="main-info-user">
             <div class="image0-user">
                 <img alt="" src="@/assets/user_profile.png" id="photoAvatarUser" style="width:50px;height:50px; border-radius: 50%; color:white">
+                <img :src="URLIMAGE" alt="" id="photoRsUUser">
 
                 <div class="inner-info-box">
                     <span id="user-name-text"></span>
@@ -67,6 +68,7 @@ import IError from '@/IError';
 import { TransitionApi } from '@/firebase-config/UserController';
 import { UserApi } from '@/firebase-config/UserController';
 
+
 export default {
     data() {
         return {
@@ -86,8 +88,9 @@ export default {
             queryStatus: '',
             queryCountry: '',
             queryCity: '',
-
             userPersonalData: [],
+
+            URLIMAGE: null,
         }
     },
 
@@ -179,12 +182,47 @@ export default {
             // TransitionApi.updateField()
         },
 
+        // fileToDataUri(field) {
+        //     return new Promise((resolve) => {
+        //         const reader = new FileReader();
+        //         reader.addEventListener("load", () => {
+        //         resolve(reader.result);
+        //         });
+        //         reader.readAsDataURL(field);
+        //     });
+        // },
+
+        // resizeImage(imgToResize, resizingFactor = 0.5) {
+        //     const canvas = document.createElement("canvas")
+        //     const context = canvas.getContext("2d")
+
+        //     const originalWidth = imgToResize.width
+        //     const originalHeight = imgToResize.height
+        //     console.log(imgToResize.width)
+
+        //     const canvasWidth = originalWidth * resizingFactor
+        //     const canvasHeight = originalHeight * resizingFactor
+
+        //     canvas.width = canvasWidth
+        //     canvas.height = canvasHeight
+
+        //     context.drawImage(
+        //         imgToResize,
+        //         0,
+        //         0,
+        //         originalWidth * resizingFactor,
+        //         originalHeight * resizingFactor
+        //     )
+
+        //     return canvas.toDataURL();
+        // },
+
         async setBackImage(event) {
             let file = event.target.files[0]
             let cortUrl = URL.createObjectURL(file)
             let photoUser = document.getElementById('photoAvatarUser')
             photoUser.src = cortUrl
-            
+
             storageAPImage.uploadBlobImageFile(file, localStorage.getItem('user-id')).then( () => {
                 storageAPImage.downloadBlobImageFile(localStorage.getItem('user-id')).then(promise_ => {
                     try {
@@ -207,6 +245,8 @@ export default {
             }).catch( err => {
                 console.log(err)
             })
+
+            
 
 
 

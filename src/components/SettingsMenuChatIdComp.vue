@@ -13,7 +13,7 @@
                 <div class="view-profile item-setting"><i class="fi fi-ss-user"></i><h4>View profile</h4></div>
                 <div class="unmute item-setting" @click="this.MuteActive = !this.MuteActive"><i :class="{'mute-active' : MuteActive}" class="fi fi-ss-volume"></i><h4 :class="{'mute-active' : MuteActive}">Mute</h4></div>
                 <div class="copy-link item-setting"><i class="fi fi-sr-duplicate"></i><h4>Copy link</h4></div>
-                <div class="clear-chat item-setting"><i class="fi fi-rr-broom"></i><h4>Clear chat</h4></div>
+                <div class="clear-chat item-setting" @click="() => {this.$store.commit('changeDialogValue')}"><i class="fi fi-rr-broom"></i><h4>Clear chat</h4></div>
                 <div class="clear-chat leave-app item-setting" @click="leaveApp"><i class="fi fi-rr-power"></i><h4>Leave</h4></div>
             </div>
 

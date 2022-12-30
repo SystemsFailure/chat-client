@@ -3,9 +3,9 @@
 <div class="main-banner-up">
     <div class="content">
 
-        <div class="user-box" @click="showOrHideProfile_">
+        <div class="user-box" @click="showOrHideProfile_" v-if="$store.state.user_data.length != 0">
             <h6 style="color:white;">{{$store.state.user_data[0].name}}</h6>
-            <div class="recently-ok" style="color:white; font-size: 12px;">seen at 9:46 - {{user_id}}</div>
+            <div class="recently-ok" style="color:white; font-size: 12px;">{{ $store.state.user_data[0].online ? 'online' : 'seen at 9:46' }}</div>
         </div>
 
         <!-- <div class="navigation-menu-modes-box">
@@ -20,7 +20,7 @@
             </div>
         </div> -->
 
-        <div class="banner">
+        <div class="banner" :style="$store.state.user_data.length === 0 ? {'width' : '100%'} : {'width' : '30%'}">
             <div class="settings-chatId" @click="change">
                 <div class="item-round-i"></div>
                 <div class="item-round-i"></div>
@@ -95,8 +95,8 @@ $color-text-izumrud: #00ff80;
             display: flex;
             align-items: center;
             justify-content: end;
-
             .settings-chatId {
+                margin-left: auto;
                 height: 30px;
                 // background: #00cec7;
                 margin-right: 10px;

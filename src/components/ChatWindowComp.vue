@@ -2,11 +2,13 @@
     <div class="main-window-chat">
         <BannerUpComp @showOrHideSettingChatId="showHideSettingChatId"></BannerUpComp>
         <BannerBottomComp @sendMessage="add_message" @add_file_messageFunction="add_file_message"></BannerBottomComp>
-        <MiniListLastChatsComp></MiniListLastChatsComp>
+        <MiniListLastChatsComp @MiniChatBindMiniUsersListFunction="functionBindingMiniListUsersByMiniChat"></MiniListLastChatsComp>
+        <MiniChatComp v-if="showMiniChatValue" v-bind:USERTO="USERTO" @closeMiniChatCompFunction="value => this.showMiniChatValue=value"></MiniChatComp>
 
         <div class="content-win-chat">
             
             <div class="chat-window">
+                <div class="empty-title-won" v-if="Object.keys(message_lst).length == 0"><span>You not choiced user, please current however user in your contacts...</span></div>
 
                 <Transition name="fade-comp-settChatId-v">
                     <SettingsMenuChatIdComp v-if="showSettingsChatId"></SettingsMenuChatIdComp>
@@ -21,17 +23,19 @@
                             <h5  class="mess-content-example" style="color: white;" id="q4"></h5>
                             <h5  class="mess-content-example" style="color: white;" id="q5"></h5>
                         </div>
-                        <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container">
+                        <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
                             <div class="message-bubble">
                                 <div class="image-content" v-if="n.img_url">
-                                    <img :src="n.img_url" alt="" :style="n.fromId === user_id ? {'float' : 'right'} : {'float' : 'left'}">
+                                    <!-- <img :src="n.img_url" :style="n.fromId === user_id ? {'float' : 'right'} : {'float' : 'left'}" @click="openImageToWindow(n.img_url)"> -->
+                                    <img :src="n.img_url" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" @click="openImageToWindow(n.img_url)">
+                                    <div class="data-created-img" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}"><span>{{ n.atCreated }}</span></div>
                                 </div>
                                 <h6 v-else
                                     class="im-message-content"
                                     oncontextmenu="alert('boy');return false"
                                     @mouseover="showDetailDataMessage($event, n.id)"
                                     @mouseout="hideDetailDataMessage($event)"
-                                    v-bind:style="n.fromId===user_id?{'float':'right'}:{'float':'left'}"
+                                    v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : 'rgba(0, 248, 248, 0.581)', 'color' : 'white'}:{'float':'left'}"
                                 >{{n.content}}</h6>
                             </div>
                         </div>
@@ -49,8 +53,8 @@ import BannerUpComp from '@/components/BannerUpComp.vue'
 import BannerBottomComp from '@/components/BannerBottomComp.vue'
 import SettingsMenuChatIdComp from '@/components/SettingsMenuChatIdComp.vue'
 import MiniListLastChatsComp from '@/components/ModalWindows/MiniListLastChatsComp.vue'
+import MiniChatComp from '@/components/ModalWindows/MiniChatComp.vue'
 import { MessagesApi } from '@/firebase-config/MessagesController'
-
 
 export default {
     data() {
@@ -58,17 +62,18 @@ export default {
             showSettingsChatId: false,
             user_id: localStorage.getItem('user-id') ? localStorage.getItem('user-id') : null,
             showDialogWindow: false,
-            message_lst: []
+            message_lst: [],
+            USERTO: null,
+            showMiniChatValue: false,
         }
-    },
-
-    mounted() {
-
-    
     },
 
     props: {
         user_to_id: {}
+    },
+
+    mounted() {
+        console.log(this.message_lst)
     },
 
 
@@ -93,10 +98,27 @@ export default {
 
 
     methods: {
-        // dropDown() {
-        //     alert('bbbbbeeeee')
-        //     return false
+
+        // async updateAllChat() {
+        //     await MessagesApi.getAllMessage(data_).then(arr => {
+        //         this.message_lst = arr
+        //     }).catch(err => {
+        //         console.log(err)
+        //     })
         // },
+
+        functionBindingMiniListUsersByMiniChat(user, value) {
+            if(user) {
+                this.USERTO = user
+                this.showMiniChatValue = value
+            } else {
+                console.log('user is empty')
+            }
+        },
+
+        openImageToWindow(valueImageURL) {
+            console.log(valueImageURL)
+        },
 
         showHideProfile(result) {
             console.log(result, 'res')
@@ -129,10 +151,9 @@ export default {
             ? "result" + " : " + "<font color=#00cec7>"+mess_OnId[0].result+"</font>" 
             : "result" + " : " + "<font color=red>"+mess_OnId[0].result+"</font>"
 
-            // q2.innerText = "time" + " : " + mess_OnId[0].atCreated.split(',')[1]
             q2.innerText = "time" + " : " + mess_OnId[0].atCreated
             q3.innerText = "size" + " : " + mess_OnId[0].size + 'kb'
-            q4.innerText = "view" + " : " + mess_OnId[0].view
+            q4.innerText = mess_OnId[0].view ? "Viewed" + " : " +  'Yah' : "Viewed" + " : " +   'No'
 
             if(event.target.style.float === 'left') {
                 if(this.message_lst.findIndex(i => i.id === mess_OnId[0].id) === this.message_lst.length - 1) {
@@ -235,7 +256,8 @@ export default {
         BannerUpComp,
         BannerBottomComp,
         SettingsMenuChatIdComp,
-        MiniListLastChatsComp
+        MiniListLastChatsComp,
+        MiniChatComp
     }
 }
 </script>
@@ -266,6 +288,30 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
         // background-color:$color-back;
             padding-top: 40px;
             padding-bottom: 40px;
+
+            .empty-title-won {
+                position: relative;
+                margin: 0;
+                top: 50%;
+                left: 50%;
+                margin-right: -50%;
+                transform: translate(-50%, -50%);
+
+                color: white;
+
+                font-family: Lato,sans-serif;
+                font-weight: 900;
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: .02em;
+
+                // background-color: #ff216d;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                word-wrap: break-word;
+            }
 
         .generl-list-messages {
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -302,20 +348,34 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                     .message-bubble {
                         height: auto;
                         // background-color:$color-back-message-bubble;
+                        
 
-                    }
+                        .image-content {
+                            right: 0;
+                            // background-color: #ff216d;   
+                            display: grid;
+                             
+                            .data-created-img {
+                                // position: absolute;
+                                // // width: ;
+                                color: white;
+                                // margin-left: auto;
+                                font-size: 12px;
+                                z-index: 5;
+                                float: right;
+                            }
+
+                            img{ 
+                                width: 200px;
+                                height: 250px;
+                                float: right;
+                                // margin-left: auto;
 
 
-                    .image-content {
-                        right: 0;
-
-                        img{ 
-                            width: 200px;
-                            height: 250px;
-                            float: right;
-
+                            }
                         }
                     }
+
                 }
 
 

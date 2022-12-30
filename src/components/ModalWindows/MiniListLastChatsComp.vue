@@ -10,54 +10,67 @@
             <div v-else class="nav-btn-express" @click="ExpandUpMiniMenu_($event)"><i class="fi fi-rr-angle-small-up"></i></div>
             
         </div>
-        <div class="inner-container-of-contant" v-for="element in lst" :key="element.id">
-            <img src="@/assets/user_profile.png" alt="" srcset="">
+        <div class="inner-container-of-contant" v-for="element in lst" :key="element.id" @click="showMiniChatWindow(element)">
+            <img :src="element.img_url" alt="" srcset="">
             <div class="title-box-text" style="display: none; color: white; margin-left: 10px;">
                 <div class="title-text">{{ element.name }}</div>
             </div>
         </div>
     </div>
     
-    
 </template>
 <script>
-
+import { UserApi } from '@/firebase-config/UserController'
 export default {
     data() {
         return {
+            USERID: localStorage.getItem('user-id'),
             reverse_btn: true,
             reverse_btn_: true,
-            lst: [
-                {id: 0, name: 'Helena'},
-                {id: 1, name: 'Eric'},
-                {id: 2, name: 'Mirage'},
-                {id: 3, name: 'Nick'},
-                {id: 4, name: 'Loise'},
-                {id: 4, name: 'Loise'},
-                {id: 4, name: 'Loise'},
-                {id: 4, name: 'Loise'},
-                {id: 4, name: 'Loise'},
-            ]
+            lst: []
+        }
+    },
+
+    watch: {
+        lst: {
+            handler(newValue) {
+                let zero = 0
+                if([newValue].length != zero) {
+                    setTimeout(() => {
+                        let listItems = document.getElementsByClassName('inner-container-of-contant')
+                        for (let index = 1; index < listItems.length; index++) {
+                            let element = listItems[index]
+                            console.log('PR - 01 - ', element, element.style.display)
+                            element.style.padding = '5px'
+                            element.style.display = 'none'
+                            console.log('PR - 02 - ', element, element.style.display)
+                        }
+                    }, zero);
+                }
+            },
+            deep: true
         }
     },
 
     mounted() {
-        document.getElementsByClassName('btn-expand-to-express-mini-menu')[0].style.height = '40px'
-        let mainElement = document.getElementById('btn-pop-up-down')
-
-        mainElement.style.height = '50px'
-        mainElement.style.padding = '0px'
-        mainElement.style.borderTopRightRadius = '0'
-        mainElement.style.borderTopLeftRadius = '0'
-        let listItems = document.getElementsByClassName('inner-container-of-contant')
-        for (let index = 1; index < listItems.length; index++) {
-            const element = listItems[index]
-            element.style.padding = '5px'
-            element.style.display = 'none'
-        }
+        UserApi.getAllChats(this.USERID).then(data => {
+            this.lst = data
+            document.getElementsByClassName('btn-expand-to-express-mini-menu')[0].style.height = '40px'
+            let mainElement = document.getElementById('btn-pop-up-down')
+            mainElement.style.height = '50px'
+            mainElement.style.padding = '0px'
+            mainElement.style.borderTopRightRadius = '0'
+            mainElement.style.borderTopLeftRadius = '0'
+        }).catch(err => {
+            console.log(err)
+        })
     },
 
     methods: {
+        showMiniChatWindow(user) {
+            this.$emit('MiniChatBindMiniUsersListFunction', user, true)
+        },
+
 
         ExpandLeftMiniMenu() {
             let container = document.getElementById('btn-pop-up-down')
@@ -74,7 +87,7 @@ export default {
                 const element = listItems[index]
                 element.style.width = '100%'
                 element.style.height = '100%'
-                element.style.padding = '0px'
+                element.style.padding = '8px'
                 element.style.paddingLeft = '5px'
                 element.style.borderRadius = '0'
                 element.style.justifyContent = 'flex-start'
@@ -89,19 +102,23 @@ export default {
         },
 
         ExpandUpMiniMenu_() {
-            let mainElement = document.getElementById('btn-pop-up-down')
-            mainElement.style.height = 'auto'
-            mainElement.style.padding = '0px'
-            mainElement.style.borderTopRightRadius = '0'
-            mainElement.style.borderTopLeftRadius = '0'   
-            this.reverse_btn_ = !this.reverse_btn_
-
-            let listItems = document.getElementsByClassName('inner-container-of-contant')
-            for (let index = 1; index < listItems.length; index++) {
-                const element = listItems[index]
-                element.style.display = 'flex'
-                element.style.width = '100%'
-                element.style.justifyContent = 'none'
+            if(this.lst.length <= 1 ) {
+                return
+            } else {
+                let mainElement = document.getElementById('btn-pop-up-down')
+                mainElement.style.height = 'auto'
+                mainElement.style.padding = '0px'
+                mainElement.style.borderTopRightRadius = '0'
+                mainElement.style.borderTopLeftRadius = '0'   
+                this.reverse_btn_ = !this.reverse_btn_
+    
+                let listItems = document.getElementsByClassName('inner-container-of-contant')
+                for (let index = 1; index < listItems.length; index++) {
+                    const element = listItems[index]
+                    element.style.display = 'flex'
+                    element.style.width = '100%'
+                    element.style.justifyContent = 'none'
+                }
             }
         },
 

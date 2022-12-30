@@ -1,6 +1,6 @@
 import IError from "@/IError"
 import { db } from "@/main"
-import { collection, addDoc, orderBy, where, query, getDocs} from "firebase/firestore"
+import { collection, addDoc, orderBy, where, query, getDocs, deleteDoc, doc, runTransaction} from "firebase/firestore"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/main";
 
@@ -91,16 +91,65 @@ const MessagesApi = {
         return array
     },
 
+    deleteAllMessages: async (USERID) => {
+
+      const q = query(collection(db, "messages"))
+      const querySnapshot = await getDocs(q)
+      querySnapshot.forEach((docum) => {
+        if(docum.data().fromId === USERID || docum.data().toId === USERID) {
+          const docRef = doc(db, "messages", docum.id)
+          deleteDoc(docRef)
+          console.log('delete mess', USERID)
+        }
+      })
+
+
+      // const docRef = doc(db, "messages", '7z8j6LMnSwLKAJkkyOpA');
+      // deleteDoc(docRef).then(() => {
+      //   console.log("Entire Document has been deleted successfully.", USERID)
+
+      // })
+      // const todoRef = collection(db, 'messages')
+      // let allMessages = await getDocs(todoRef)
+      // allMessages.forEach(doc => {
+      //   deleteDoc(doc).then(() => {
+      //     console.log(doc.data(), USERID)
+      //   }).catch(err => {
+      //     console.log()
+      //   })
+      // })
+    },
+
     incrementValue: () => {
 
     },
 
-    deleteMessage: () => {
+    deleteByMessage: async (message_id) => {
+      const docRef = doc(db, "messages", message_id)
+      if(!docRef) {
+        console.log('docRef not found')
+        return
+      } else {
+        deleteDoc(docRef)
+        console.log(docRef.id, ' was deleted...')
+      }
 
     },
 
-    editMessage: () => {
-
+    editMessage: async (message_id, newContent) => {
+      const sfDocRef = doc(db, "messages", message_id)
+      try {
+        await runTransaction(db, async (transaction) => {
+          const sfDoc = await transaction.get(sfDocRef)
+          if (!sfDoc.exists()) throw "Document does not exist!"
+          // const newPopulation = sfDoc.data().population + 1
+          transaction.update(sfDocRef, { content: newContent })
+        })
+        console.log("Transaction successfully committed!")
+      } catch (e) {
+        console.log("Transaction failed: ", e)
+      }
+      
     },
 
     deleteAllMessage: () => {

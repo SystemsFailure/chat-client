@@ -5,6 +5,7 @@ import { getFirestore } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from "firebase/storage";
+import { doc, onSnapshot, updateDoc} from "firebase/firestore";
 
 
 import App from './App.vue'
@@ -29,15 +30,41 @@ const auth = getAuth(appBase);
 const db = getFirestore(appBase);
 const storage = getStorage(appBase)
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
     if (user) {
+        const userRef = doc(db, "users", localStorage.getItem('user-id') ? localStorage.getItem('user-id') : false)
+        await updateDoc(userRef, {
+            online: true
+        }).then( () => {
+            console.log('result: field online was update. true - online')
+        }).catch( err => {
+            console.log(err)
+        })
+
         localStorage.setItem('user-uid', user.uid)
         store.state.isAuth = true
+        store.state.online = true
     } else {
+        const userRef = doc(db, "users", localStorage.getItem('user-id') ? localStorage.getItem('user-id') : false)
+        await updateDoc(userRef, {
+            online: false
+        }).then( () => {
+            console.log('result: field online was update. false - offline')
+        }).catch( err => {
+            console.log(err)
+        })
+
         localStorage.removeItem('user-uid')
         store.state.isAuth = false
+        store.state.online = false
     }
 });
+
+onSnapshot(doc(db, "users", localStorage.getItem('user-id')), (doc) => {
+    console.log("Current data: ", doc.data());
+})
+
+
 
 const emmiter = mitt()
 const appVue = createApp(App)

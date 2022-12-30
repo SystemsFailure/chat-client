@@ -1,7 +1,8 @@
 <template>
 
     <div class="search-users">
-        <input type="text" placeholder="search" class="inp-search" id="search_e" v-bind:value="modelValue" @input="updateInput">
+        <input type="text" placeholder="searching..." class="inp-search" id="search_e" v-bind:value="modelValue" @input="(event) => {this.$emit('update:modelValue', event.target.value)}">
+        <div class="clearInp" @click="() => {this.$emit('clearTextFunction')}"><i class="fi fi-ss-cross"></i></div>
     </div>
 
 </template>
@@ -14,9 +15,7 @@ export default {
     },
 
     methods: {
-        updateInput(event) {
-            this.$emit('update:modelValue', event.target.value)
-        }
+
     }
 }
 
@@ -31,6 +30,7 @@ $color-text: #4e5f7d;
     height: 40px;
     align-items: center;
     justify-content: center;
+    display: flex;
     // background:blueviolet;
 
     background: rgba(10, 10, 10, 0.65);
@@ -41,9 +41,27 @@ $color-text: #4e5f7d;
     position: fixed;
     z-index: 1;
 
+    .clearInp {
+        width: 10%;
+        height: 40px;
+        padding: 10px;
+        border: none;
+        background: rgba(10, 10, 10, 0);
+        color: $color-text;
+        font-size: 12px;
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
 
     .inp-search {
-        width: 100%;
+        width: 90%;
         height: 40px;
         padding: 10px;
         border: none;
@@ -53,8 +71,8 @@ $color-text: #4e5f7d;
 
         font-family: Lato,sans-serif;
         font-weight: bold;
-        font-size: 11px;
-        text-transform: uppercase;
+        font-size: 12px;
+        // text-transform: uppercase;
         letter-spacing: .02em;
 
     }

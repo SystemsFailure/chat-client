@@ -2,7 +2,7 @@ import {createStore} from "vuex";
 
 const store = createStore({
     state: () => ({
-        user_data: ['fas'],
+        user_data: [],
 
         validated: true,
         isAuth: true,
@@ -14,11 +14,19 @@ const store = createStore({
         id_backgroundImage: null,
 
         showProfile: false,
-        itemByProfile: [
-            {id: 0}
-        ]
+        itemByProfile: [],
+
+        online: false,
+        USERID: localStorage.getItem('user-id'),
+
+        showDialogDeleteWindow: false,
     }),
     mutations: {
+        changeDialogValue (state) {
+            state.showDialogDeleteWindow = true
+        },
+
+
         showEventMutation (state) {
             state.showProfile = !state.showProfile
         },

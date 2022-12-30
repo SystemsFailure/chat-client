@@ -1,4 +1,5 @@
 <template>
+    <dialogWindow v-if="this.$store.state.showDialogDeleteWindow"></dialogWindow>
     <ProfileCardComp v-if="$store.state.showProfile" @closeProfileFunction="(value) => {this.$store.state.showProfile = value}"></ProfileCardComp>
     <ListAllUsersComp v-if="show_list_all_users_comp" @updateUsersListFunction="updateUsersList" @closeListUsersCompFunction="(value) => {this.show_list_all_users_comp = value}"></ListAllUsersComp>
     <div class="main_div">
@@ -12,38 +13,50 @@
 
             <div class="left-block">
 
-                <SearchUsersBoxComp v-if="showMenuChats" v-model="searchQuery"></SearchUsersBoxComp>
+                <Transition name="up-profile-card-slide">
+                    <SearchUsersBoxComp v-if="showMenuChats" v-model="searchQuery" @clearTextFunction="() => {this.searchQuery = ''}"></SearchUsersBoxComp>
+                </Transition>
 
-                <div v-if="showMenuChats" class="list-users">
-                    <ul>
-                        <TransitionGroup name="list">
-                            <div
-                            v-for="item in filteredUsers"
-                            v-bind:key="item.id"
-                            class="item-list"
-                            @click="open_item_of_list_users($event, item.id, item)"
-                            v-bind:class="{'selected-item-of-list-messages' : this.id_currect_user === item.id}"
-                            >
-                                <div class="name-and-img">
-                                    <div class="box-img-and-toggle">
-                                        <div :class="{'toggle-online' : item.online}"></div>
-                                        <img :src="item.img_url || require('../assets/user_profile.png')" alt="photo" srcset="">
-                                        <!-- <img src="../assets/user_profile.png" alt="" srcset=""> -->
+                <Transition name="up-profile-card-slide">
+                    <div v-if="showMenuChats" class="list-users">
+                        <ul>
+                            <TransitionGroup name="list">
+                                <div
+                                v-for="item in filteredUsers"
+                                v-bind:key="item.id"
+                                class="item-list"
+                                @click="open_item_of_list_users($event, item.id, item)"
+                                v-bind:class="{'selected-item-of-list-messages' : this.id_currect_user === item.id}"
+                                :style=" item.online?  {'border-left' : '1px solid #00cec7'} : {'border' : ''}"
+                                >
+                                    <div class="name-and-img">
+                                        <div class="box-img-and-toggle">
+                                            <div :class="{'toggle-online' : item.online}"></div>
+                                            <img :src="item.img_url || require('../assets/user_profile.png')" alt="photo" srcset="">
+                                            <!-- <img src="../assets/user_profile.png" alt="" srcset=""> -->
+                                        </div>
+                                        <span>{{item.name}}</span>
+                                        <span id="dateLastMessage_id">{{item.dateLastMessage}}</span>
                                     </div>
-                                    <span>{{item.name}}</span>
-                                    <span id="dateLastMessage_id">{{item.dateLastMessage}}</span>
+                                    <h6>{{slice_last_message(item.lastmessage)}}</h6>
+                                    <div class="box-not-read-message">
+                                        <span :class="{'count-not-read-message_': item.countNotReadMessages}">{{item.countNotReadMessages ? item.countNotReadMessages:undefined}}</span>
+                                    </div>
                                 </div>
-                                <h6>{{slice_last_message(item.lastmessage)}}</h6>
-                                <div class="box-not-read-message">
-                                    <span :class="{'count-not-read-message_': item.countNotReadMessages}">{{item.countNotReadMessages ? item.countNotReadMessages:undefined}}</span>
-                                </div>
-                            </div>
-                        </TransitionGroup>
-                    </ul>
-                </div>
+                            </TransitionGroup>
+                        </ul>
+                        <div class="btn-add-new-contact-chat" @click="() => {this.show_list_all_users_comp = true}">
+                            <div class="icon=box"></div>
+                            <div class="title-btn-new-cont"><span>new comunicated</span></div>
+                        </div>
+                    </div>
+                </Transition>
 
-                <SettingsComp v-show="showMenuSettings" @setImageToBack="setImage"></SettingsComp>
-                <ViewProfileComp></ViewProfileComp>
+                <Transition name="up-profile-card-slide">
+                    <SettingsComp v-show="showMenuSettings" @setImageToBack="setImage"></SettingsComp>
+                </Transition>
+                    <ViewProfileComp></ViewProfileComp>
+
 
             </div>
         </div>
@@ -58,6 +71,7 @@ import SettingsComp from '@/components/SettingsComp.vue'
 import ProfileCardComp from '@/components/ProfileCardComp.vue'
 import ListAllUsersComp from '@/components/ListAllUsersComp.vue'
 import ViewProfileComp from '@/components/ViewProfileComp.vue'
+import dialogWindow from '@/components/UI/dialogWindow.vue'
 
 import requestGetUsers from '@/hooks/hookRequestsToUser'
 import hookBackChange from '@/hooks/hookBackgroundChange'
@@ -69,19 +83,13 @@ export default {
     data() {
         return {
             showSettingsChatId: true,
-
             userId: localStorage.getItem('user-id') || null,
-
             showMenuChats: true,
             showMenuMail: false,
             showMenuSettings: false,
-
-            show_list_all_users_comp: true,
-
+            show_list_all_users_comp: false,
             i_user_to_id: null,
-
             id_currect_user: null,
-
             searchQuery: '',
             up: true,
             list_users: [],
@@ -90,12 +98,9 @@ export default {
 
 
     setup() {
-        // const { data_, result_write, sendData } = sendDataToServer();
         let {users_list, getUsers} = requestGetUsers()
         const {changeBack, imgs_path_list, getCookieValueByName} = hookBackChange()
 
-        // console.log(users_list, 'startApp')
-        // console.log(imgs_path_list, 'startApp2')
         return {
             users_list,
             getUsers,
@@ -112,8 +117,6 @@ export default {
         } else {
             console.log('cookie is empty!')
         }
-        // document.body.style.backgroundImage = `url(${require('@/assets/Clouds.png')})`
-        // this.getUsers()
 
         const users = UserApi.getAllChats(this.userId)
         users.then(data => {
@@ -174,12 +177,6 @@ export default {
             }
         },
 
-        // hideScroll(param) {
-        //     const x = document.getElementById('search_e')
-        //     x.style.width = "64px";
-        //     param.style.overflow = 'auto'
-        // },
-
         slice_last_message(text) {
             var sliced = text.slice(0,40);
             if (sliced.length < text.length) {
@@ -190,7 +187,7 @@ export default {
     },
 
     components: {NavigationComp, ChatWindowComp, SearchUsersBoxComp, SettingsComp,
-         ProfileCardComp, ListAllUsersComp, ViewProfileComp
+         ProfileCardComp, ListAllUsersComp, ViewProfileComp, dialogWindow
         }
 
 }
@@ -279,22 +276,49 @@ $color-text-izumrud: #00ff80;
             
 
             .list-users{
-                // position: fixed;
-                // width: 25%;
                 width: 100%;
                 height: 100%;
-                padding-right: 10px;
-                padding-left: 10px;
-                padding-top: 45px;
+                // padding-right: 10px;
+                // padding-left: 10px;
+                padding-top: 35px;
                 background: $color-back;
                 overflow:auto;
-
+                overflow-x: hidden;
                 font-family: Lato,sans-serif;
-                // font-weight: 700;
-                // font-size: 11px;
-                // text-transform: uppercase;
-                // letter-spacing: .02em;
+                background: rgba(10, 10, 10, 0.65);
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(4.2px);
+                -webkit-backdrop-filter: blur(4.2px);
 
+                .btn-add-new-contact-chat {
+                    position: fixed;
+                    width: 100%;
+                    bottom: 0;
+                    height: 40px;
+                    // background-color: #00cec7;
+                    border: 1px solid #333;
+                    display: flex;
+                    padding: 10px;
+                    align-items: center;
+                    justify-content: center;
+
+                    &:hover {
+                        cursor: pointer;
+                        border: 1px solid #00cec7;
+                    }
+
+                    .title-btn-new-cont {
+                        color: #888;
+                        font-family: Lato,sans-serif;
+                        font-weight: 700;
+                        font-size: 11px;
+                        text-transform: uppercase;
+                        letter-spacing: .02em;
+                        // background-image: linear-gradient(90deg, #00ff2a, #00e1ff);
+                        // -webkit-background-clip: text;
+                        // -webkit-text-fill-color: transparent;
+                    }
+                }
 
 
                 .item-list:hover {
@@ -304,7 +328,7 @@ $color-text-izumrud: #00ff80;
                     // background-color: $color-back;
                     color:white;
                     padding: 10px;
-                    margin-top: 5px;
+                    // margin-top: 5px;
                     display: flex;
                     flex-direction: column;
 
@@ -393,5 +417,20 @@ $color-text-izumrud: #00ff80;
         }
     }
 
+}
+
+.up-profile-card-slide-enter-active,
+.up-profile-card-slide-leave-active {
+  transition: all 0.4s ease-out;
+}
+
+.up-profile-card-slide-enter-from {
+  opacity: 0;
+//   transform: translateY(-100px);
+}
+
+.up-profile-card-slide-leave-to {
+  opacity: 0;
+//   transform: translateY(-100px);
 }
 </style>

@@ -104,7 +104,10 @@ export default {
     data() {
         return {
             list_users: [],
-            IUserId: localStorage.getItem('user-id') || null
+            IUserId: localStorage.getItem('user-id') || null,
+            allSettingsForSortingAndFilter: [
+                {},
+            ],
         };
     },
 

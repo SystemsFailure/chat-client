@@ -1,8 +1,10 @@
-import StartAppComponent from "@/pages/StartAppComponent";
-import registerPage from "@/pages/registerPage";
+import StartAppComponent from "@/pages/StartAppComponent"
+import registerPage from "@/pages/registerPage"
 import messangerPage from "@/pages/MessangerComp"
+import DashboardAdminComp from '@/pages/DashboardAdmin/DashboardAdminComp'
+
 import {createRouter, createWebHistory} from 'vue-router'
-import store from "@/store/store";
+import store from "@/store/store"
 
 const routes = [
     {path: '/', component: StartAppComponent, name: 'mainPage'},
@@ -14,7 +16,12 @@ const routes = [
         if(to.name != 'registerPage' && !store.state.isAuth) {
             return {name: 'registerPage'}
         }
-    }}
+    }},
+    {path: '/dashboard', name: 'panelComponent', component: DashboardAdminComp, beforeEnter: (to) => {
+        if(to.name != 'registerPage' && !store.state.isAuth ) {
+            return {name: 'registerPage'}
+        }
+    }},
 ]
 
 const router = createRouter({

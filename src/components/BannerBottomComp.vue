@@ -29,6 +29,7 @@
                         </div>
 
                         <div class="video-capture">
+                            <i class="fi fi-sr-clip" style="color: white"></i>
                             <label for="myfile" class="label"></label>
                             <input type="file" class="my" id="myfile" name="myfile" multiple @change="send_photo($event)">
                         </div>
@@ -316,7 +317,7 @@ $color-text-izumrud: #00ff80;
                         
                     }
                     .video-capture::before {
-                        content: 'v';
+                        // content: 'v';
                         color:white;
                     }
 
