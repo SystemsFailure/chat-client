@@ -69,11 +69,14 @@ const MessagesApi = {
                     view: doc.data().view,
                     img_url: doc.data().img_url,
                     img_name: doc.data().img_name,
+                    totalCount: doc.data().totalCount,
                 }
                 mess_lst.push(data_message)
             } else {
-                IError(doc.data().content)
-                IError(mess_lst)
+              return
+              // console.log('error')
+                // IError(doc.data().content)
+                // IError(mess_lst)
             }
         })
         return mess_lst
@@ -91,8 +94,15 @@ const MessagesApi = {
         return array
     },
 
-    deleteAllMessages: async (USERID) => {
+    deleteMessageById: async (MESSAGEID) => {
+      await deleteDoc(doc(db, "messages", MESSAGEID)).then(() => {
+        console.log('message was delete')
+      }).catch(err => {
+        console.log(err)
+      })
+    },
 
+    deleteAllMessages: async (USERID) => {
       const q = query(collection(db, "messages"))
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((docum) => {
@@ -118,6 +128,13 @@ const MessagesApi = {
       //     console.log()
       //   })
       // })
+    },
+
+    returnTotalNumberOfDocuments: async () => {
+      const q = query(collection(db, "messages"))
+      const snapShoot = await getDocs(q)
+      console.log(snapShoot.size, 'size of snap')
+      return snapShoot.size
     },
 
     incrementValue: () => {

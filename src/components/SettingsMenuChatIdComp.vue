@@ -1,12 +1,6 @@
 <template>
     <div class="main-sett-chat-id-comp">
         <div class="sett-chat-id-content">
-            <!-- <select name="sel" id="sel-id">
-                <option value="view-profile" selected>view profile</option>
-                <option value="clear-chat" selected>clear chat</option>
-                <option value="unmute-notify" selected>unmute notify</option>
-                <option value="copy-link" selected>copy link</option>
-            </select> -->
 
             <div class="items-content-settings">
                 <div></div>

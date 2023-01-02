@@ -104,7 +104,7 @@ export default {
             document.getElementById('data-created-id').innerHTML = user[0].atCreated
             document.getElementById('country-id').innerHTML = user[0].country
 
-            document.getElementById('avatar-profile-id').src = user[0].img_url
+            // document.getElementById('avatar-profile-id').src = user[0].img_url
             document.getElementById('data-created-id')
 
         })
@@ -113,6 +113,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
+// :root {
+//     --theme-color: yellow;
+// }
+
 $color-back: rgba(0, 0, 0, 0.4);
 
 
@@ -172,7 +177,6 @@ $color-back: rgba(0, 0, 0, 0.4);
                     .bio-item {
                         margin-top: 20px;
                         width: 100%;
-                        // height: 5vh;
                         // background-color: darkcyan;
                         display: flex;
                         flex-direction: column;
@@ -217,6 +221,9 @@ $color-back: rgba(0, 0, 0, 0.4);
                 display: flex;
                 justify-content: center;
                 margin-top: 10px;
+                // span {
+                //     color: var(--theme-color);
+                // }
             }
 
             .info-block {

@@ -40,10 +40,10 @@ export default {
                         let listItems = document.getElementsByClassName('inner-container-of-contant')
                         for (let index = 1; index < listItems.length; index++) {
                             let element = listItems[index]
-                            console.log('PR - 01 - ', element, element.style.display)
+                            // console.log('PR - 01 - ', element, element.style.display)
                             element.style.padding = '5px'
                             element.style.display = 'none'
-                            console.log('PR - 02 - ', element, element.style.display)
+                            // console.log('PR - 02 - ', element, element.style.display)
                         }
                     }, zero);
                 }

@@ -5,7 +5,8 @@ import { getFirestore } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from "firebase/storage";
-import { doc, onSnapshot, updateDoc} from "firebase/firestore";
+import { doc, updateDoc} from "firebase/firestore";
+// import { doc, onSnapshot, updateDoc} from "firebase/firestore";
 
 
 import App from './App.vue'
@@ -31,6 +32,7 @@ const db = getFirestore(appBase);
 const storage = getStorage(appBase)
 
 onAuthStateChanged(auth, async (user) => {
+    if (!localStorage.getItem('user-id')) {console.log('user-id is empty. SigIn to system '); return}
     if (user) {
         const userRef = doc(db, "users", localStorage.getItem('user-id') ? localStorage.getItem('user-id') : false)
         await updateDoc(userRef, {
@@ -60,9 +62,9 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-onSnapshot(doc(db, "users", localStorage.getItem('user-id')), (doc) => {
-    console.log("Current data: ", doc.data());
-})
+// onSnapshot(doc(db, "users", localStorage.getItem('user-id')), (doc) => {
+//     console.log("Current data: ", doc.data());
+// })
 
 
 

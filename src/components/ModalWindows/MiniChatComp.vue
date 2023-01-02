@@ -10,7 +10,7 @@
         <div class="inner-container-mini-chate-window">
             <div class="bubble-card" v-for="element in listMessages" :key="element.id">
                 <div class="message-bubble">
-                    <div class="wrapper-class-bubble-message" v-bind:style="element.fromId === USERID ? {'float':'right'} : {'float':'left'}">
+                    <div class="wrapper-class-bubble-message" v-bind:style="element.fromId === USERID ? {'float':'right', 'background-color' : 'rgba(0, 248, 248, 0.581)'} : {'float':'left'}">
                         <h6>{{ element.content }}</h6>
                         <!-- <div class="data_time-class"><h6>19:33</h6></div> -->
                     </div>
@@ -19,8 +19,8 @@
         </div>
 
         <div class="bottom-naviganor-mini-chat">
-            <textarea type="text" id="inp-message-write-mini-chat" placeholder="message..."></textarea>
-            <div class="btn-send-message-0"><span>click</span></div>
+            <textarea type="text" id="inp-message-write-mini-chat" placeholder="write..." v-model="queryModel"></textarea>
+            <div class="btn-send-message-0" @click="add_message"><img src="@/assets/sender.png" alt="send"></div>
         </div>
     </div>
 </template>
@@ -31,6 +31,7 @@ export default {
         return {
             USERID: localStorage.getItem('user-id'),
             listMessages: [],
+            queryModel: '',
         }
     },
 
@@ -59,6 +60,40 @@ export default {
         }
     },
 
+    methods: {
+        async add_message() {
+            const data_ = {
+                message_lst: this.message_lst,
+                toId: this.USERTO.id,
+                fromId: this.USERID,
+            }
+            await MessagesApi.returnTotalNumberOfDocuments().then(async totalCountDocuments => {
+                await MessagesApi.createMessage({
+                    content: this.queryModel,
+                    fromId: this.USERID,
+                    toId: this.USERTO.id != null && this.USERTO.id != 0 ? this.USERTO.id : false,
+                    size: new Blob([this.queryModel]).size,
+                    result: true,
+                    atCreated: new Date().toLocaleString(),
+                    atUpdated: new Date().toLocaleString(),
+                    view: false,
+                    img_url: null,
+                    img_name: null,
+                    number_in_the_list: null,
+                    totalCount: totalCountDocuments,
+                }, data_).then(data => {
+                    this.listMessages = data
+                    console.log('send data now. ', this.USERTO, this.USERID)
+                    this.queryModel = ''
+                }).catch(err => {
+                    console.log(err)
+                })
+            })
+
+
+        },
+    }
+
 }
 </script>
 <style lang="scss" scoped>
@@ -79,6 +114,7 @@ export default {
     -webkit-backdrop-filter: blur(4.2px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     z-index: 102;
+    padding-bottom: 30px;
 
     .bottom-naviganor-mini-chat {
         position: fixed;
@@ -99,7 +135,7 @@ export default {
             // min-width: 60%;
             // min-height: 30px;
             resize: none;
-            padding: 5px;
+            padding: 8px;
             color: wheat;
             outline: none;
             border: none;
@@ -114,7 +150,9 @@ export default {
         }
 
         .btn-send-message-0 {
-            padding: 5px;
+            // padding: 5px;
+            margin-left: auto;
+            margin-right: 10px;
             background-color: rgba($color: #000000, $alpha: .8);
             color: wheat;
 
@@ -124,6 +162,16 @@ export default {
             text-transform: uppercase;
             letter-spacing: .02em;
             color: white;
+
+            border-radius: 50%;
+
+            float: right;
+            img {
+                // float: right;
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+            }
 
             &:hover {
                 cursor: pointer;
@@ -144,6 +192,10 @@ export default {
             margin-right: 10px;
             text-align: end;
             font-size: 12px;
+
+            &:hover {
+                cursor: pointer;
+            }
         }
 
         img {

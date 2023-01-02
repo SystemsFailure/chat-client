@@ -72,10 +72,8 @@ import ProfileCardComp from '@/components/ProfileCardComp.vue'
 import ListAllUsersComp from '@/components/ListAllUsersComp.vue'
 import ViewProfileComp from '@/components/ViewProfileComp.vue'
 import dialogWindow from '@/components/UI/dialogWindow.vue'
-
 import requestGetUsers from '@/hooks/hookRequestsToUser'
 import hookBackChange from '@/hooks/hookBackgroundChange'
-
 import { UserApi } from '@/firebase-config/UserController'
 
 
@@ -114,10 +112,7 @@ export default {
     mounted() {
         if(this.getCookieValueByName('imgId') != '' && document.cookie) {
             document.body.style.backgroundImage = `url(${require('@/assets/' + this.imgs_path_list[this.getCookieValueByName('imgId')].img_path)})`
-        } else {
-            console.log('cookie is empty!')
-        }
-
+        } else { console.log('cookie is empty!') }
         const users = UserApi.getAllChats(this.userId)
         users.then(data => {
             this.list_users = data

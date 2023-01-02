@@ -1,9 +1,71 @@
-import { getDoc, doc, deleteDoc, runTransaction, getDocs, collection, updateDoc, arrayUnion, increment} from "firebase/firestore";
+import { getDoc, doc, deleteDoc, runTransaction, getDocs, collection, updateDoc, arrayUnion, increment, addDoc} from "firebase/firestore";
+import { onAuthStateChanged } from 'firebase/auth';
 import {auth, db} from '@/main.js'
 import { signOut } from "firebase/auth";
 import IError from "@/IError";
 
 const UserApi = {
+
+    userIsLogoutFromSystem: async (localStorage, store) => {
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userRef = doc(db, "users", localStorage.getItem('user-id') ? localStorage.getItem('user-id') : false)
+                await updateDoc(userRef, {
+                    online: true
+                }).then( () => {
+                    console.log('result: field online was update. true - online', 'Its from UserController')
+                }).catch( err => {
+                    console.log(err)
+                })
+        
+                localStorage.setItem('user-uid', user.uid)
+                store.state.isAuth = true
+                store.state.online = true
+            } else {
+                const userRef = doc(db, "users", localStorage.getItem('user-id') ? localStorage.getItem('user-id') : false)
+                await updateDoc(userRef, {
+                    online: false
+                }).then( () => {
+                    console.log('result: field online was update. false - offline', 'Its from UserController')
+                }).catch( err => {
+                    console.log(err)
+                })
+        
+                localStorage.removeItem('user-uid')
+                store.state.isAuth = false
+                store.state.online = false
+            }
+        });
+        
+    },
+
+    addUserToBase: async (data, local) => {
+        await addDoc(collection(db, "users"), {
+            name: data.queryName,
+            email: data.queryEm,
+            password: data.queryPassword,
+            image_url: null,
+            online: false,
+            countNotReadMessages: 0,
+            atCreated: new Date().toLocaleString(),
+            atUpdated: new Date().toLocaleString(),
+            bio_info: null,
+            status: null,
+            city: null,
+            country: null,
+            arrayNotReadMessages: [],
+            arrayFollowing: [],
+            arrayFollowers: [],
+            arrayChats: [],
+            arrayConfigurations: [],
+            arrayMuteNotificationsUsers: [],
+            arrayСertainUsers: [],
+        }).then(user => {
+            local.setItem('user-id', user.id)
+            console.log(user.id, 'daddada')
+        })
+        
+    },
 
     GetPersonalDataOfUser: async (userId) => {
         const dataUser = []

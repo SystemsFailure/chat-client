@@ -99,7 +99,7 @@ export default {
             if(user) {
                 document.getElementById('user-name-text').innerHTML = user[0].name
                 document.getElementById('user-id-text').innerHTML = user[0].id
-                document.getElementById('photoAvatarUser').src = user[0].img_url
+                // document.getElementById('photoAvatarUser').src = user[0].img_url
             } else {
                 console.log('user is not found!')
             }
@@ -265,7 +265,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 $color-back: rgba(0, 0, 0, 0.4);
 $color-back-trans: none;
 $color-back-gray: rgba(41, 41, 41, 0.7);

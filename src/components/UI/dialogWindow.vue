@@ -18,12 +18,12 @@ import { MessagesApi } from '@/firebase-config/MessagesController';
 export default {
     data() {
         return {
-
+            USERID: localStorage.getItem('user-id')
         }
     },
     methods: {
         clearChat() {
-            MessagesApi.deleteAllMessages(this.$store.state.USERID)
+            MessagesApi.deleteAllMessages(this.USERID)
             this.$store.state.showDialogDeleteWindow = false
             console.log('clear chat')
         },

@@ -79,12 +79,10 @@
 </template>
 
 <script>
-// import validEmail from "@/hooks/reg-comp-hook/validEmail";
-// import sendDataToServer from "@/hooks/reg-comp-hook/sendDataToServer";
-import { collection, addDoc} from "firebase/firestore"; 
-import {db} from '@/main.js'
 import AuthApi from "@/firebase-config/AuthController";
+import { UserApi } from "@/firebase-config/UserController";
 import {sendEmailMessageAccess} from '@/firebase-config/MailController.js'
+import { validName } from "@/CustomValidation";
 
 export default {
   name: "FormRegisterComp",
@@ -93,24 +91,14 @@ export default {
           resultInputEnter: null,
           resultInputEnterName: null,
           resultInputEnterPassword: null,
-
           loader_loading: false,
-
           queryName: "",
           queryEm: "",
           queryPassword: "",
           absolut_data: [],
-
           show_password: false,
         };
     },
-
-
-    mounted() {
-      console.log('LocalStorage: ')
-      console.log(localStorage.getItem('user-id'), localStorage.getItem('user-name'))
-    },
-
 
     watch: {
       queryEm: {
@@ -121,13 +109,6 @@ export default {
         }
       }
 
-    },
-    
-    setup() {
-        // const { data_, result_write, sendData } = sendDataToServer();
-        return {
-
-        }
     },
 
   methods: {
@@ -147,7 +128,6 @@ export default {
 
     showAndHidePassword() {
       this.show_password = !this.show_password
-
       if(this.show_password === true) {
         let queryPassword = document.getElementById('id-inp-password')
         if(queryPassword) {
@@ -162,66 +142,41 @@ export default {
     },
 
     async send() {
-            if (this.queryName > 26 || this.queryName === "") {
-                alert("name is very long or empty")
+      try {
+        if(validName(this.queryName)) {
+          if (this.resultInputEnter && this.resultInputEnterPassword) {
+            this.loader_loading = true
+            const data = {
+              queryName: this.queryName,
+              queryEm: this.queryEm,
+              queryPassword: this.queryPassword
             }
-            else {
-                if (this.resultInputEnter && this.resultInputEnterPassword) {
-
-                  this.loader_loading = true
-
-                  await addDoc(collection(db, "users"), {
-                    name: this.queryName,
-                    email: this.queryEm,
-                    password: this.queryPassword,
-                    image_url: null,
-
-                    online: false,
-                    countNotReadMessages: 0,
-
-                    atCreated: new Date().toLocaleString(),
-                    atUpdated: new Date().toLocaleString(),
-
-                    bio_info: null,
-                    status: null,
-                    city: null,
-                    country: null,
-
-                    arrayNotReadMessages: [],
-                    arrayFollowing: [],
-                    arrayFollowers: [],
-                    arrayChats: [],
-                    arrayConfigurations: [],
-                    arrayMuteNotificationsUsers: [],
-                    arrayСertainUsers: [],
-
-
-                  }).then( doc => {
-                      setTimeout(() => {
-                        this.$emit('successAuthDrop', true)
-                        setTimeout(() => {
-                          this.$emit('successAuthDrop', false)
-                        }, 3000)
-                      this.loader_loading = false
-                      }, 3000)
-                      console.log(doc.id)
-
-                      AuthApi.singup(this.queryEm, this.queryPassword)
-                      sendEmailMessageAccess()
-                      
-                    }).catch(err => {
-                        console.log(err)
-                        this.$emit('failAuthDrop', true)
-                        setTimeout(() => {
-                          this.$emit('failAuthDrop', false)
-                        }, 3000)
-                        this.loader_loading = false
-                    })
-                } else {
-                    console.log("data is not valid!")
-                }
-            }
-        },
+            UserApi.addUserToBase(data, localStorage).then(() => {
+              setTimeout(() => {
+                  this.$emit('successAuthDrop', true)
+                  setTimeout(() => {
+                    this.$emit('successAuthDrop', false)
+                  }, 3000)
+                this.loader_loading = false
+                }, 3000)
+                AuthApi.singup(this.queryEm, this.queryPassword)
+                sendEmailMessageAccess()
+              }).catch(err => {
+                  console.log(err)
+                  this.$emit('failAuthDrop', true)
+                  setTimeout(() => {
+                    this.$emit('failAuthDrop', false)
+                  }, 3000)
+                  this.loader_loading = false
+              }) 
+          } else {
+              console.log("data is not valid!")
+          }
+        }
+      } catch (error) {
+        console.log(error.textError, error.nameFunction)
+      }
+    },
   }
 }
 </script>

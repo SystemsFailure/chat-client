@@ -4,6 +4,7 @@
         <BannerBottomComp @sendMessage="add_message" @add_file_messageFunction="add_file_message"></BannerBottomComp>
         <MiniListLastChatsComp @MiniChatBindMiniUsersListFunction="functionBindingMiniListUsersByMiniChat"></MiniListLastChatsComp>
         <MiniChatComp v-if="showMiniChatValue" v-bind:USERTO="USERTO" @closeMiniChatCompFunction="value => this.showMiniChatValue=value"></MiniChatComp>
+        <viewPhotoWindow v-if="showWindowImage" v-model:imageURL="imageURL" @closeWindowFunction="() => {this.showWindowImage = false}"></viewPhotoWindow>
 
         <div class="content-win-chat">
             
@@ -32,7 +33,7 @@
                                 </div>
                                 <h6 v-else
                                     class="im-message-content"
-                                    oncontextmenu="alert('boy');return false"
+                                    @contextmenu="() => {this.deleteMessage(n.id); return false}"
                                     @mouseover="showDetailDataMessage($event, n.id)"
                                     @mouseout="hideDetailDataMessage($event)"
                                     v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : 'rgba(0, 248, 248, 0.581)', 'color' : 'white'}:{'float':'left'}"
@@ -54,17 +55,20 @@ import BannerBottomComp from '@/components/BannerBottomComp.vue'
 import SettingsMenuChatIdComp from '@/components/SettingsMenuChatIdComp.vue'
 import MiniListLastChatsComp from '@/components/ModalWindows/MiniListLastChatsComp.vue'
 import MiniChatComp from '@/components/ModalWindows/MiniChatComp.vue'
+import viewPhotoWindow from '@/components/ModalWindows/viewPhotoWindow.vue'
 import { MessagesApi } from '@/firebase-config/MessagesController'
 
 export default {
     data() {
         return {
             showSettingsChatId: false,
+            showWindowImage: false,
             user_id: localStorage.getItem('user-id') ? localStorage.getItem('user-id') : null,
             showDialogWindow: false,
             message_lst: [],
             USERTO: null,
             showMiniChatValue: false,
+            imageURL: null,
         }
     },
 
@@ -99,6 +103,13 @@ export default {
 
     methods: {
 
+        deleteMessage(messId) {
+            MessagesApi.deleteMessageById(messId).then(() => {
+                console.log('mes')
+            })
+            return false
+        },
+
         // async updateAllChat() {
         //     await MessagesApi.getAllMessage(data_).then(arr => {
         //         this.message_lst = arr
@@ -117,6 +128,8 @@ export default {
         },
 
         openImageToWindow(valueImageURL) {
+            this.imageURL = valueImageURL
+            this.showWindowImage = true
             console.log(valueImageURL)
         },
 
@@ -257,7 +270,8 @@ export default {
         BannerBottomComp,
         SettingsMenuChatIdComp,
         MiniListLastChatsComp,
-        MiniChatComp
+        MiniChatComp,
+        viewPhotoWindow
     }
 }
 </script>
@@ -277,6 +291,9 @@ $color-text-izumrud: #00ff80;
 
 $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
 
+:root {
+    --th-color: blue;
+}
 .main-window-chat{
     width: 100%;
     height: 100%;
@@ -297,7 +314,6 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                 margin-right: -50%;
                 transform: translate(-50%, -50%);
 
-                color: white;
 
                 font-family: Lato,sans-serif;
                 font-weight: 900;
@@ -311,6 +327,10 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                 align-items: center;
                 justify-content: center;
                 word-wrap: break-word;
+
+                span {
+                    color: white;
+                }
             }
 
         .generl-list-messages {

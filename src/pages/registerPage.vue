@@ -86,10 +86,11 @@ export default {
             absolut_data: [],
             list_cookie_file: [],
             list_imgs_background: [
-              {id: 0, img_path: 'WinterNorthFire.jpeg'},
+              {id: 0, img_path: 'Tiger.jpeg'},
               {id: 1, img_path: 'Ninja.jpeg'},
               {id: 2, img_path: 'RedSpringSpirit.jpeg'},
               {id: 3, img_path: 'Tumblr.jpeg'},
+              {id: 4, img_path: 'Tiger.jpeg'},
             ],
 
             showMenuSettings: false,
@@ -156,19 +157,21 @@ export default {
             document.body.style.backgroundImage = `${event.target.style.backgroundImage}`
             this.$store.state.id_backgroundImage = id
             document.cookie = `imgId=${id}`
-
             break;
           case 2:
             document.body.style.backgroundImage = `${event.target.style.backgroundImage}`
             this.$store.state.id_backgroundImage = id
             document.cookie = `imgId=${id}`
-
             break;
           case 3:
             document.body.style.backgroundImage = `${event.target.style.backgroundImage}`
             this.$store.state.id_backgroundImage = id
             document.cookie = `imgId=${id}`
-
+            break;
+          case 4:
+            document.body.style.backgroundImage = `${event.target.style.backgroundImage}`
+            this.$store.state.id_backgroundImage = id
+            document.cookie = `imgId=${id}`
             break;
 
           default:
