@@ -302,7 +302,7 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
         .chat-window {
             width: 100%;
             height: 100vh;
-        // background-color:$color-back;
+            background-color:rgba(0, 0, 0, 0.8);
             padding-top: 40px;
             padding-bottom: 40px;
 
@@ -389,6 +389,10 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                                 width: 200px;
                                 height: 250px;
                                 float: right;
+
+                                &:hover{
+                                    cursor: pointer;
+                                }
                                 // margin-left: auto;
 
 

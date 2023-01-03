@@ -19,41 +19,68 @@
         </div>
 
         <div class="sett-box">
-            <h5>name</h5>
-            <input type="text" placeholder="name" v-model="queryName">
+            <!-- <div class="i-item-class">
+                <i class="fi fi-ss-building"></i>
+            </div> -->
+            <h5>Name</h5>
+            <input type="text" placeholder="Name" v-model="queryName">
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="name">Change</div>
         </div>
-
+    
         <div class="sett-box">
-            <h5>email</h5>
-            <input type="email" placeholder="email" v-model="queryEmail">
-            <div class="btn-changed" @click="changeValueSetting($event)" data-value="email">Change</div>
-        </div>
-
-        <div class="sett-box">
-            <h5>bio</h5>
-            <input type="text" placeholder="biography" v-model="queryBio">
+            <!-- <div class="i-item-class">
+                <i class="fi fi-ss-building"></i>
+            </div> -->
+            <h5>Bio</h5>
+            <textarea type="text" placeholder="Bio" v-model="queryBio" style="margin-left: 10px;"></textarea>
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="bio_info">Change</div>
         </div>
 
         <div class="sett-box">
-            <h5>status</h5>
-            <input type="text" placeholder="status" v-model="queryStatus">
+            <div class="i-item-class">
+                <i class="fi fi-ss-envelope"></i>
+            </div>
+            <input type="email" placeholder="Email" v-model="queryEmail">
+            <div class="btn-changed" @click="changeValueSetting($event)" data-value="email">Change</div>
+        </div>
+
+        <div class="sett-box">
+            <div class="i-item-class">
+                <i class="fi fi-sr-link"></i>
+            </div>
+            <input type="text" placeholder="Website" v-model="queryStatus">
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="status">Change</div>
         </div>
 
         <div class="sett-box">
-            <h5>country</h5>
-            <input type="text" placeholder="country" v-model="queryCountry">
+            <div class="i-item-class">
+                <i class="fi fi-ss-flag"></i>
+            </div>
+            <input type="text" placeholder="Country" v-model="queryCountry">
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="country">Change</div>
         </div>
 
         <div class="sett-box">
-            <h5>city</h5>
-            <input type="text" placeholder="city" v-model="queryCity">
+            <div class="i-item-class">
+                <i class="fi fi-ss-building"></i>
+            </div>
+            <input type="text" placeholder="Company" v-model="queryCity">
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="city">Change</div>
         </div>
 
+        <div class="sett-box">
+            <div class="i-item-class">
+                <i class="fi fi-brands-twitter"></i>
+            </div>
+            <input type="text" placeholder="Twitter account link" v-model="queryCity">
+            <div class="btn-changed" @click="changeValueSetting($event)" data-value="city">Change</div>
+        </div>
+
+        <div class="bottom-box">
+            <div class="wrapper-box">
+                <div class="btn-save"><span>save</span></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -265,7 +292,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$color-back: rgba(0, 0, 0, 0.4);
+$color-back: rgba(0, 0, 0, 0.8);
 $color-back-trans: none;
 $color-back-gray: rgba(41, 41, 41, 0.7);
 $color-back-blue: rgba(12, 22, 44, 0.7);
@@ -280,7 +307,10 @@ $color-text-izumrud: #00ff80;
     width: 100%;
     height: 100%;
     // background-color: #333;
-    background: $color-back;
+    // background: $color-back;
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(4.2px);
+    -webkit-backdrop-filter: blur(4.2px);
 }
 
 .main-settings-comp{
@@ -305,6 +335,34 @@ $color-text-izumrud: #00ff80;
     letter-spacing: .02em;
     color: white;
 
+    .bottom-box {
+        width: 100%;
+        height: 100px;
+        // background-color: $color-back;
+
+        .wrapper-box {
+            width: 100%;
+            padding: 10px;
+            .btn-save {
+                float: left;
+                margin-left: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: $color-text;
+                span {
+                    color: white;
+                    padding: 8px 15px 8px 15px;
+
+                    &:hover {
+                        cursor: pointer;
+                        opacity: .8;
+                    }
+                }
+            }
+        }
+    }
+
     .main-info-user {
         width: 100%;
         height: auto;
@@ -313,26 +371,51 @@ $color-text-izumrud: #00ff80;
     .sett-box {
         margin-top: 10px;
         width: 100%;
-        padding: 10px;
+        padding: 10px 10px 10px 0;
         // background-color: #4e5f7d;
         display: flex;
-        // justify-content: space-between;
+        // flex-direction: column;
+        // justify-content: center;
         align-items: center;
+
+        .i-item-class {
+            font-size: 16px;
+            padding-top: 4px;
+        }
 
         input {
             // background-color: #333;
-            width: 150px;
+            width: 300px;
             background: none;
             outline: none;
             color: white;
-            border: 1px solid #333;
+            border: 1px solid #777;
+            border-radius: 5px;
+            padding: 8px;
+            margin-left: 10px;
+            font-size: 12px;
+        }
+
+        textarea {
+            width: 250px;
+            font-size: 12px;
+            padding: 8px;
+            border-radius: 5px;
+            background: none;
+            outline: none;
+            color: white;
+            border: 1px solid #777;
             padding: 5px;
-            margin-left: 35px;
+            // margin-left: 35px;
+            max-width: 250px;
+            min-width: 250px;
+            max-height: 300px;
+            min-height: 50px;
         }
 
         h5 {
             // background-color: red;
-            width: 60px;
+            width: 40px;
             padding: 5px;
             border-right: 1px solid #4e5f7d;
 
@@ -343,7 +426,7 @@ $color-text-izumrud: #00ff80;
             width: 60px;
             height: 30px;
             background-color: none;
-            border: 1px solid #333;
+            border: 1px solid #777;
             display: flex;
             align-items: center;
             justify-content: center;

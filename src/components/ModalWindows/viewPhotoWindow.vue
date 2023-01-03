@@ -24,8 +24,8 @@ export default {
 
 .main-class-view-photo-window {
     position: absolute;
-    width: 95%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
     background-color: rgba($color: #000000, $alpha: .8);
     margin: 0;
     top: 50%;
@@ -65,14 +65,14 @@ export default {
 
         .wrapper-continer {
             width: 800px;
-            height: 600px;
+            height: 95%;
             background-color: rgba($color: #000000, $alpha: 1);
 
             img {
                 width: 100%;
                 height: 100%;
-                max-width: 800px;
-                max-height: 600px;
+                // max-width: 800px;
+                // max-height: 600px;
                 border: 1px solid #333;
             }
         }

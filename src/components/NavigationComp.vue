@@ -9,11 +9,13 @@
                 <i class="fi fi-rr-comment"></i>
                 <!-- <img src="@/assets/chat-right-fill.svg" alt="chats" srcset=""> -->
             </div>
+            <div @click="openMenuAny(3)" class="item-im" :class="{'item-selected' : showMenuMusics}">
+                <i class="fi fi-ss-music-alt"></i>
+            </div>
             <div @click="openMenuAny(2)" class="item-im" :class="{'item-selected' : showMenuSettings}">
                 <i class="fi fi-br-settings-sliders"></i>
                 <!-- <img src="@/assets/setting.png" alt="chats" srcset=""> -->
             </div>
-
 
         </div>
     </div>
@@ -27,6 +29,7 @@ export default {
             showMenuChats: true,
             showMenuMail: false,
             showMenuSettings: false,
+            showMenuMusics: false,
         }
     },
     methods: {
@@ -36,16 +39,26 @@ export default {
                     this.showMenuMail = true
                     this.showMenuChats = false
                     this.showMenuSettings = false
+                    this.showMenuMusics = false
                     this.$emit('openMenu', integer)
                     break;
                 case 1:
                     this.showMenuChats = true
                     this.showMenuMail = false
                     this.showMenuSettings = false
+                    this.showMenuMusics = false
                     this.$emit('openMenu', integer)
                     break;
                 case 2:
                     this.showMenuSettings = true
+                    this.showMenuMail = false
+                    this.showMenuChats = false
+                    this.showMenuMusics = false
+                    this.$emit('openMenu', integer)
+                    break;
+                case 3:
+                    this.showMenuMusics = true
+                    this.showMenuSettings = false
                     this.showMenuMail = false
                     this.showMenuChats = false
                     this.$emit('openMenu', integer)

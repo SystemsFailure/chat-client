@@ -118,7 +118,7 @@ export default {
 //     --theme-color: yellow;
 // }
 
-$color-back: rgba(0, 0, 0, 0.4);
+$color-back: rgba(0, 0, 0, 0.8);
 
 
 .main-viewProfile-comp {
@@ -128,6 +128,10 @@ $color-back: rgba(0, 0, 0, 0.4);
     padding-left: 10px;
     padding-top: 45px;
     background: $color-back;
+
+    // background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(4.2px);
+    -webkit-backdrop-filter: blur(4.2px);
     // overflow:auto;
 
     // background-color: red;

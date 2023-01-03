@@ -10,18 +10,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .main-AudioComp {
-    width: 1000%;
+    width: 100%;
     height: 100vh;
     z-index: 100;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: aquamarine;
-
+    background-color: rgba($color: #000000, $alpha: .8);
+    // padding: 20px;
     .inner-container-deep {
-        width: 70px;
-        height: 50px;
-        background: deeppink;
+        width: 100%;
+        height: 100%;
+        background: rgba($color: #000000, $alpha: .8);
         z-index: 1000;
     }
 }

@@ -8,7 +8,12 @@
             <NavigationComp @openMenu="openMenu"></NavigationComp>
 
             <div class="right-block">
-                <ChatWindowComp v-bind:user_to_id="i_user_to_id"></ChatWindowComp>
+                <Transition name="up-profile-card-slide">
+                    <ChatWindowComp v-if="showChatWindowComp" v-bind:user_to_id="i_user_to_id"></ChatWindowComp>
+                </Transition>
+                <Transition name="up-profile-card-slide">
+                    <AudioListComp v-if="showMenuMusics"></AudioListComp>
+                </Transition>
             </div>
 
             <div class="left-block">
@@ -55,7 +60,10 @@
                 <Transition name="up-profile-card-slide">
                     <SettingsComp v-show="showMenuSettings" @setImageToBack="setImage"></SettingsComp>
                 </Transition>
-                    <ViewProfileComp></ViewProfileComp>
+                    <ViewProfileComp v-show="showMenuMail"></ViewProfileComp>
+                <Transition name="up-profile-card-slide">
+                    <MusicMenuComp v-show="showMenuMusics"></MusicMenuComp>
+                </Transition>
 
 
             </div>
@@ -66,11 +74,13 @@
 <script>
 import NavigationComp from '@/components/NavigationComp.vue'
 import ChatWindowComp from '@/components/ChatWindowComp.vue'
+import AudioListComp from '@/components/AudioListComp.vue'
 import SearchUsersBoxComp from '@/components/SearchUsersBoxComp.vue'
 import SettingsComp from '@/components/SettingsComp.vue'
 import ProfileCardComp from '@/components/ProfileCardComp.vue'
 import ListAllUsersComp from '@/components/ListAllUsersComp.vue'
 import ViewProfileComp from '@/components/ViewProfileComp.vue'
+import MusicMenuComp from '@/components/MusicMenuComp.vue'
 import dialogWindow from '@/components/UI/dialogWindow.vue'
 import requestGetUsers from '@/hooks/hookRequestsToUser'
 import hookBackChange from '@/hooks/hookBackgroundChange'
@@ -80,17 +90,19 @@ import { UserApi } from '@/firebase-config/UserController'
 export default {
     data() {
         return {
-            showSettingsChatId: true,
             userId: localStorage.getItem('user-id') || null,
-            showMenuChats: true,
-            showMenuMail: false,
-            showMenuSettings: false,
-            show_list_all_users_comp: false,
             i_user_to_id: null,
+            show_list_all_users_comp: false,
             id_currect_user: null,
             searchQuery: '',
             up: true,
             list_users: [],
+            showSettingsChatId: true,
+            showChatWindowComp: false,
+            showMenuChats: true,
+            showMenuMail: false,
+            showMenuSettings: false,
+            showMenuMusics: false,
         }
     },
 
@@ -156,14 +168,25 @@ export default {
                     this.showMenuMail = true
                     this.showMenuChats = false
                     this.showMenuSettings = false
+                    this.showMenuMusics = false
                     break;
                 case 1:
                     this.showMenuChats = true
+                    this.showChatWindowComp = true
                     this.showMenuMail = false
                     this.showMenuSettings = false
+                    this.showMenuMusics = false
                     break;
                 case 2:
                     this.showMenuSettings = true
+                    this.showMenuMail = false
+                    this.showMenuChats = false
+                    this.showMenuMusics = false
+                    break;
+                case 3:
+                    this.showMenuMusics = true
+                    this.showChatWindowComp = false
+                    this.showMenuSettings = false
                     this.showMenuMail = false
                     this.showMenuChats = false
                     break;
@@ -182,7 +205,7 @@ export default {
     },
 
     components: {NavigationComp, ChatWindowComp, SearchUsersBoxComp, SettingsComp,
-         ProfileCardComp, ListAllUsersComp, ViewProfileComp, dialogWindow
+         ProfileCardComp, ListAllUsersComp, ViewProfileComp, dialogWindow, AudioListComp, MusicMenuComp,
         }
 
 }
@@ -211,7 +234,7 @@ export default {
 
 
 
-$color-back: rgba(0, 0, 0, 0.4);
+$color-back: rgba(0, 0, 0, 0.8);
 $color-back-trans: none;
 $color-back-gray: rgba(41, 41, 41, 0.7);
 $color-back-blue: rgba(12, 22, 44, 0.7);
@@ -276,14 +299,14 @@ $color-text-izumrud: #00ff80;
                 // padding-right: 10px;
                 // padding-left: 10px;
                 padding-top: 35px;
-                background: $color-back;
+                // background: $color-back;
                 overflow:auto;
                 overflow-x: hidden;
                 font-family: Lato,sans-serif;
-                background: rgba(10, 10, 10, 0.65);
-                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                background: rgba(10, 10, 10, 0.8);
                 backdrop-filter: blur(4.2px);
                 -webkit-backdrop-filter: blur(4.2px);
+                // box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 
                 .btn-add-new-contact-chat {
                     position: fixed;
