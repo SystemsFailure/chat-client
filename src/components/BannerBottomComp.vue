@@ -143,7 +143,7 @@ $color-text-izumrud: #00ff80;
     border-top: 1px solid rgba(255, 255, 255, 0.3);
 
 
-    z-index: 11;
+    z-index: 12;
     bottom: 0;
 
     .content {
@@ -171,18 +171,19 @@ $color-text-izumrud: #00ff80;
                         width: 32px;
                         height: 32px;
                         border-radius: 50%;
-
-                        background-color: $color-back-gray;
+                        padding-top: 2px;
+                        border: 1px solid #333;
                         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
                         backdrop-filter: blur(4.2px);
                         -webkit-backdrop-filter: blur(4.2px);
-
+                        // background-color: $color-back-gray;
                         margin-right: 5px;
                         margin-left: 5px;
-
                         display: flex;
                         justify-content: center;
                         align-items: center;
+
+                        cursor: pointer;
                         .cycle-point-adapter {
                             width: 10px;
                             height: 10px;
@@ -206,15 +207,13 @@ $color-text-izumrud: #00ff80;
                             // height: 40px;
                             width: auto;
                             height: auto;
-                            z-index: 1;
                             transform: translateY(-70px);
 
                             border-radius: 10px;
 
                             position:absolute;
 
-                            background: rgba(10, 10, 10, 0.65);
-                            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                            background: rgba(0, 188, 157, 0.65);
                             backdrop-filter: blur(4.2px);
                             -webkit-backdrop-filter: blur(4.2px);
                             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -224,6 +223,7 @@ $color-text-izumrud: #00ff80;
                             justify-content: space-between;
 
                             padding: 5px;
+                            z-index: 11;
 
                             // transition: 1s;
                             .item-menu0 {
@@ -232,6 +232,7 @@ $color-text-izumrud: #00ff80;
                                 border-radius: 50%;
 
                                 background:$color-back-gray;
+                                // padding-top: 4px;
 
                                 display: flex;
                                 align-items: center;
@@ -277,13 +278,14 @@ $color-text-izumrud: #00ff80;
                         height: 32px;
                         border-radius: 50%;
                         
-                        background-color: $color-back-gray;
+                        // background-color: $color-back-gray;
                         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
                         backdrop-filter: blur(4.2px);
                         -webkit-backdrop-filter: blur(4.2px);
 
                         margin-right: 5px;
                         margin-left: 5px;
+                        padding-top: 4px;
 
                         display: flex;
                         align-items: center;
@@ -308,7 +310,7 @@ $color-text-izumrud: #00ff80;
 
                             
                             &:hover {
-                                background-color: $color-back;
+                                // background-color: $color-back;
                                 cursor: pointer;
                                 opacity: 1;
                                 transition: .3s;
@@ -329,8 +331,10 @@ $color-text-izumrud: #00ff80;
                         border-radius: 100%;
                         padding: 8px;
                         border: none;
-                        background-color: $color-back-gray;
+                        // background-color: $color-back-gray;
                         color: $color-text;
+
+                        cursor: pointer;
 
                         margin-right: 5px;
                         margin-left: 5px;

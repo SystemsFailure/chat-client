@@ -53,6 +53,7 @@ const UserApi = {
             status: null,
             city: null,
             country: null,
+            lastMessageId: null,
             arrayNotReadMessages: [],
             arrayFollowing: [],
             arrayFollowers: [],
@@ -63,6 +64,8 @@ const UserApi = {
         }).then(user => {
             local.setItem('user-id', user.id)
             console.log(user.id, 'daddada')
+        }).catch(err => {
+            console.log(err)
         })
         
     },
@@ -78,7 +81,8 @@ const UserApi = {
                     email: user.data().email,
                     online: user.data().online,
                     img_url: user.data().image_url,
-                    lastmessage: "Hello, How are you going man? bro? good luck",
+                    // lastmessage: "Hello, How are you going man? bro? good luck",
+                    lastmessage: user.data().lastMessageId,
                     countNotReadMessages: user.data().countNotReadMessages,
                     arrayChats: user.data().arrayChats,
                     arrayFollowers: user.data().arrayFollowers,
@@ -114,7 +118,7 @@ const UserApi = {
                             email: user.data().email,
                             online: user.data().online,
                             img_url: user.data().image_url,
-                            lastmessage: "Hello, How are you going man? bro? good luck",
+                            lastmessage: user.data().lastMessageId,
                             countNotReadMessages: user.data().countNotReadMessages,
                             arrayChats: user.data().arrayChats,
                             arrayFollowers: user.data().arrayFollowers,
@@ -155,7 +159,7 @@ const UserApi = {
                 email: user.data().email,
                 online: user.data().online,
                 img_url: user.data().image_url,
-                lastmessage: "Hello, How are you going man? bro? good luck",
+                lastmessage: user.data().lastMessageId,
                 countNotReadMessages: user.data().countNotReadMessages,
                 arrayChats: user.data().arrayChats,
                 arrayFollowers: user.data().arrayFollowers,
@@ -201,7 +205,18 @@ const UserApi = {
           }).catch((error) => {
             IError(error)
           });
-    }
+    },
+
+
+
+    updateDataOfLastMessageField: async (userID, value) => {
+        const user = doc(db, 'users', userID)
+        await updateDoc(user, {lastMessageId: value}).then( () => {
+            console.log('success update lastMessage')
+        }).catch( err => {
+            console.log(err)
+        })
+    },
 }
 
 const TransitionApi = {
@@ -230,7 +245,7 @@ const TransitionApi = {
         await updateDoc(washingtonRef, {
             [value]: increment(1)
         })
-    }
+    },
 }
 
 export {UserApi, TransitionApi}

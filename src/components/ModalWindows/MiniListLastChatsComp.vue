@@ -201,6 +201,7 @@ export default {
     border-bottom-right-radius: 24px;
     border-bottom-left-radius: 24px;
     padding: 20px;
+    z-index: 11;
 
     .btn-expand-to-express-mini-menu {
         width: 50px;

@@ -4,11 +4,9 @@
             <div class="slose-btn-box"><i @click="() => {this.$emit('closeListUsersCompFunction', false)}" class="fi fi-ss-cross"></i></div>
             <div class="title-comp"><span>Search users</span></div>
 
-
             <div class="inside-box">
 
                 <div class="left-box-list-users">
-
 
                     <div class="inp-searching">
                         <SearchUsersBoxComp style="width: 65%; border: none; background:none;border-left: 1px solid teal;"></SearchUsersBoxComp>
@@ -22,8 +20,8 @@
                                 </div>
                                 <div class="name-box">{{user.name}}</div>
 
-                                <div class="btn-add-fr" @click="addUserMe(user)">
-                                    add to chats
+                                <div class="btn-add-fr" @click="addUserMe(user)" :style="filteredListUsers(user) === true ? {'color' : 'teal'} : {'color' : 'red'} ">
+                                    {{filteredListUsers(user) ? 'No' : 'add to chats'}}
                                 </div>
                             </div>
                         </div>
@@ -98,6 +96,7 @@
 <script>
 import SearchUsersBoxComp from './SearchUsersBoxComp.vue';
 import { UserApi } from '@/firebase-config/UserController';
+import { NotifyApi } from '@/firebase-config/NotificationController'
 import IError from '@/IError';
 
 export default {
@@ -120,18 +119,46 @@ export default {
     mounted() {
         const users = UserApi.getAllUsers()
         users.then(array => {
-            this.list_users = array    
+            this.list_users = array
         })
     },
 
     methods: {
+        async filteredListUsers(userInstance) {
+            let result = true
+            if(userInstance) {
+                await UserApi.getUserById(this.IUserId).then(user => {
+                    if(user)
+                    {
+
+                        if (user.data().arrayChats.length != 0) 
+                        {
+                            for (let index = 0; index < user.data().arrayChats.length; index++) {
+                                const element = user.data().arrayChats[index]
+                                if(userInstance.id === element) {
+                                    result = false
+                                    console.log('so user is exit', userInstance.name)
+                                }
+                            }
+                        }
+
+                    }
+                })
+            }
+            console.log(result)
+            return result
+        },
+
         addUserMe(user) {
             if(user) {
-                console.log(user, 'logo 0001')
                 if(!this.IUserId) return IError('error -> from ListUsersComp')
-                // Здесь поменять, скидывать в массив arrayChats не users целиком, а только id, и получать по айди тоже всех пользователей!
-                UserApi.addUserToChats(this.IUserId, user.id)
-                this.$emit('updateUsersListFunction')
+                const data = {
+                    toID: user.id,
+                    fromID: this.IUserId,
+                    priviewMessage: 'Hi, do you want to comunicated with me?'
+                    
+                }
+                NotifyApi.sendNotify(data)
             } else {
                 return false
             }

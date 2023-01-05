@@ -1,6 +1,6 @@
 <template>
     <div class="main-window-chat">
-        <BannerUpComp @showOrHideSettingChatId="showHideSettingChatId"></BannerUpComp>
+        <BannerUpComp @showOrHideSettingChatId="showHideSettingChatId" @showNotificationWindowFunction="(value) => {this.$emit('showNotificationWindowFunctionArrow', value)}"></BannerUpComp>
         <BannerBottomComp @sendMessage="add_message" @add_file_messageFunction="add_file_message"></BannerBottomComp>
         <MiniListLastChatsComp @MiniChatBindMiniUsersListFunction="functionBindingMiniListUsersByMiniChat"></MiniListLastChatsComp>
         <MiniChatComp v-if="showMiniChatValue" v-bind:USERTO="USERTO" @closeMiniChatCompFunction="value => this.showMiniChatValue=value"></MiniChatComp>
@@ -24,22 +24,26 @@
                             <h5  class="mess-content-example" style="color: white;" id="q4"></h5>
                             <h5  class="mess-content-example" style="color: white;" id="q5"></h5>
                         </div>
-                        <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
-                            <div class="message-bubble">
-                                <div class="image-content" v-if="n.img_url">
-                                    <!-- <img :src="n.img_url" :style="n.fromId === user_id ? {'float' : 'right'} : {'float' : 'left'}" @click="openImageToWindow(n.img_url)"> -->
-                                    <img :src="n.img_url" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" @click="openImageToWindow(n.img_url)">
-                                    <div class="data-created-img" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}"><span>{{ n.atCreated }}</span></div>
-                                </div>
-                                <h6 v-else
+
+                        <!-- <transition-group name="fade" tag="div"> -->
+                            <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
+                                <div class="message-bubble">
+                                    <div class="image-content" v-if="n.img_url">
+                                        <!-- <img :src="n.img_url" :style="n.fromId === user_id ? {'float' : 'right'} : {'float' : 'left'}" @click="openImageToWindow(n.img_url)"> -->
+                                        <img :src="n.img_url" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" @click="openImageToWindow(n.img_url)">
+                                        <div class="data-created-img" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}"><span>{{ n.atCreated }}</span></div>
+                                    </div>
+                                    <h6 v-else
                                     class="im-message-content"
                                     @contextmenu="() => {this.deleteMessage(n.id); return false}"
                                     @mouseover="showDetailDataMessage($event, n.id)"
                                     @mouseout="hideDetailDataMessage($event)"
                                     v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : 'rgba(0, 248, 248, 0.581)', 'color' : 'white'}:{'float':'left'}"
-                                >{{n.content}}</h6>
+                                    >{{n.content}}</h6>
+                                </div>
                             </div>
-                        </div>
+                        <!-- </transition-group> -->
+
                     </div>
                 </div>
             </div>
@@ -57,6 +61,7 @@ import MiniListLastChatsComp from '@/components/ModalWindows/MiniListLastChatsCo
 import MiniChatComp from '@/components/ModalWindows/MiniChatComp.vue'
 import viewPhotoWindow from '@/components/ModalWindows/viewPhotoWindow.vue'
 import { MessagesApi } from '@/firebase-config/MessagesController'
+import { UserApi } from '@/firebase-config/UserController'
 
 export default {
     data() {
@@ -230,7 +235,7 @@ export default {
                 toId: this.user_to_id,
                 fromId: this.user_id,
             }
-
+            
             await MessagesApi.createMessage({
                 content: text,
                 fromId: localStorage.getItem('user-id'),
@@ -242,8 +247,15 @@ export default {
                 view: false,
                 img_url: null,
                 img_name: null,
-            }, data_).then(data => {
+            }, data_).then( async data => {
                 this.message_lst = data
+                console.log(this.message_lst[this.message_lst.length - 1].content, 'last mess which need to send in messangerComp')
+                const content = this.message_lst[this.message_lst.length - 1].content
+                if (!content || content === '') {console.log('content === null'); return}
+                await UserApi.updateDataOfLastMessageField(this.user_to_id, content)
+
+                // this.$emit('setContentOfLastMessageFunction', content)
+
                 // let collectionMessages = document.getElementsByClassName('message-bubble')
                 // let lastElement = collectionMessages[collectionMessages.length - 1]
 
@@ -278,8 +290,8 @@ export default {
 
 <style scoped lang="scss">
 
-$color-back: rgba(0, 0, 0, 0.4);
-$color-back-message-bubble: rgba(0, 0, 0, 0.9);
+$color-back: rgba(19, 19, 19, 0.4);
+$color-back-message-bubble: rgba(34, 34, 34, 0.8);
 $color-back-trans: none;
 $color-back-gray: rgba(41, 41, 41, 0.7);
 $color-back-blue: rgba(12, 22, 44, 0.7);
@@ -313,20 +325,17 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                 left: 50%;
                 margin-right: -50%;
                 transform: translate(-50%, -50%);
-
-
                 font-family: Lato,sans-serif;
                 font-weight: 900;
                 font-size: 14px;
                 text-transform: uppercase;
                 letter-spacing: .02em;
-
-                // background-color: #ff216d;
                 width: 100%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 word-wrap: break-word;
+                // background-color: #ff216d;
 
                 span {
                     color: white;
@@ -439,5 +448,14 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
 .fade-comp-settChatId-v-enter-from,
 .fade-comp-settChatId-v-leave-to {
   opacity: 0;
+}
+
+//LIST ANIME
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+  opacity: 0
 }
 </style>

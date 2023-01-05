@@ -33,7 +33,7 @@ export default {
     margin-right: -50%;
     transform: translate(-50%, -50%);
     position: absolute;
-    z-index: 11;
+    z-index: 12;
     // display: flex;
     // align-items: center;
     // justify-content: center;

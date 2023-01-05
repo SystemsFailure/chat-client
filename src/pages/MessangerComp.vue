@@ -1,7 +1,16 @@
 <template>
     <dialogWindow v-if="this.$store.state.showDialogDeleteWindow"></dialogWindow>
     <ProfileCardComp v-if="$store.state.showProfile" @closeProfileFunction="(value) => {this.$store.state.showProfile = value}"></ProfileCardComp>
-    <ListAllUsersComp v-if="show_list_all_users_comp" @updateUsersListFunction="updateUsersList" @closeListUsersCompFunction="(value) => {this.show_list_all_users_comp = value}"></ListAllUsersComp>
+    <ListAllUsersComp v-if="show_list_all_users_comp" @closeListUsersCompFunction="(value) => {this.show_list_all_users_comp = value}"></ListAllUsersComp>
+    
+    <Transition name="transition-notifi-comp">
+        <NotificationsComp 
+            v-if="showNotificationComp" 
+            @closeNotificationsCompFunction="(value) => {this.showNotificationComp = value}" 
+            @updateUsersListFunction="updateUsersList"
+            ></NotificationsComp>
+    </Transition>
+    
     <div class="main_div">
         <div class="global-content">
 
@@ -9,7 +18,7 @@
 
             <div class="right-block">
                 <Transition name="up-profile-card-slide">
-                    <ChatWindowComp v-if="showChatWindowComp" v-bind:user_to_id="i_user_to_id"></ChatWindowComp>
+                    <ChatWindowComp v-if="showChatWindowComp" v-bind:user_to_id="i_user_to_id" @showNotificationWindowFunctionArrow="(value) => {this.showNotificationComp = value}"></ChatWindowComp>
                 </Transition>
                 <Transition name="up-profile-card-slide">
                     <AudioListComp v-if="showMenuMusics"></AudioListComp>
@@ -21,6 +30,10 @@
                 <Transition name="up-profile-card-slide">
                     <SearchUsersBoxComp v-if="showMenuChats" v-model="searchQuery" @clearTextFunction="() => {this.searchQuery = ''}"></SearchUsersBoxComp>
                 </Transition>
+                <div class="btn-add-new-contact-chat" @click="() => {this.show_list_all_users_comp = true}">
+                    <div class="icon=box"></div>
+                    <div class="title-btn-new-cont"><span>new comunicated</span></div>
+                </div>
 
                 <Transition name="up-profile-card-slide">
                     <div v-if="showMenuChats" class="list-users">
@@ -43,17 +56,13 @@
                                         <span>{{item.name}}</span>
                                         <span id="dateLastMessage_id">{{item.dateLastMessage}}</span>
                                     </div>
-                                    <h6>{{slice_last_message(item.lastmessage)}}</h6>
+                                    <h6 id="lastmess-id">{{slice_last_message(item.lastmessage)}}</h6>
                                     <div class="box-not-read-message">
                                         <span :class="{'count-not-read-message_': item.countNotReadMessages}">{{item.countNotReadMessages ? item.countNotReadMessages:undefined}}</span>
                                     </div>
                                 </div>
                             </TransitionGroup>
                         </ul>
-                        <div class="btn-add-new-contact-chat" @click="() => {this.show_list_all_users_comp = true}">
-                            <div class="icon=box"></div>
-                            <div class="title-btn-new-cont"><span>new comunicated</span></div>
-                        </div>
                     </div>
                 </Transition>
 
@@ -80,6 +89,7 @@ import SettingsComp from '@/components/SettingsComp.vue'
 import ProfileCardComp from '@/components/ProfileCardComp.vue'
 import ListAllUsersComp from '@/components/ListAllUsersComp.vue'
 import ViewProfileComp from '@/components/ViewProfileComp.vue'
+import NotificationsComp from '@/components/NotificationsComp.vue'
 import MusicMenuComp from '@/components/MusicMenuComp.vue'
 import dialogWindow from '@/components/UI/dialogWindow.vue'
 import requestGetUsers from '@/hooks/hookRequestsToUser'
@@ -97,8 +107,9 @@ export default {
             searchQuery: '',
             up: true,
             list_users: [],
-            showSettingsChatId: true,
-            showChatWindowComp: false,
+            showSettingsChatId: false,
+            showChatWindowComp: true,
+            showNotificationComp: false,
             showMenuChats: true,
             showMenuMail: false,
             showMenuSettings: false,
@@ -196,6 +207,7 @@ export default {
         },
 
         slice_last_message(text) {
+            if (!text) text = 'default message'
             var sliced = text.slice(0,40);
             if (sliced.length < text.length) {
                 sliced += '...';
@@ -204,9 +216,15 @@ export default {
         },
     },
 
-    components: {NavigationComp, ChatWindowComp, SearchUsersBoxComp, SettingsComp,
-         ProfileCardComp, ListAllUsersComp, ViewProfileComp, dialogWindow, AudioListComp, MusicMenuComp,
-        }
+    components: 
+    {
+        NavigationComp, ChatWindowComp,
+        SearchUsersBoxComp, SettingsComp,
+        ProfileCardComp, ListAllUsersComp,
+        ViewProfileComp, dialogWindow,
+        AudioListComp, MusicMenuComp,
+        NotificationsComp,
+    }
 
 }
 
@@ -291,34 +309,18 @@ $color-text-izumrud: #00ff80;
             float: left;
             margin-left: 4%;
 
-            
-
-            .list-users{
-                width: 100%;
-                height: 100%;
-                // padding-right: 10px;
-                // padding-left: 10px;
-                padding-top: 35px;
-                // background: $color-back;
-                overflow:auto;
-                overflow-x: hidden;
-                font-family: Lato,sans-serif;
-                background: rgba(10, 10, 10, 0.8);
-                backdrop-filter: blur(4.2px);
-                -webkit-backdrop-filter: blur(4.2px);
-                // box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-
-                .btn-add-new-contact-chat {
+            .btn-add-new-contact-chat {
                     position: fixed;
-                    width: 100%;
+                    width: 25%;
                     bottom: 0;
                     height: 40px;
-                    // background-color: #00cec7;
+                    background-color: rgba($color: #000000, $alpha: 1.0);
                     border: 1px solid #333;
                     display: flex;
                     padding: 10px;
                     align-items: center;
                     justify-content: center;
+                    z-index: 11;
 
                     &:hover {
                         cursor: pointer;
@@ -337,6 +339,24 @@ $color-text-izumrud: #00ff80;
                         // -webkit-text-fill-color: transparent;
                     }
                 }
+
+            
+
+            .list-users{
+                width: 100%;
+                height: 100%;
+                // padding-right: 10px;
+                // padding-left: 10px;
+                padding-top: 35px;
+                // background: $color-back;
+                overflow:auto;
+                overflow-x: hidden;
+                font-family: Lato,sans-serif;
+                background: rgba(10, 10, 10, 0.8);
+                backdrop-filter: blur(4.2px);
+                -webkit-backdrop-filter: blur(4.2px);
+                // box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                padding-bottom: 40px;
 
 
                 .item-list:hover {
@@ -450,5 +470,15 @@ $color-text-izumrud: #00ff80;
 .up-profile-card-slide-leave-to {
   opacity: 0;
 //   transform: translateY(-100px);
+}
+
+.transition-notifi-comp-enter-active,
+.transition-notifi-comp-leave-active {
+  transition: opacity .3s ease;
+}
+
+.transition-notifi-comp-enter-from,
+.transition-notifi-comp-leave-to {
+  opacity: 0;
 }
 </style>

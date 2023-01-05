@@ -8,19 +8,14 @@
             <div class="recently-ok" style="color:white; font-size: 12px;">{{ $store.state.user_data[0].online ? 'online' : 'seen at 9:46' }}</div>
         </div>
 
-        <!-- <div class="navigation-menu-modes-box">
-            <div class="content-box0">
-                <div
-                class="modes-boxes"
-                v-for="mode in list_modes"
-                v-bind:key="mode.id"
-                @click="console.log('hellooooo')"
-                >{{mode.name}}
+        <div class="banner" :style="$store.state.user_data.length === 0 ? {'width' : '100%'} : {'width' : '30%'}">
+            <div class="notifycation-container">
+                <div class="nityfy-iecon">
+                    <i class="fi fi-ss-bell" @click="() => {this.$emit('showNotificationWindowFunction', true)}">
+                        <div class="cycle-box"></div>
+                    </i>
                 </div>
             </div>
-        </div> -->
-
-        <div class="banner" :style="$store.state.user_data.length === 0 ? {'width' : '100%'} : {'width' : '30%'}">
             <div class="settings-chatId" @click="change">
                 <div class="item-round-i"></div>
                 <div class="item-round-i"></div>
@@ -36,11 +31,6 @@
 export default {
     data() {
         return {
-            list_modes: [
-                {id: 0, name: 'standart', callback: 'undefined'},
-                {id: 1, name: 'socket', callback: 'undefined'},
-                {id: 2, name: 'firebase', callback: 'undefined'}
-            ],
             showSettingsChatId: false,
             user_id: localStorage.getItem('user-id')
         }
@@ -95,6 +85,44 @@ $color-text-izumrud: #00ff80;
             display: flex;
             align-items: center;
             justify-content: end;
+
+            .notifycation-container {
+                width: 100%;
+                // background-color: red;
+                height: 100%;
+
+                .nityfy-iecon {
+                    // background-color: red;
+                    height: 100%;
+                    width: auto;
+                    padding: 5px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin-right: 20px;
+                    color: white;
+                    font-size: 18px;
+
+                    i {
+
+                        &:hover {
+                            cursor: pointer;
+                            opacity: .8;
+                        }
+                        .cycle-box {
+                            position: absolute;
+                            transform: translateY(-24px) translateX(10px);
+                            width: 8px;
+                            height: 8px;
+                            border-radius: 50%;
+                            background-color: #00cec7;
+    
+                        }
+                    }
+
+
+                }
+            }
             .settings-chatId {
                 margin-left: auto;
                 height: 30px;
