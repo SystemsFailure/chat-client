@@ -20,9 +20,10 @@
                                 </div>
                                 <div class="name-box">{{user.name}}</div>
 
-                                <div class="btn-add-fr" @click="addUserMe(user)" :style="filteredListUsers(user) === true ? {'color' : 'teal'} : {'color' : 'red'} ">
-                                    {{filteredListUsers(user) ? 'No' : 'add to chats'}}
+                                <div class="btn-add-fr" @click="addUserMe(user)" :style="filteredListUsers(user)? {'color' : 'teal'} : {'color' : 'red'} ">
+                                    {{'add to chats'}}
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -125,7 +126,7 @@ export default {
 
     methods: {
         async filteredListUsers(userInstance) {
-            let result = true
+            let result = null
             if(userInstance) {
                 await UserApi.getUserById(this.IUserId).then(user => {
                     if(user)
