@@ -398,6 +398,7 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                                 width: 200px;
                                 height: 250px;
                                 float: right;
+                                border: 3px solid #333;
 
                                 &:hover{
                                     cursor: pointer;

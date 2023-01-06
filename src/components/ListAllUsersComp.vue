@@ -20,7 +20,7 @@
                                 </div>
                                 <div class="name-box">{{user.name}}</div>
 
-                                <div class="btn-add-fr" @click="addUserMe(user)" :style="filteredListUsers(user)? {'color' : 'teal'} : {'color' : 'red'} ">
+                                <div class="btn-add-fr" @click="addUserMe(user)">
                                     {{'add to chats'}}
                                 </div>
 
@@ -119,37 +119,29 @@ export default {
 
     mounted() {
         const users = UserApi.getAllUsers()
-        users.then(array => {
-            this.list_users = array
+        users.then(async array => {
+            let arr = []
+            await UserApi.getUserById(this.IUserId).then(user => {
+                if (!user.data().arrayChats) {
+                    console.log('arrayChats not work')
+                    return
+                }
+                if (user.data().arrayChats.length === 0) arr = array
+                user.data().arrayChats.forEach(elem => {
+                    array.forEach(ele => {
+                        if(ele.id != elem) {
+                            arr.push(ele)
+                        } else {
+                            console.log('element is not exit')
+                        }
+                    })
+                })
+            })
+            this.list_users = arr
         })
     },
 
     methods: {
-        async filteredListUsers(userInstance) {
-            let result = null
-            if(userInstance) {
-                await UserApi.getUserById(this.IUserId).then(user => {
-                    if(user)
-                    {
-
-                        if (user.data().arrayChats.length != 0) 
-                        {
-                            for (let index = 0; index < user.data().arrayChats.length; index++) {
-                                const element = user.data().arrayChats[index]
-                                if(userInstance.id === element) {
-                                    result = false
-                                    console.log('so user is exit', userInstance.name)
-                                }
-                            }
-                        }
-
-                    }
-                })
-            }
-            console.log(result)
-            return result
-        },
-
         addUserMe(user) {
             if(user) {
                 if(!this.IUserId) return IError('error -> from ListUsersComp')

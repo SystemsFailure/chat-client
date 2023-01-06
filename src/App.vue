@@ -27,7 +27,7 @@ export default {
 
 
 body {
-  background-image: url(./assets/RedSpringSpirit.jpeg);
+  background-image: url(./assets/404Error.jpg);
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;

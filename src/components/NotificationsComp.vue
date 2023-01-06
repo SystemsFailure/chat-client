@@ -54,6 +54,7 @@
 <script>
 import { NotifyApi } from '@/firebase-config/NotificationController'
 import { UserApi } from '@/firebase-config/UserController'
+import { ChatApi } from '@/firebase-config/ChatController'
 export default {
     data() {
         return {
@@ -62,13 +63,7 @@ export default {
                 {id: 0, title: 'Глобальные сообщения'},
                 {id: 1, title: 'Заявки и запросы'}
             ],
-            list_requests: [
-                // {id: 0, content: 'hello', previewMessage: 'Hello how are you', fromID: 'adwa2dd2ed2132d', notRead: true},
-                // {id: 0, content: 'hello', previewMessage: 'Hello how are you', fromID: 'adwa2dd2ed2132d', notRead: false},
-                // {id: 0, content: 'hello', previewMessage: 'Hello how are you', fromID: 'adwa2dd2ed2132d', notRead: true},
-                // {id: 0, content: 'hello', previewMessage: 'Hello how are you', fromID: 'adwa2dd2ed2132d', notRead: false},
-                // {id: 0, content: 'hello', previewMessage: 'Hello how are you', fromID: 'adwa2dd2ed2132d', notRead: false},
-            ],
+            list_requests: [],
 
             showGlobalMessWindow: false,
             showRequestMessWindow: true,
@@ -84,10 +79,16 @@ export default {
     },
 
     methods: {
-        addToChat_createChat_send_notify(message) {
+        async addToChat_createChat_send_notify(message) {
             UserApi.addUserToChats(message.toID, message.fromID)
             UserApi.addUserToChats(message.fromID, message.toID)
+            await ChatApi.createChat({toID: message.toID, fromID: message.fromID}).then(() => {
+                console.log('chat success created')
+            }).catch(err => {
+                console.log(err)
+            })
             this.$emit('updateUsersListFunction')
+
         },
         
         showWindowById(id) {
