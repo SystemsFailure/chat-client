@@ -319,10 +319,10 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
             padding-bottom: 40px;
 
             .empty-title-won {
-                position: relative;
+                position: absolute;
                 margin: 0;
                 top: 50%;
-                left: 50%;
+                left: 65%;
                 margin-right: -50%;
                 transform: translate(-50%, -50%);
                 font-family: Lato,sans-serif;

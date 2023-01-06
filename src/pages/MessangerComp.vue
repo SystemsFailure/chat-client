@@ -51,12 +51,11 @@
                                         <div class="box-img-and-toggle">
                                             <div :class="{'toggle-online' : item.online}"></div>
                                             <img :src="item.img_url || require('../assets/user_profile.png')" alt="photo" srcset="">
-                                            <!-- <img src="../assets/user_profile.png" alt="" srcset=""> -->
                                         </div>
                                         <span>{{item.name}}</span>
                                         <span id="dateLastMessage_id">{{item.dateLastMessage}}</span>
                                     </div>
-                                    <h6 id="lastmess-id">{{slice_last_message(item.lastmessage)}}</h6>
+                                    <h6 id="lastmess-id">{{slice_last_message('offline')}}</h6>
                                     <div class="box-not-read-message">
                                         <span :class="{'count-not-read-message_': item.countNotReadMessages}">{{item.countNotReadMessages ? item.countNotReadMessages:undefined}}</span>
                                     </div>
@@ -95,6 +94,7 @@ import dialogWindow from '@/components/UI/dialogWindow.vue'
 import requestGetUsers from '@/hooks/hookRequestsToUser'
 import hookBackChange from '@/hooks/hookBackgroundChange'
 import { UserApi } from '@/firebase-config/UserController'
+// import { ChatApi } from '@/firebase-config/ChatController'
 
 
 export default {
@@ -154,6 +154,24 @@ export default {
     },
 
     methods: {
+        // async getLastMessageWithItChat(item) {
+        //     let lastMess = 'You dont to comunicated'
+        //     await ChatApi.getChat({toID: item.id, fromID: this.userId}).then(data => {
+        //         if(data.length != 0) {
+        //             console.log(data[0].lastMessage, data[0], '0011')
+        //             lastMess = data.lastMessage
+        //         } else {
+        //             console.log('chat not found')
+        //             return
+        //         }
+        //     }).catch(err => {
+        //         console.log(err)
+        //     })
+
+        //     console.log(lastMess)
+        //     return lastMess
+        // },
+
         updateUsersList() {
             const users = UserApi.getAllChats(this.userId)
             users.then( data => {
