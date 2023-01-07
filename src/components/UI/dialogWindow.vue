@@ -23,13 +23,7 @@ export default {
     },
     methods: {
         clearChat() {
-            // const data_ = {
-            //     message_lst: this.message_lst,
-            //     toId: this.user_to_id,
-            //     fromId: this.user_id,
-            // }
             MessagesApi.deleteAllMessages(this.USERID)
-            // MessagesApi.getAllMessage({})
             this.$store.state.showDialogDeleteWindow = false
             console.log('clear chat')
         },

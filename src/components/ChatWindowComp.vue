@@ -2,7 +2,7 @@
     <div class="main-window-chat">
         <BannerUpComp @showOrHideSettingChatId="showHideSettingChatId" @showNotificationWindowFunction="(value) => {this.$emit('showNotificationWindowFunctionArrow', value)}"></BannerUpComp>
         <BannerBottomComp @sendMessage="add_message" @add_file_messageFunction="add_file_message"></BannerBottomComp>
-        <MiniListLastChatsComp @MiniChatBindMiniUsersListFunction="functionBindingMiniListUsersByMiniChat"></MiniListLastChatsComp>
+        <MiniListLastChatsComp v-if="showMiniListComp" @MiniChatBindMiniUsersListFunction="functionBindingMiniListUsersByMiniChat"></MiniListLastChatsComp>
         <MiniChatComp v-if="showMiniChatValue" v-bind:USERTO="USERTO" @closeMiniChatCompFunction="value => this.showMiniChatValue=value"></MiniChatComp>
         <viewPhotoWindow v-if="showWindowImage" v-model:imageURL="imageURL" @closeWindowFunction="() => {this.showWindowImage = false}"></viewPhotoWindow>
 
@@ -15,7 +15,7 @@
                     <SettingsMenuChatIdComp v-if="showSettingsChatId"></SettingsMenuChatIdComp>
                 </Transition>
 
-                <div class="generl-list-messages">
+                <div class="generl-list-messages" id="block-chat-window-id">
                     <div class="outer-container">
                         <div v-show="showDialogWindow" class="container-hide-box" id="query1">
                             <h5  class="mess-content-example" style="color: white;" id="q1"></h5>
@@ -39,7 +39,9 @@
                                     @mouseover="showDetailDataMessage($event, n.id)"
                                     @mouseout="hideDetailDataMessage($event)"
                                     v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : 'rgba(0, 248, 248, 0.581)', 'color' : 'white'}:{'float':'left'}"
-                                    >{{n.content}}</h6>
+                                    >{{n.content}}
+                                    <div class="bomb-s-loader">@</div>
+                                    </h6>
                                 </div>
                             </div>
                         <!-- </transition-group> -->
@@ -61,7 +63,7 @@ import MiniListLastChatsComp from '@/components/ModalWindows/MiniListLastChatsCo
 import MiniChatComp from '@/components/ModalWindows/MiniChatComp.vue'
 import viewPhotoWindow from '@/components/ModalWindows/viewPhotoWindow.vue'
 import { MessagesApi } from '@/firebase-config/MessagesController'
-import { UserApi } from '@/firebase-config/UserController'
+// import { UserApi } from '@/firebase-config/UserController'
 
 export default {
     data() {
@@ -73,6 +75,7 @@ export default {
             message_lst: [],
             USERTO: null,
             showMiniChatValue: false,
+            showMiniListComp: false,
             imageURL: null,
         }
     },
@@ -82,7 +85,20 @@ export default {
     },
 
     mounted() {
-        console.log(this.message_lst)
+        const data_ = {
+            message_lst: this.message_lst,
+            toId: this.user_to_id,
+            fromId: this.user_id,
+        }
+        MessagesApi.getAllMessage(data_).then(arr => {
+            this.message_lst = arr
+            setTimeout(() => {
+                let block = document.getElementById("block-chat-window-id")
+                block.scrollTop = block.scrollHeight
+            },1000)
+        }).catch(err => {
+            console.log(err)
+        })
     },
 
 
@@ -230,6 +246,11 @@ export default {
         },
 
         async add_message(text) {
+
+            this.message_lst.push({fromId: this.user_id, content: text})
+            let block = document.getElementById("block-chat-window-id");
+            block.scrollTop = block.scrollHeight;
+
             const data_ = {
                 message_lst: this.message_lst,
                 toId: this.user_to_id,
@@ -249,10 +270,8 @@ export default {
                 img_name: null,
             }, data_).then( async data => {
                 this.message_lst = data
-                console.log(this.message_lst[this.message_lst.length - 1].content, 'last mess which need to send in messangerComp')
-                const content = this.message_lst[this.message_lst.length - 1].content
-                if (!content || content === '') {console.log('content === null'); return}
-                await UserApi.updateDataOfLastMessageField(this.user_to_id, content)
+                block.scrollTop = block.scrollHeight;
+
 
                 // this.$emit('setContentOfLastMessageFunction', content)
 
@@ -433,6 +452,12 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                     max-width: 47%;
                     height: auto;
                     padding: 10px;
+                    display: flex;
+                    flex-direction: column;
+
+                    .bomb-s-loader {
+                        margin-left: auto;
+                    }
                     }
             }
         }
