@@ -40,7 +40,10 @@
                                     @mouseout="hideDetailDataMessage($event)"
                                     v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : 'rgba(0, 248, 248, 0.581)', 'color' : 'white'}:{'float':'left'}"
                                     >{{n.content}}
-                                    <div class="bomb-s-loader">@</div>
+                                    <div v-if="n.result === true" class="bomb-s-loader"><i class="fi fi-ss-check"></i></div>
+                                    <div v-if="n.result === false || showFailureMessage" class="bomb-s-loader" style="color: red;">failure</div>
+                                    <div v-if="showLoaderMessage && n.id === message_lst[message_lst.length - 1].id" class="loadingio-spinner-eclipse-pguwq2zyapl"><div class="ldio-irfwm47jvi"><div></div></div></div>
+
                                     </h6>
                                 </div>
                             </div>
@@ -76,12 +79,15 @@ export default {
             USERTO: null,
             showMiniChatValue: false,
             showMiniListComp: false,
+            showLoaderMessage: false,
+            showFailureMessage: false,
             imageURL: null,
         }
     },
 
     props: {
-        user_to_id: {}
+        user_to_id: {},
+        cleaningChat: {},
     },
 
     mounted() {
@@ -116,9 +122,19 @@ export default {
                 }).catch(err => {
                     console.log(err)
                 })
-            }
+            },
+            deep: true
+
         },
-        deep: true
+
+        cleaningChat: {
+            handler() {
+                this.showSettingsChatId = false
+                this.message_lst = []
+            },
+            deep: true
+        },
+
     },
 
 
@@ -231,7 +247,7 @@ export default {
                         fromId: localStorage.getItem('user-id'),
                         toId: this.user_to_id != null && this.user_to_id != 0 ? this.user_to_id : false,
                         size: null,
-                        result: null,
+                        result: true,
                         atCreated: new Date().toLocaleString(),
                         atUpdated: new Date().toLocaleString(),
                         view: null,
@@ -239,6 +255,8 @@ export default {
                         img_name: file_path,
                     }, data_).then(data => {
                         this.message_lst = data
+                    }).catch(err => {
+                        console.log(err)
                     })
                     console.log(file, 'adddada121212', file_path)
                 })
@@ -246,10 +264,10 @@ export default {
         },
 
         async add_message(text) {
-
+            this.showLoaderMessage = true
             this.message_lst.push({fromId: this.user_id, content: text})
-            let block = document.getElementById("block-chat-window-id");
-            block.scrollTop = block.scrollHeight;
+            let block = document.getElementById("block-chat-window-id")
+            block.scrollTop = block.scrollHeight
 
             const data_ = {
                 message_lst: this.message_lst,
@@ -269,9 +287,16 @@ export default {
                 img_url: null,
                 img_name: null,
             }, data_).then( async data => {
+                console.log(data)
+                setTimeout(() => {
+                    if(data === 'failure') {
+                        this.showFailureMessage = true
+                    }
+                }, 5000)
+
                 this.message_lst = data
                 block.scrollTop = block.scrollHeight;
-
+                this.showLoaderMessage = false
 
                 // this.$emit('setContentOfLastMessageFunction', content)
 
@@ -291,6 +316,8 @@ export default {
 
             }).catch(err => {
                 console.log(err)
+                this.showLoaderMessage = false
+                this.showFailureMessage = true
             })
         },
     },
@@ -451,12 +478,14 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                     width: auto;
                     max-width: 47%;
                     height: auto;
-                    padding: 10px;
+                    padding: 10px 10px 5px 10px;
                     display: flex;
                     flex-direction: column;
 
                     .bomb-s-loader {
                         margin-left: auto;
+                        font-size: 10px;
+                        padding-left: 10px;
                     }
                     }
             }
@@ -484,4 +513,40 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
 .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
   opacity: 0
 }
+
+
+
+@keyframes ldio-irfwm47jvi {
+  0% { transform: rotate(0deg) }
+  50% { transform: rotate(180deg) }
+  100% { transform: rotate(360deg) }
+}
+.ldio-irfwm47jvi div {
+  position: absolute;
+  animation: ldio-irfwm47jvi 1s linear infinite;
+  width: 14px;
+  height: 14px;
+//   top: 92px;
+//   left: 92px;
+  border-radius: 50%;
+  box-shadow: 0 1px 0 0 #0a0a0a;
+  transform-origin: 8px 8.5px;
+}
+.loadingio-spinner-eclipse-pguwq2zyapl {
+  width: 15px;
+  height: 15px;
+//   padding: 10px;
+  display: inline-block;
+  overflow: hidden;
+  margin-left: auto;
+}
+.ldio-irfwm47jvi {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
+  transform-origin: 0 0; /* see note above */
+}
+.ldio-irfwm47jvi div { box-sizing: content-box; }
 </style>

@@ -62,7 +62,7 @@ const MessagesApi = {
                     content: doc.data().content,
                     toId: doc.data().toId,
                     fromId: doc.data().fromId,
-                    result: true,
+                    result: doc.data().result,
                     size: doc.data().size,
                     atCreated: doc.data().atCreated,
                     atUpdated: doc.data().atUpdated,
@@ -89,7 +89,8 @@ const MessagesApi = {
         const array = await addDoc(collection(db, "messages"), data).then( async () => {
             return await MessagesApi.getAllMessage(data_r)
         }).catch(err => {
-            IError(err)
+            console.log(err, 'error from createMessage')
+            return 'failure'
         })
         return array
     },

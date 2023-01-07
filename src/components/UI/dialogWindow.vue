@@ -25,7 +25,10 @@ export default {
         clearChat() {
             MessagesApi.deleteAllMessages(this.USERID)
             this.$store.state.showDialogDeleteWindow = false
-            console.log('clear chat')
+            this.$emit('ShowOrCloseDialogWindowChatDeletedFunction', true)
+            setTimeout(() => {
+                this.$emit('CloseDialogWindowChatDeletedFunction', false)
+            }, 3000);
         },
     },
 }

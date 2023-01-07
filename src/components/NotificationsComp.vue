@@ -64,7 +64,6 @@ export default {
                 {id: 1, title: 'Заявки и запросы'}
             ],
             list_requests: [],
-
             showGlobalMessWindow: false,
             showRequestMessWindow: true,
         }

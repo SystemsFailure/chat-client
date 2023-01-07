@@ -1,5 +1,9 @@
 <template>
-    <dialogWindow v-if="this.$store.state.showDialogDeleteWindow"></dialogWindow>
+    <dialogWindow
+        v-if="this.$store.state.showDialogDeleteWindow"
+        @ShowOrCloseDialogWindowChatDeletedFunction="DialogMessageBoutDeletedChatFunc">
+    </dialogWindow>
+    <dialogChatDeleted v-if="showDialogWindowChatDeleted"></dialogChatDeleted>
     <ProfileCardComp v-if="$store.state.showProfile" @closeProfileFunction="(value) => {this.$store.state.showProfile = value}"></ProfileCardComp>
     <ListAllUsersComp v-if="show_list_all_users_comp" @closeListUsersCompFunction="(value) => {this.show_list_all_users_comp = value}"></ListAllUsersComp>
     
@@ -18,7 +22,12 @@
 
             <div class="right-block">
                 <Transition name="up-profile-card-slide">
-                    <ChatWindowComp v-if="showChatWindowComp" v-bind:user_to_id="i_user_to_id" @showNotificationWindowFunctionArrow="(value) => {this.showNotificationComp = value}"></ChatWindowComp>
+                    <ChatWindowComp
+                        v-if="showChatWindowComp"
+                        v-bind:user_to_id="i_user_to_id"
+                        @showNotificationWindowFunctionArrow="(value) => {this.showNotificationComp = value}"
+                        v-bind:cleaningChat="cleaningChatModel"
+                        ></ChatWindowComp>
                 </Transition>
                 <Transition name="up-profile-card-slide">
                     <AudioListComp v-if="showMenuMusics"></AudioListComp>
@@ -91,6 +100,7 @@ import ViewProfileComp from '@/components/ViewProfileComp.vue'
 import NotificationsComp from '@/components/NotificationsComp.vue'
 import MusicMenuComp from '@/components/MusicMenuComp.vue'
 import dialogWindow from '@/components/UI/dialogWindow.vue'
+import dialogChatDeleted from '@/components/UI/dialogChatDeleted.vue'
 import requestGetUsers from '@/hooks/hookRequestsToUser'
 import hookBackChange from '@/hooks/hookBackgroundChange'
 import { UserApi } from '@/firebase-config/UserController'
@@ -107,6 +117,7 @@ export default {
             searchQuery: '',
             up: true,
             list_users: [],
+            cleaningChatModel: 0,
             showSettingsChatId: false,
             showChatWindowComp: true,
             showNotificationComp: false,
@@ -114,6 +125,7 @@ export default {
             showMenuMail: false,
             showMenuSettings: false,
             showMenuMusics: false,
+            showDialogWindowChatDeleted: false,
         }
     },
 
@@ -154,6 +166,15 @@ export default {
     },
 
     methods: {
+        DialogMessageBoutDeletedChatFunc(value) {
+            this.showDialogWindowChatDeleted = value
+            this.cleaningChatModel++
+            setTimeout(() => {
+                this.showDialogWindowChatDeleted = false
+            }, 3000);
+
+        },
+
         // async getLastMessageWithItChat(item) {
         //     let lastMess = 'You dont to comunicated'
         //     await ChatApi.getChat({toID: item.id, fromID: this.userId}).then(data => {
@@ -241,7 +262,8 @@ export default {
         ProfileCardComp, ListAllUsersComp,
         ViewProfileComp, dialogWindow,
         AudioListComp, MusicMenuComp,
-        NotificationsComp,
+        NotificationsComp, dialogChatDeleted,
+
     }
 
 }

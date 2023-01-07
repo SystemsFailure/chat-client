@@ -104,7 +104,7 @@ export default {
             document.getElementById('data-created-id').innerHTML = user[0].atCreated
             document.getElementById('country-id').innerHTML = user[0].country
 
-            // document.getElementById('avatar-profile-id').src = user[0].img_url
+            document.getElementById('avatar-profile-id').src = user[0].img_url
             document.getElementById('data-created-id')
 
         })
