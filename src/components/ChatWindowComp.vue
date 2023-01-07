@@ -38,9 +38,9 @@
                                     @contextmenu="() => {this.deleteMessage(n.id); return false}"
                                     @mouseover="showDetailDataMessage($event, n.id)"
                                     @mouseout="hideDetailDataMessage($event)"
-                                    v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : 'rgba(0, 248, 248, 0.581)', 'color' : 'white'}:{'float':'left'}"
+                                    v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : 'rgba(0, 248, 248, 0.581)', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
                                     >{{n.content}}
-                                    <div v-if="n.result === true" class="bomb-s-loader"><i class="fi fi-ss-check"></i></div>
+                                    <div v-if="n.result === true && n.fromId === user_id" class="bomb-s-loader" :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}"><i class="fi fi-ss-check"></i></div>
                                     <div v-if="n.result === false || showFailureMessage" class="bomb-s-loader" style="color: red;">failure</div>
                                     <div v-if="showLoaderMessage && n.id === message_lst[message_lst.length - 1].id" class="loadingio-spinner-eclipse-pguwq2zyapl"><div class="ldio-irfwm47jvi"><div></div></div></div>
 
@@ -66,8 +66,11 @@ import MiniListLastChatsComp from '@/components/ModalWindows/MiniListLastChatsCo
 import MiniChatComp from '@/components/ModalWindows/MiniChatComp.vue'
 import viewPhotoWindow from '@/components/ModalWindows/viewPhotoWindow.vue'
 import { MessagesApi } from '@/firebase-config/MessagesController'
-// import { UserApi } from '@/firebase-config/UserController'
+import { UserApi } from '@/firebase-config/UserController'
 import { ChatApi } from '@/firebase-config/ChatController'
+import { db } from '@/main'
+import { doc, onSnapshot} from "firebase/firestore"
+
 
 export default {
     data() {
@@ -91,7 +94,7 @@ export default {
         cleaningChat: {},
     },
 
-    mounted() {
+    async mounted() {
         const data_ = {
             message_lst: this.message_lst,
             toId: this.user_to_id,
@@ -106,6 +109,34 @@ export default {
         }).catch(err => {
             console.log(err)
         })
+
+        await UserApi.getAllChats(this.user_id).then(chats => {
+            chats.forEach(async elem => {
+                await ChatApi.getChat({toID: elem.id, fromID: this.user_id}).then( async chat => {
+                    console.log(chat)
+                    onSnapshot(doc(db, "ChatId", chat[0].id), async (doc) => {
+                        console.log(doc.data())
+                        const data_ = {
+                            message_lst: this.message_lst,
+                            toId: this.user_to_id,
+                            fromId: this.user_id,
+                        }
+                        await MessagesApi.getAllMessage(data_).then(arr => {
+                            this.message_lst = arr
+                            let block = document.getElementById("block-chat-window-id")
+                            block.scrollTop = block.scrollHeight
+                        }).catch(err => {
+                            console.log(err)
+                        })
+
+                    })
+                })
+            })
+        }).catch(err => {
+            console.log(err)
+        })
+
+
     },
 
 
@@ -148,13 +179,20 @@ export default {
             return false
         },
 
-        // async updateAllChat() {
-        //     await MessagesApi.getAllMessage(data_).then(arr => {
-        //         this.message_lst = arr
-        //     }).catch(err => {
-        //         console.log(err)
-        //     })
-        // },
+        async updateAllChat() {
+            const data_ = {
+                message_lst: this.message_lst,
+                toId: this.user_to_id,
+                fromId: this.user_id,
+            }
+            await MessagesApi.getAllMessage(data_).then(arr => {
+                this.message_lst = arr
+                let block = document.getElementById("block-chat-window-id")
+                block.scrollTop = block.scrollHeight
+            }).catch(err => {
+                console.log(err)
+            })
+        },
 
         functionBindingMiniListUsersByMiniChat(user, value) {
             if(user) {
