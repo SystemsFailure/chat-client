@@ -1,6 +1,6 @@
 import { db } from "@/main"
-import { collection, addDoc} from "firebase/firestore";
-import { orderBy, where, query, getDocs} from "firebase/firestore"
+import { collection, addDoc, increment} from "firebase/firestore";
+import { orderBy, where, query, getDocs, doc, updateDoc} from "firebase/firestore"
 
 const ChatApi = {
     createChat: async (data) => {
@@ -37,6 +37,7 @@ const ChatApi = {
                     atCreated: doc.data().atCreated,
                     atUpdated: doc.data().atUpdated,
                     lastMessage: doc.data().lastMessage,
+                    countMessages: doc.data().countMessages
                 }
                 chat_lst.push(data_chat)
             } else {
@@ -48,6 +49,15 @@ const ChatApi = {
 
     getChatById: async () => {
 
+    },
+
+    updataField: async (chatId) => {
+        const docRef = doc(db, 'ChatId', chatId);
+
+        const count = await updateDoc(docRef, {
+            countMessages: increment(1)
+        })
+        return count
     },
 }
 

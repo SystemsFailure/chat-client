@@ -67,6 +67,7 @@ import MiniChatComp from '@/components/ModalWindows/MiniChatComp.vue'
 import viewPhotoWindow from '@/components/ModalWindows/viewPhotoWindow.vue'
 import { MessagesApi } from '@/firebase-config/MessagesController'
 // import { UserApi } from '@/firebase-config/UserController'
+import { ChatApi } from '@/firebase-config/ChatController'
 
 export default {
     data() {
@@ -269,12 +270,31 @@ export default {
             let block = document.getElementById("block-chat-window-id")
             block.scrollTop = block.scrollHeight
 
+            let countMess = 0
             const data_ = {
                 message_lst: this.message_lst,
                 toId: this.user_to_id,
                 fromId: this.user_id,
             }
-            
+
+            if(this.user_to_id && this.user_id) {
+                await ChatApi.getChat({toID: this.user_to_id, fromID: this.user_id}).then( async chat => {
+                    if (chat.length != 0)
+                    {
+                        if (chat.length === 1)
+                        {
+                            await ChatApi.updataField(chat[0].id)
+                            countMess = chat[0].countMessages
+                        }
+                        else
+                        {
+                            console.log('length is not 1')
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
             await MessagesApi.createMessage({
                 content: text,
                 fromId: localStorage.getItem('user-id'),
@@ -286,8 +306,8 @@ export default {
                 view: false,
                 img_url: null,
                 img_name: null,
+                index: countMess,
             }, data_).then( async data => {
-                console.log(data)
                 setTimeout(() => {
                     if(data === 'failure') {
                         this.showFailureMessage = true
