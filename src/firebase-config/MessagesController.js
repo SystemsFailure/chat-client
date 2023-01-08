@@ -87,13 +87,27 @@ const MessagesApi = {
         if(!data.fromId) {IError('fromId is null -> MessageApi')}
         if(!data.toId) throw IError('toId as null -> MessageApi')
         const array = await addDoc(collection(db, "messages"), data).then( async () => {
-            return await MessagesApi.getAllMessage(data_r)
+          console.log(data_r)
+          return true
         }).catch(err => {
             console.log(err, 'error from createMessage')
             return 'failure'
         })
         return array
     },
+
+    createMessageImage: async (data, data_r=null) => {
+      if(!data) {IError('data is empty -> MessageApi')}
+      if(!data.fromId) {IError('fromId is null -> MessageApi')}
+      if(!data.toId) throw IError('toId as null -> MessageApi')
+      const array = await addDoc(collection(db, "messages"), data).then( async () => {
+          return await MessagesApi.getAllMessage(data_r)
+      }).catch(err => {
+          console.log(err, 'error from createMessage')
+          return 'failure'
+      })
+      return array
+  },
 
     deleteMessageById: async (MESSAGEID) => {
       await deleteDoc(doc(db, "messages", MESSAGEID)).then(() => {

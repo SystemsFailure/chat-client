@@ -40,7 +40,7 @@
                                     @mouseout="hideDetailDataMessage($event)"
                                     v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : 'rgba(0, 248, 248, 0.581)', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
                                     >{{n.content}}
-                                    <div v-if="n.result === true && n.fromId === user_id" class="bomb-s-loader" :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}"><i class="fi fi-ss-check"></i></div>
+                                    <div v-if="n.result === true && n.fromId === user_id && !showLoaderMessage" class="bomb-s-loader" :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}"><i class="fi fi-ss-check"></i></div>
                                     <div v-if="n.result === false || showFailureMessage" class="bomb-s-loader" style="color: red;">failure</div>
                                     <div v-if="showLoaderMessage && n.id === message_lst[message_lst.length - 1].id" class="loadingio-spinner-eclipse-pguwq2zyapl"><div class="ldio-irfwm47jvi"><div></div></div></div>
 
@@ -281,7 +281,7 @@ export default {
                     fromId: this.user_id,
                 }
                 MessagesApi.uploadImageMessage(file, localStorage.getItem('user-id'), data_).then(({file_path, file_url}) => {
-                    MessagesApi.createMessage( {
+                    MessagesApi.createMessageImage( {
                         content: null,
                         fromId: localStorage.getItem('user-id'),
                         toId: this.user_to_id != null && this.user_to_id != 0 ? this.user_to_id : false,
@@ -352,9 +352,12 @@ export default {
                     }
                 }, 5000)
 
-                this.message_lst = data
-                block.scrollTop = block.scrollHeight;
                 this.showLoaderMessage = false
+                // this.message_lst = data
+                setTimeout(() => {
+                    let block_ = document.getElementById("block-chat-window-id")
+                    block_.scrollTop = block_.scrollHeight
+                }, 200)
 
                 // this.$emit('setContentOfLastMessageFunction', content)
 
