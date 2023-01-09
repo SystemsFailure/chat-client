@@ -15,6 +15,7 @@ const store = createStore({
         online: false,
         USERID: localStorage.getItem('user-id'),
         showDialogDeleteWindow: false,
+        // showCycyleNotifyItem: false
 
     }),
     mutations: {

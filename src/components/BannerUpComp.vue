@@ -32,7 +32,7 @@ export default {
     data() {
         return {
             showSettingsChatId: false,
-            user_id: localStorage.getItem('user-id')
+            user_id: localStorage.getItem('user-id'),
         }
     },
     methods: {

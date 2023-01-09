@@ -1,4 +1,7 @@
 <template>
+    <Transition name="transitionCustomWindow">
+        <customNotifyWindow v-if="showCustomDialogWindow" v-bind:modalText="'Request was sent successfully'"></customNotifyWindow>
+    </Transition>
     <div class="main-list-users-comp">
         <div class="inside-container-content">
             <div class="slose-btn-box"><i @click="() => {this.$emit('closeListUsersCompFunction', false)}" class="fi fi-ss-cross"></i></div>
@@ -96,6 +99,7 @@
 </template>
 <script>
 import SearchUsersBoxComp from './SearchUsersBoxComp.vue';
+import customNotifyWindow from '@/components/UI/customNotifyWindow.vue'
 import { UserApi } from '@/firebase-config/UserController';
 import { NotifyApi } from '@/firebase-config/NotificationController'
 import IError from '@/IError';
@@ -108,6 +112,7 @@ export default {
             allSettingsForSortingAndFilter: [
                 {},
             ],
+            showCustomDialogWindow: false,
         };
     },
 
@@ -149,15 +154,23 @@ export default {
                     toID: user.id,
                     fromID: this.IUserId,
                     priviewMessage: 'Hi, do you want to comunicated with me?'
-                    
                 }
                 NotifyApi.sendNotify(data)
+                    .then( () => {
+                        this.showCustomDialogWindow = true
+                        setTimeout( () => {
+                            this.showCustomDialogWindow = false
+                        }, 2500)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             } else {
                 return false
             }
         },
     },
-    components: { SearchUsersBoxComp }
+    components: { SearchUsersBoxComp, customNotifyWindow }
 }
 </script>
 <style lang="scss" scoped>
@@ -515,5 +528,16 @@ export default {
             letter-spacing: .02em;
         }
     }
+}
+.transitionCustomWindow-enter-active,
+.transitionCustomWindow-leave-active {
+  transition: all opacity .45s ease;
+  transform: translateX(20px);
+}
+
+.transitionCustomWindow-enter-from,
+.transitionCustomWindow-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 </style>

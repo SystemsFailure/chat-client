@@ -1,5 +1,5 @@
 import { getDocs, collection, addDoc } from "firebase/firestore";
-import { orderBy, where, query} from "firebase/firestore"
+import { orderBy, where, query, doc, deleteDoc} from "firebase/firestore"
 import { db } from "@/main";
 const NotifyApi = {
     sendNotify: async (data) => {
@@ -38,6 +38,49 @@ const NotifyApi = {
         })
         return notifyList
     },
+
+    deleteNotificationsSelected: (arrayID) => {
+        if (arrayID)
+        {
+            arrayID.forEach( elem => {
+                const docRef = doc(db, "notifications", elem)
+                if (docRef)
+                {
+                    deleteDoc(docRef)
+                    console.log('notify been deleted', elem)
+                }
+                else
+                {
+                    console.log('so notify not found id: ', elem)
+                }
+            })
+        } else
+        {
+            console.log('array is empty')
+        }
+    },
+
+    deleteNotifications: (id) => {
+        const docRef = doc(db, 'notifications', id)
+        if(docRef)
+        {
+            deleteDoc(docRef)
+            console.log('delete notify from listNotifications', docRef.id)
+        }
+    },
+
+    deleteAllNotifications: async (USERID) => {
+        const q = query(collection(db, "notifications"))
+        const querySnapshot = await getDocs(q)
+        querySnapshot.forEach((docum) => {
+          if(docum.data().toID === USERID)
+          {
+            const docRef = doc(db, "notifications", docum.id)
+            deleteDoc(docRef)
+            console.log('delete notification', USERID)
+          }
+        })
+    }
 }
 
 export {NotifyApi}

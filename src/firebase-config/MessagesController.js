@@ -9,7 +9,7 @@ const MessagesApi = {
     uploadImageMessage: async (file, user_id, data_) => {
         let file_path = null
         let file_url = null
-        const query_ = query(collection(db, "messages"), orderBy("atCreated", "asc"), where("toId", "in", [data_.toId, data_.fromId]))
+        const query_ = query(collection(db, "messages"), orderBy("index", "asc"), where("toId", "in", [data_.toId, data_.fromId]))
         await getDocs(query_).then(async array => {
             if(!user_id) {
               IError('localStorage -> item = user-id === null')
@@ -49,7 +49,7 @@ const MessagesApi = {
 
 
     getAllMessage: async (data_) => {
-        const q = query(collection(db, "messages"), orderBy("atCreated", "asc"), where("toId", "in", [data_.toId, data_.fromId]))
+        const q = query(collection(db, "messages"), orderBy("index"), where("toId", "in", [data_.toId, data_.fromId]))
         let mess_lst = data_.message_lst
         mess_lst = []
         const querySnapshot = await getDocs(q)
@@ -70,6 +70,7 @@ const MessagesApi = {
                     img_url: doc.data().img_url,
                     img_name: doc.data().img_name,
                     totalCount: doc.data().totalCount,
+                    index: doc.data().index
                 }
                 mess_lst.push(data_message)
             } else {
@@ -87,8 +88,17 @@ const MessagesApi = {
         if(!data.fromId) {IError('fromId is null -> MessageApi')}
         if(!data.toId) throw IError('toId as null -> MessageApi')
         const array = await addDoc(collection(db, "messages"), data).then( async () => {
-          console.log(data_r)
-          return true
+          // console.log(data_r)
+          if (data.img_url) 
+          {
+            console.log('file')
+            return await MessagesApi.getAllMessage(data_r)
+          }
+          else
+          {
+            console.log('text')
+            return true
+          }
         }).catch(err => {
             console.log(err, 'error from createMessage')
             return 'failure'

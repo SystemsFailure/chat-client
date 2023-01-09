@@ -19,6 +19,7 @@
                     <div class="close-btn" @click="() => {this.$emit('closeNotificationsCompFunction', false)}"><i class="fi fi-ss-cross"></i></div>
                     <div class="expend-window"><i class="fi fi-ss-expand"></i></div>
                 </div>
+                <div class="no-message" v-if="noMessage && systemMessagesList.length === 0"><span>You don't have system notifications</span></div>
             </div>
 
             <div class="right-block-content-request-mess" v-if="showRequestMessWindow">
@@ -30,21 +31,37 @@
                     </div>
                 </div>
                 <div class="list-messages-of-request">
-                    <div class="message-box" v-for="message in list_requests" :key="message.id" :style="message.status ? {'border-left' : '5px solid teal'} : {'border' : '1px solid #333'}">
-                        <div class="check-box-bpx">
-                            <input type="checkbox" name="" id="check-id">
-                        </div>
 
-                        <div class="wrapper-container-mess-box">
-                            <div class="fromWhoMessage-box"><span>{{ message.fromID }}</span></div>
-                            <div class="text-message-box"><span>{{ message.previewMessage }}</span></div>
+                    <Transition name="transition-show-tools">
+                        <div class="line-useful-tools" v-if="SelectedMessagesList.length > 0">
+                            <div class="wrapper-tools">
+                                <div class="btn-select-all" @click="selectAll">select all</div>
+                                <div class="btn-delete-all" @click="deleteSelectedNotify">delete</div>
+                            </div>
+                            <div class="wrapper-settings-window">
+                                <div class="close" @click="() => {this.SelectedMessagesList = []}">cancel</div>
+                                <div class="settings"><i class="fi fi-ss-settings"></i></div>
+                            </div>
                         </div>
+                    </Transition>
 
-                        <div class="wrapper-container-btns">
-                            <div class="btn-success-accept-box" @click="addToChat_createChat_send_notify(message)"><span>Accept</span></div>
-                            <div class="btn-fail-no-accept-box"><span>Cancel</span></div>
+                    <transition-group name="bounce">
+                        <div class="message-box" v-for="message in list_requests" :key="message.id" :style="message.status ? {'border-left' : '5px solid teal'} : {'border' : '1px solid #333'}">
+                            <div class="check-box-bpx">
+                                <input type="checkbox" name="" id="check-id" :value="message.id" v-model="SelectedMessagesList" class="checkbox-class">
+                            </div>
+    
+                            <div class="wrapper-container-mess-box">
+                                <div class="fromWhoMessage-box"><span>{{ message.fromID }}</span></div>
+                                <div class="text-message-box"><span>{{ message.previewMessage }}</span></div>
+                            </div>
+    
+                            <div class="wrapper-container-btns">
+                                <div class="btn-success-accept-box" @click="addToChat_createChat_send_notify(message)"><span>Accept</span></div>
+                                <div class="btn-fail-no-accept-box" @click="deleteAndNotify(message.id, message.fromID)"><span>Cancel</span></div>
+                            </div>
                         </div>
-                    </div>
+                    </transition-group>
                 </div>
             </div>
 
@@ -60,12 +77,31 @@ export default {
         return {
             USERID: localStorage.getItem('user-id'),
             list_items_mess: [
-                {id: 0, title: 'Глобальные сообщения'},
+                {id: 0, title: 'Системные сообщения'},
                 {id: 1, title: 'Заявки и запросы'}
             ],
             list_requests: [],
+            systemMessagesList: [],
+            noMessage: true,
+            SelectedMessagesList: [],
             showGlobalMessWindow: false,
             showRequestMessWindow: true,
+        }
+    },
+
+    watch: {
+        SelectedMessagesList: {
+            handler(newValue) {
+                if(newValue.length > 0)
+                {
+                    console.log('newValue more zero')
+                }
+                else
+                {
+                    console.log('newValue less zero')
+                }
+            },
+            deep: true,
         }
     },
 
@@ -78,6 +114,68 @@ export default {
     },
 
     methods: {
+
+ // Локальные методы, local mutations
+        updateList() {
+            NotifyApi.getAllNotifictions({toID: this.USERID}).then(notiftList => {
+                this.list_requests = notiftList
+            })
+        },
+
+        sendNotify(fromID) {
+            const data = {
+                toID: fromID,
+                fromID: this.USERID,
+                priviewMessage: 'your requests been cancel'
+            }
+            NotifyApi.sendNotify(data).then( () => {
+                console.log('notify deleted +++')
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+
+// конец локальных методов end of local mutations
+
+        deleteSelectedNotify() {
+            if(this.SelectedMessagesList.length > 0)
+            {
+                NotifyApi.deleteNotificationsSelected(this.SelectedMessagesList)
+                this.updateList()
+                console.log('all selected notify been deleted')
+            }
+        },
+
+        deleteAndNotify(id, fromID) {
+            if(id)
+            {
+                NotifyApi.deleteNotifications(id)
+                this.updateList()
+                if(fromID)
+                {
+                    this.sendNotify(fromID)
+                    console.log('selected notify been deleted', 'from: ' + fromID, 'id notify: ' + id)
+                }
+            }
+            else
+            {
+                console.log('id is empty')
+            }
+        },
+
+        selectAll() {
+            let checkboxes = document.getElementsByClassName('checkbox-class')
+            if (checkboxes.length != 0)
+            {
+                for (let index = 0; index < checkboxes.length; index++) {
+                    const element = checkboxes[index];
+                    element.checked = true
+                }
+                console.log(checkboxes)
+            }
+
+        },
+
         async addToChat_createChat_send_notify(message) {
             UserApi.addUserToChats(message.toID, message.fromID)
             UserApi.addUserToChats(message.fromID, message.toID)
@@ -106,7 +204,8 @@ export default {
 
             }
         },
-    }
+    },
+    component: {}
 }
 </script>
 <style lang="scss" scoped>
@@ -183,7 +282,20 @@ export default {
             width: 80%;
             height: 100%;
             padding: 10px;
-            background-color: yellow;
+            // background-color: yellow;
+            // display: flex;
+            // flex-direction: column;
+
+            .no-message {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                // background-color: red;
+                color: white;
+                font-size: 16px;
+            }
 
             .line-up-content {
                 width: 100%;
@@ -230,6 +342,85 @@ export default {
                 // margin-top: 10px;
                 padding: 10px;
 
+                .line-useful-tools {
+                    width: 100%;
+                    height: 40px;
+                    border: 1px solid #333;
+                    color: white;
+                    display: flex;
+
+
+                    .wrapper-tools {
+                        height: 100%;
+                        width: 15%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        margin-left: 10px;
+                        // background-color: yellow;
+
+                        .btn-select-all {
+                            padding: 5px;
+                            border: 1px solid #333;
+
+                            &:hover {
+                                cursor: pointer;
+                                border: 1px solid teal;
+                            }
+                            
+                        }
+
+                        .btn-delete-all {
+                            padding: 5px;
+                            border: 1px solid #333;
+
+                            &:hover {
+                                cursor: pointer;
+                                border: 1px solid teal;
+                            }
+                        }
+                    }
+                    .wrapper-settings-window {
+                        margin-left: auto;
+                        width: 10%;
+                        height: 100%;
+                        // background-color: red;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        .close {
+                            padding: 5px;
+                            border: 1px solid #333;
+
+                            &:hover {
+                                cursor: pointer;
+                                border: 1px solid red;
+                            }
+                        }
+
+                        .settings {
+                            padding: 5px;
+                            // border: 1px solid #333;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 14px;
+                            margin-right: 5px;
+
+                            &:hover {
+                                cursor: pointer;
+                                opacity: .7;
+                                transition: .3s;
+                            }
+
+                            i {
+                                margin-top: 4px;
+                            }
+                        }
+                    }
+                }
+
                 .message-box {
                     width: 100%;
                     padding: 10px;
@@ -267,9 +458,7 @@ export default {
     
                         .text-message-box {
                             margin-left: 20px;
-                            span {
-    
-                            }
+                            span { color: white; }
     
                         }
                     }
@@ -357,6 +546,42 @@ export default {
         }
 
     }
+}
+
+.transition-show-tools-enter-active,
+.transition-show-tools-leave-active {
+//   transition: opacity .8s ease;
+  transition: all 0.15s ease-out;
+
+  transform: translateY(5px);
+}
+
+.transition-show-tools-enter-from,
+.transition-show-tools-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
+}
+
+
+
+.bounce-enter-active {
+  animation: bounce-in .3s ease-out both;
+}
+
+.bounce-leave-active {
+  animation: bounce-in .3s reverse ease-in both;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.10);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 </style>

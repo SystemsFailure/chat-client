@@ -40,8 +40,8 @@
                                     @mouseout="hideDetailDataMessage($event)"
                                     v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : 'rgba(0, 248, 248, 0.581)', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
                                     >{{n.content}}
-                                    <div v-if="n.result === true && n.fromId === user_id && !showLoaderMessage" class="bomb-s-loader" :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}"><i class="fi fi-ss-check"></i></div>
-                                    <div v-if="n.result === false || showFailureMessage" class="bomb-s-loader" style="color: red;">failure</div>
+                                    <div v-if="n.result === true && n.fromId === user_id" class="bomb-s-loader" :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}"><i class="fi fi-ss-check"></i></div>
+                                    <div v-if="n.result === false || showFailureMessage && n.id === message_lst[message_lst.length - 1].id" class="bomb-s-loader" style="color: red;">failure</div>
                                     <div v-if="showLoaderMessage && n.id === message_lst[message_lst.length - 1].id" class="loadingio-spinner-eclipse-pguwq2zyapl"><div class="ldio-irfwm47jvi"><div></div></div></div>
 
                                     </h6>
@@ -172,6 +172,29 @@ export default {
 
     methods: {
 
+        async createIndex() {
+            let countMess = null
+            if(this.user_to_id && this.user_id) {
+                await ChatApi.getChat({toID: this.user_to_id, fromID: this.user_id}).then( async chat => {
+                    if (chat.length != 0)
+                    {
+                        if (chat.length === 1)
+                        {
+                            await ChatApi.updataField(chat[0].id)
+                            countMess = chat[0].countMessages
+                        }
+                        else
+                        {
+                            console.log('length is not 1')
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+            return countMess
+        },
+
         deleteMessage(messId) {
             MessagesApi.deleteMessageById(messId).then(() => {
                 console.log('mes')
@@ -273,15 +296,16 @@ export default {
             this.showDialogWindow = false
         },
 
-        add_file_message(file) {
+        async add_file_message(file) {
             if(file) {
                 const data_ = {
                     message_lst: this.message_lst,
                     toId: this.user_to_id,
                     fromId: this.user_id,
                 }
+                const count = await this.createIndex()
                 MessagesApi.uploadImageMessage(file, localStorage.getItem('user-id'), data_).then(({file_path, file_url}) => {
-                    MessagesApi.createMessageImage( {
+                    MessagesApi.createMessage( {
                         content: null,
                         fromId: localStorage.getItem('user-id'),
                         toId: this.user_to_id != null && this.user_to_id != 0 ? this.user_to_id : false,
@@ -292,12 +316,13 @@ export default {
                         view: null,
                         img_url: file_url,
                         img_name: file_path,
+                        index: count,
                     }, data_).then(data => {
                         this.message_lst = data
                     }).catch(err => {
                         console.log(err)
                     })
-                    console.log(file, 'adddada121212', file_path)
+                    console.log(file, 'adddada121212', count)
                 })
             }
         },
@@ -335,7 +360,7 @@ export default {
             }
             await MessagesApi.createMessage({
                 content: text,
-                fromId: localStorage.getItem('user-id'),
+                fromId: this.user_id,
                 toId: this.user_to_id != null && this.user_to_id != 0 ? this.user_to_id : false,
                 size: new Blob([text]).size,
                 result: true,
@@ -351,9 +376,8 @@ export default {
                         this.showFailureMessage = true
                     }
                 }, 5000)
-
-                this.showLoaderMessage = false
                 // this.message_lst = data
+                this.showLoaderMessage = false
                 setTimeout(() => {
                     let block_ = document.getElementById("block-chat-window-id")
                     block_.scrollTop = block_.scrollHeight
@@ -610,4 +634,7 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
   transform-origin: 0 0; /* see note above */
 }
 .ldio-irfwm47jvi div { box-sizing: content-box; }
+
+
+
 </style>
