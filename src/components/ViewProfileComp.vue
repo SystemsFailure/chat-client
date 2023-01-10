@@ -19,69 +19,54 @@
                 <div class="info-block">
                     <span id="bio-id" style="text-align: center; font-size: 9px; display: flex; flex-wrap: wrap; width: 300px; margin-top: 10px;"></span>
                 </div>
-
-                <div class="bio-block">
-                    <div class="left-b">
-                        <div class="bio-item">
-                            <span style="border-bottom: 1px solid #333;">Email</span>
-                            <span id="email-id" style="font-size:12px; font-family: sans-serif; text-transform: lowercase ;"></span>
-                        </div>
-
-                        <div class="bio-item">
-                            <span style="border-bottom: 1px solid #333;">sity</span>
-                            <span id="city-id" style="font-size:12px; font-family: sans-serif; text-transform: uppercase ;"></span>
-                        </div>
-
-                        <div class="bio-item">
-                            <span style="border-bottom: 1px solid #333;">Country</span>
-                            <span id="country-id" style="font-size:12px; font-family: sans-serif; text-transform: uppercase ;"></span>
-                        </div>
-                    </div>
-
-                    <div class="right-b">
-                        <div class="bio-item">
-                            <span style="border-bottom: 1px solid #333;">Number-phone</span>
-                            <span id="number-phoe-id" style="font-size:12px"></span>
-                        </div>
-
-                        <div class="bio-item">
-                            <span style="border-bottom: 1px solid #333;">State</span>
-                            <span id="state-id" style="font-size:12px; font-family: sans-serif; text-transform: lowercase ;"></span>
-                        </div>
-
-                        <div class="bio-item">
-                            <span style="border-bottom: 1px solid #333;">Created</span>
-                            <span id="data-created-id" style="font-size:12px; font-family: sans-serif; text-transform: lowercase ;"></span>
-                        </div>
+                
+                <div class="info-block-section">
+                    <div class="wrapper-container">
+                        <span>followers</span>
+                        <span>following</span>
                     </div>
                 </div>
 
-            </div>
+                <div class="line-main-informations">
+                    <div class="btn-detail">
+                        <i class="fi fi-ss-interrogation"></i>
+                        <span>detail</span>
+                    </div>
+                </div>
 
-            <!-- <div class="bottom-n">
-                <audio
-                    controls
-                    src="">
-                        <a href="/media/cc0-audio/t-rex-roar.mp3">
-                            Download audio
-                        </a>
-                </audio>
-            </div> -->
+                <div class="spinner-container-navigation">
+                    <swiper
+                        class="swiper"
+                        :modules="modules"
+                        :slides-per-view="1"
+                        :centered-slides="true"
+                        :space-between="50"
+                        :grab-cursor="false"
+                        :pagination="{
+                            clickable: true
+                        }"
+                        >
+                        <swiper-slide class="slide">Music</swiper-slide>
+                        <swiper-slide class="slide">Posts</swiper-slide>
+                        <swiper-slide class="slide">Photos</swiper-slide>
+                    </swiper>
+                </div>
+
+            </div>
 
         </div>
         
     </div>
 </template>
 <script>
+
 import {UserApi} from '@/firebase-config/UserController.js'
+import { Pagination} from 'swiper'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import 'swiper/css'
+import 'swiper/css/pagination'
 
-// let myAudioElement = new Audio('https://muzofond.fm/collections/artists/%D0%BE%D0%BA%D1%81%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%BD')
-
-// myAudioElement.addEventListener("canplaythrough", event => {
-//   console.log(event)
-//   myAudioElement.play();
-// });
-export default {
+export default{
     data() {
         return {
             titleId: localStorage.getItem('user-id')
@@ -95,30 +80,44 @@ export default {
                 return
             }
             document.getElementById('username-id').innerHTML = user[0].name
-            document.getElementById('user-id-id').innerHTML = user[0].id
-            document.getElementById('bio-id').innerHTML = user[0].bio_info
-            document.getElementById('email-id').innerHTML = user[0].email
-            document.getElementById('city-id').innerHTML = user[0].city
-            document.getElementById('number-phoe-id').innerHTML = 'NOT'
-            document.getElementById('state-id').innerHTML = user[0].status
-            document.getElementById('data-created-id').innerHTML = user[0].atCreated
-            document.getElementById('country-id').innerHTML = user[0].country
-
-            document.getElementById('avatar-profile-id').src = user[0].img_url
-            document.getElementById('data-created-id')
-
         })
     },
+
+    components: {
+      Swiper,
+      SwiperSlide
+    },
+    setup() {
+      return {
+        modules: [Pagination]
+      }
+    }
     
 }
 </script>
 <style lang="scss" scoped>
+$color-back: rgba(0, 0, 0, 0.8);
 
-// :root {
-//     --theme-color: yellow;
+// .swiper {
+//     // margin-top: 20px;
+//     // display: flex;
+//     // align-items: center;
+//     // justify-content: center;
 // }
 
-$color-back: rgba(0, 0, 0, 0.8);
+// .slide {
+//     width: 100%;
+
+//     &:nth-child(2n) {
+//         width: 40%;
+//         margin-left: 10px;
+//     }
+//     &:nth-child(3n) {
+//         width: 20%;
+//         margin-left: 10px;
+//     }
+// }
+
 
 
 .main-viewProfile-comp {
@@ -147,6 +146,9 @@ $color-back: rgba(0, 0, 0, 0.8);
     letter-spacing: .02em;
     color: white;
 
+    border-right: 1px solid #333;
+    border-top: 1px solid #333;
+
     .inner-content {
         width: 100%;
         height: 100%;
@@ -165,6 +167,88 @@ $color-back: rgba(0, 0, 0, 0.8);
             width: 100%;
             height: auto;
             padding: 5px;
+
+            .spinner-container-navigation {
+                width: 100%;
+                height:50px;
+                padding: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                margin-top: 20px;
+                // background-color: red;
+
+                .swiper {
+                    width: 50%;
+                    height: 100px;
+                    // background-color: #333;
+                }
+
+                .slide {
+                    width: 50%;
+                    font-size: 14px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    cursor: default;
+                    &:nth-child(1n) {
+                        width: 30%;
+                    }
+
+                    &:nth-child(2n) {
+                        width: 40%;
+                    }
+                    &:nth-child(3n) {
+                        width: 30%;
+                    }
+                }
+
+            }
+
+            .info-block-section {
+                width: 100%;
+                height: 50px;
+                padding: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .wrapper-container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 5px;
+                    width: 50%;
+
+                    span {
+                        font-size: 12px;
+                        text-transform: lowercase;
+                    }
+                }
+
+            }
+
+
+            .line-main-informations {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .btn-detail {
+                    padding: 8px;
+
+                    span {
+                        margin-left: 5px;
+                        font-size: 12px;
+                    }
+
+                    i {
+                        margin-top: 4px;
+                    }
+                }
+            }
 
             .bio-block {
                 width: 100%;

@@ -4,7 +4,7 @@
         <BannerBottomComp @sendMessage="add_message" @add_file_messageFunction="add_file_message"></BannerBottomComp>
         <MiniListLastChatsComp v-if="showMiniListComp" @MiniChatBindMiniUsersListFunction="functionBindingMiniListUsersByMiniChat"></MiniListLastChatsComp>
         <MiniChatComp v-if="showMiniChatValue" v-bind:USERTO="USERTO" @closeMiniChatCompFunction="value => this.showMiniChatValue=value"></MiniChatComp>
-        <viewPhotoWindow v-if="showWindowImage" v-model:imageURL="imageURL" @closeWindowFunction="() => {this.showWindowImage = false}"></viewPhotoWindow>
+        <viewPhotoWindow v-if="showWindowImage" v-model:imageURL="imageURL" @closeWindowFunction="() => {this.showWindowImage = false}" v-bind:toID="user_to_id"></viewPhotoWindow>
 
         <div class="content-win-chat">
             
@@ -304,7 +304,8 @@ export default {
                     fromId: this.user_id,
                 }
                 const count = await this.createIndex()
-                MessagesApi.uploadImageMessage(file, localStorage.getItem('user-id'), data_).then(({file_path, file_url}) => {
+                await MessagesApi.uploadImageMessage(file, localStorage.getItem('user-id'), data_).then(({file_path, file_url}) => {
+                    console.log(file_path, file_url, '0002')
                     MessagesApi.createMessage( {
                         content: null,
                         fromId: localStorage.getItem('user-id'),
@@ -319,6 +320,7 @@ export default {
                         index: count,
                     }, data_).then(data => {
                         this.message_lst = data
+                        console.log(data, '0001')
                     }).catch(err => {
                         console.log(err)
                     })

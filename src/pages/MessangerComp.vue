@@ -392,11 +392,12 @@ $color-text-izumrud: #00ff80;
                 overflow:auto;
                 overflow-x: hidden;
                 font-family: Lato,sans-serif;
-                background: rgba(10, 10, 10, 0.8);
+                background: rgba(0, 0, 0, 0.8);
                 backdrop-filter: blur(4.2px);
                 -webkit-backdrop-filter: blur(4.2px);
                 // box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
                 padding-bottom: 40px;
+                border-right: 1px solid #333;
 
 
                 .item-list:hover {

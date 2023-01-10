@@ -308,9 +308,10 @@ $color-text-izumrud: #00ff80;
     height: 100%;
     // background-color: #333;
     // background: $color-back;
-    background: rgba(10, 10, 10, 0.8);
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
+    border-right: 1px solid #333;
 }
 
 .main-settings-comp{

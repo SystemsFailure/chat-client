@@ -3,55 +3,47 @@ import { db } from "@/main"
 import { collection, addDoc, orderBy, where, query, getDocs, deleteDoc, doc, runTransaction} from "firebase/firestore"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/main";
+import { ChatApi } from "./ChatController";
 
 const MessagesApi = {
 
     uploadImageMessage: async (file, user_id, data_) => {
         let file_path = null
         let file_url = null
-        const query_ = query(collection(db, "messages"), orderBy("index", "asc"), where("toId", "in", [data_.toId, data_.fromId]))
-        await getDocs(query_).then(async array => {
-            if(!user_id) {
-              IError('localStorage -> item = user-id === null')
-              return
+        await ChatApi.getChat({toID: data_.toId, fromID: user_id}).then(async chat => {
+            if(chat)
+            {
+              console.log(chat,'0003')
+              let countIndex = chat[0].countMessages
+              const storageRef = ref(storage, '/chat-files-package/users-photo-message_id - ' + user_id + countIndex)
+              await uploadBytes(storageRef, file).then( async (snapshot) => {
+                  file_path = snapshot.metadata.fullPath
+                  const starsRef = ref(storage, snapshot.metadata.fullPath)
+                  if(!starsRef) {
+                      console.log(starsRef, 'not found', 'MessageController -> file not found' + `${file_path}`)
+                  }
+                  await getDownloadURL(starsRef).then((url) => {
+                      file_url = url
+                    }).catch((error) => {
+                      console.log(error)  
+                    })
+                }).catch( error => {
+                  IError(error)
+                })
+            } else {
+              console.log('chat is not defined')
             }
-            const storageRef = ref(storage, '/chat-files-package/users-photo-message_id - ' + user_id + array.size)
-            await uploadBytes(storageRef, file).then( async (snapshot) => {
-                file_path = snapshot.metadata.fullPath
-                const starsRef = ref(storage, snapshot.metadata.fullPath)
-                if(!starsRef) {
-                    console.log(starsRef, 'not found', 'MessageController -> file not found' + `${file_path}`)
-                }
-                await getDownloadURL(starsRef).then((url) => {
-                    file_url = url
-                  }).catch((error) => {
-                    switch (error.code) {
-                      case 'storage/object-not-found':
-                        IError(error.code)
-                        break;
-                      case 'storage/unauthorized':
-                        IError(error.code)
-                        break;
-                      case 'storage/canceled':
-                        IError(error.code)
-                        break;
-                      case 'storage/unknown':
-                        IError(error.code)
-                        break;
-                    }
-                  })
-              }).catch( error => {
-                IError(error)
-              })
+        }).catch(err => {
+          console.log(err)
         })
+        console.log(file_url, file_path, '0004')
         return {file_path: file_path, file_url: file_url}
       },
 
 
     getAllMessage: async (data_) => {
         const q = query(collection(db, "messages"), orderBy("index"), where("toId", "in", [data_.toId, data_.fromId]))
-        let mess_lst = data_.message_lst
-        mess_lst = []
+        let mess_lst = []
         const querySnapshot = await getDocs(q)
         querySnapshot.forEach((doc) => {
             if(doc.data().fromId === data_.fromId || doc.data().fromId === data_.toId)
@@ -75,9 +67,6 @@ const MessagesApi = {
                 mess_lst.push(data_message)
             } else {
               return
-              // console.log('error')
-                // IError(doc.data().content)
-                // IError(mess_lst)
             }
         })
         return mess_lst
@@ -89,7 +78,7 @@ const MessagesApi = {
         if(!data.toId) throw IError('toId as null -> MessageApi')
         const array = await addDoc(collection(db, "messages"), data).then( async () => {
           // console.log(data_r)
-          if (data.img_url) 
+          if (data.img_url != null)
           {
             console.log('file')
             return await MessagesApi.getAllMessage(data_r)
