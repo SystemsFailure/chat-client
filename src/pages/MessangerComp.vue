@@ -90,12 +90,12 @@
 
 <script>
 import NavigationComp from '@/components/NavigationComp.vue'
-import ChatWindowComp from '@/components/ChatWindowComp.vue'
+import ChatWindowComp from '@/components/ChatWindowCompFolder/ChatWindowComp.vue'
 import AudioListComp from '@/components/AudioListComp.vue'
 import SearchUsersBoxComp from '@/components/SearchUsersBoxComp.vue'
 import SettingsComp from '@/components/SettingsComp.vue'
 import ProfileCardComp from '@/components/ProfileCardComp.vue'
-import ListAllUsersComp from '@/components/ListAllUsersComp.vue'
+import ListAllUsersComp from '@/components/ListAllUsersCompFolder/ListAllUsersComp.vue'
 import ViewProfileComp from '@/components/ViewProfileComp.vue'
 import NotificationsComp from '@/components/NotificationsComp.vue'
 import MusicMenuComp from '@/components/MusicMenuComp.vue'

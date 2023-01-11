@@ -19,7 +19,7 @@
                         <div class="items-box" v-for="user in list_users_computedProp" :key="user.id">
                             <div class="wrapper-x-box">
                                 <div class="image-box">
-                                    <img :src="user.img_url || require('../assets/user_profile.png')" alt="" srcset="">
+                                    <img :src="user.img_url || require('@/assets/user_profile.png')" alt="" srcset="">
                                 </div>
                                 <div class="name-box">{{user.name}}</div>
 
@@ -98,7 +98,7 @@
     </div>
 </template>
 <script>
-import SearchUsersBoxComp from './SearchUsersBoxComp.vue';
+import SearchUsersBoxComp from '@/components/SearchUsersBoxComp.vue';
 import customNotifyWindow from '@/components/UI/customNotifyWindow.vue'
 import { UserApi } from '@/firebase-config/UserController';
 import { NotifyApi } from '@/firebase-config/NotificationController'
@@ -123,30 +123,23 @@ export default {
     },
 
     mounted() {
-        const users = UserApi.getAllUsers()
-        users.then(async array => {
-            let arr = []
-            await UserApi.getUserById(this.IUserId).then(user => {
-                if (!user.data().arrayChats) {
-                    console.log('arrayChats not work')
-                    return
-                }
-                if (user.data().arrayChats.length === 0) arr = array
-                user.data().arrayChats.forEach(elem => {
-                    array.forEach(ele => {
-                        if(ele.id != elem) {
-                            arr.push(ele)
-                        } else {
-                            console.log('element is not exit')
-                        }
-                    })
-                })
-            })
-            this.list_users = arr
-        })
+        this.filterAllUsers()
     },
 
     methods: {
+        async filterAllUsers() {
+            await UserApi.getAllUsers().then(async array => {
+                await UserApi.getUserById(this.IUserId).then(user => {
+                    if (!user.data().arrayChats) {
+                        console.log('arrayChats not work')
+                        return
+                    }
+                    if (user.data().arrayChats.length === 0) this.list_users = array
+                    this.list_users = array.filter(globalUser => user.data().arrayChats.indexOf(globalUser.id) == -1)
+                })
+            })
+        },
+
         addUserMe(user) {
             if(user) {
                 if(!this.IUserId) return IError('error -> from ListUsersComp')
