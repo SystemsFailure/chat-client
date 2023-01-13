@@ -36,7 +36,6 @@ const MessagesApi = {
         }).catch(err => {
           console.log(err)
         })
-        console.log(file_url, file_path, '0004')
         return {file_path: file_path, file_url: file_url}
       },
 

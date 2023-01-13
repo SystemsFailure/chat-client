@@ -1,11 +1,68 @@
 // import { ref, list} from "firebase/storage";
-import { ref, list, getDownloadURL} from "firebase/storage";
-// import {addDoc, collection} from "firebase/firestore"
+import { ref, list, getDownloadURL, uploadBytes} from "firebase/storage";
+import {addDoc, collection, query, getDocs} from "firebase/firestore"
 
 import { storage } from "@/main";
-// import { db } from "@/main";
+import { db } from "@/main";
 
 const MusicApi = {
+
+    sendFile: async ( data ) => {
+        console.log(data, 'start')
+        let file_url = null
+        if(!data)
+        {
+            console.log('data is not defined')
+            return
+        }
+        const storageRef = ref(storage, 'musics/' + `${data.name} - ` + data.userId)
+        console.log(storageRef, 'storageReference')
+        await uploadBytes(storageRef, data.file).then( async (snapshot) => {
+            const starsRef = ref(storage, snapshot.metadata.fullPath)
+            console.log(starsRef, 'file been upload successful')
+            if(!starsRef) {
+                console.log(starsRef, 'not found', 'MessageController -> file not found' + ``)
+            }
+            await getDownloadURL(starsRef).then((url) => {
+                console.log(url, 'url return successful')
+                file_url = url
+              }).catch((error) => {
+                console.log(error)  
+              })
+          }).catch( error => {
+            console.log(error)
+          })
+          return {file_url: file_url}
+    },
+
+    sendFileDocument: async (data) => {
+        await addDoc(collection(db, "musics"), data).then( async () => {
+            console.log('file been created successful')
+        }).catch(err => {console.log(err)})
+        
+    },
+
+    getAllMusicsDocs: async() => {
+        const query_ = query(collection(db, 'musics'))
+        let musicsList = []
+        const querySnapshot = await getDocs(query_)
+        querySnapshot.forEach((doc) => {
+            let data_message = {
+                id: doc.id,
+                url: doc.data().url,
+                name: doc.data().name,
+                artist: doc.data().artist,
+                size: doc.data().size,
+                type: doc.data().type,
+                userId: doc.data().userId,
+                playlist: doc.data().playlist,
+            }
+            musicsList.push(data_message)
+        })
+        console.log(musicsList, 'array')
+        return musicsList
+    },
+
     getImg: async () => {
         try {
             const listRef = ref(storage, 'chat-files-package');

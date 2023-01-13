@@ -53,8 +53,6 @@
                 <!-- <transition-group name="audiolist"> -->
                     <div class="item-audio" v-for="audio in audioList" :key="audio.id" @mouseover="itemAudioOver($event, audio.id)">
 
-
-
                         <div class="inner-item" :id="`inner${audio.id}`" @mouseout="itemAudioLeave($event, audio.id)">
                             <div class="inner-image-audio">
                                 <div class="image-src">
@@ -94,26 +92,7 @@ import { MusicApi } from '@/firebase-config/MusicController'
 export default {
     data() {
         return {
-            audioList: [
-                // {id: 1, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 2, url: 'http/proxy/audio-element.mp3', name: 'Ipmossible', img_url: 'http://photo.png', artistName: 'Global'},
-                // {id: 3, url: 'http/proxy/audio-element.mp3', name: 'Dragon', img_url: 'http://photo.png', artistName: 'Design'},
-                // {id: 4, url: 'http/proxy/audio-element.mp3', name: 'Help me', img_url: 'http://photo.png', artistName: 'Oxxxymiron'},
-                // {id: 5, url: 'http/proxy/audio-element.mp3', name: 'Mix-show', img_url: 'http://photo.png', artistName: 'Image Dragons'},
-                // {id: 6, url: 'http/proxy/audio-element.mp3', name: 'Browse', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 7, url: 'http/proxy/audio-element.mp3', name: 'I Hate everthing about you', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 8, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 9, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 10, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 11, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 12, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 13, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 14, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 15, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 16, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 17, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-                // {id: 18, url: 'http/proxy/audio-element.mp3', name: 'life-cycle', img_url: 'http://photo.png', artistName: 'Maks Korzh'},
-            ]
+            audioList: [],
         }
     },
 
@@ -124,13 +103,10 @@ export default {
     },
 
     methods: {
-
         async getAll() {
-            await MusicApi.getAllMusics().then(array_ => {
-                this.audioList = array_
-            }).catch(err => {
-                console.log(err)
-            })
+            await MusicApi.getAllMusicsDocs().then(arr => {
+                this.audioList = arr
+            }).catch(err => console.log(err))
         },
 
         itemAudioOver(e, id) {
@@ -204,8 +180,6 @@ export default {
                 bottom: 0;
                 border-bottom: 1px solid #333;
                 border-top: 1px solid #333;
-
-
 
                 .inner-container-player {
                     background-color: rgba($color: #000000, $alpha: .8);
@@ -471,6 +445,7 @@ export default {
             display: flex;
             flex-direction: column;
             padding-bottom: 100px;
+            padding-top: 5px;
 
             .item-audio {
                 width: 100%;

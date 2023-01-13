@@ -15,21 +15,27 @@
             <label for="myfile_phAvatar_" class="label_">Upload file</label>
             <input type="file" class="my_" id="myfile_phAvatar_" name="myfile_phAvatar_" accept="audio/mpeg, audio/mp3" multiple @change="uploadFile">
 
-            <div class="btn-send" @click="sendFile"><span>upload</span></div>
+            <button class="btn-send" @click="sendFile" style="color: white;"><span>upload</span></button>
+
+            <div class="loader" v-if="loader">
+                <div class="lds-facebook"><div></div><div></div><div></div></div>
+            </div>
         </div>
 
     </div>
 </template>
 <script>
-// import {MusicApi} from '@/firebase-config/MusicController'
+import {MusicApi} from '@/firebase-config/MusicController'
 import { validName } from '@/CustomValidation'
 export default {
     data() {
         return {
+            loader: false,
             name: '',
             artist: '',
             selected: '',
-            file_: null
+            file_: null,
+            userId: localStorage.getItem('user-id')
         }
     },
 
@@ -62,10 +68,33 @@ export default {
             }
         },
 
-        sendFile() {
+        async sendFile() {
             if(this.file_)
             {
-                console.log(this.file_, '0001')
+                const data = {
+                    userId: this.userId,
+                    file: this.file_,
+                    name: this.name,
+                }
+                let btn = document.getElementsByClassName('btn-send')[0]
+                btn.setAttribute('disabled', true)
+                this.loader = true
+                await MusicApi.sendFile(data).then(url => {
+                    console.log(url.file_url)
+                    MusicApi.sendFileDocument({
+                        userId: this.userId,
+                        size: this.file_.size,
+                        type: this.file_.type,
+                        url: url.file_url,
+                        name: this.name,
+                        artist: this.artist,
+                        playlistId: null,
+                    }).then(() => {
+                        this.loader = false
+                        btn.setAttribute('disabled', false)
+                        console.log('document been writed')
+                    })
+                })
             }
         },
     },
@@ -100,6 +129,46 @@ export default {
         flex-direction: column;
         align-items: center;
         padding-top: 50px;
+
+        .loader {
+            // position: relative;
+            // bottom: 0;
+            // width: 100%;
+            // display: flex;
+            // align-items: center;
+            // justify-content: center;
+            .lds-facebook div {
+                display: inline-block;
+                position: absolute;
+                left: 8px;
+                width: 16px;
+                background: #00ffe1;
+                box-shadow:0 0 25px #00fff7;
+                animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+            }
+            .lds-facebook div:nth-child(1) {
+                left: 8px;
+                animation-delay: -0.24s;
+            }
+            .lds-facebook div:nth-child(2) {
+                left: 32px;
+                animation-delay: -0.12s;
+            }
+            .lds-facebook div:nth-child(3) {
+                left: 56px;
+                animation-delay: 0;
+            }
+            @keyframes lds-facebook {
+                0% {
+                top: 8px;
+                height: 64px;
+                }
+                50%, 100% {
+                top: 24px;
+                height: 32px;
+                }
+            }
+        }
 
 
         .btn-send {
