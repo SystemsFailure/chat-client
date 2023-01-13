@@ -69,6 +69,7 @@ const MessagesApi = {
               return
             }
         })
+        console.log(mess_lst, '00002')
         return mess_lst
     },
 
@@ -76,6 +77,7 @@ const MessagesApi = {
         if(!data) {IError('data is empty -> MessageApi')}
         if(!data.fromId) {IError('fromId is null -> MessageApi')}
         if(!data.toId) throw IError('toId as null -> MessageApi')
+
         const array = await addDoc(collection(db, "messages"), data).then( async () => {
           // console.log(data_r)
           if (data.img_url != null)

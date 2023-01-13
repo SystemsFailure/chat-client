@@ -13,13 +13,14 @@
                 </div>
 
                 <div class="info-block">
-                    <span>id: <span id="user-id-id">{{titleId}}</span></span>
+                    <span>id: <span id="user-id-id">{{ titleId }}</span></span>
                 </div>
 
                 <div class="info-block">
-                    <span id="bio-id" style="text-align: center; font-size: 9px; display: flex; flex-wrap: wrap; width: 300px; margin-top: 10px;"></span>
+                    <span id="bio-id"
+                        style="text-align: center; font-size: 9px; display: flex; flex-wrap: wrap; width: 300px; margin-top: 10px;"></span>
                 </div>
-                
+
                 <div class="info-block-section">
                     <div class="wrapper-container">
                         <span>followers</span>
@@ -35,47 +36,64 @@
                 </div>
 
                 <div class="spinner-container-navigation">
-                    <swiper
-                        class="swiper"
-                        :modules="modules"
-                        :slides-per-view="1"
-                        :centered-slides="true"
-                        :space-between="50"
-                        :grab-cursor="false"
-                        :pagination="{
+                    <swiper class="swiper" :modules="modules" :slides-per-view="1" :centered-slides="true"
+                        :space-between="50" :grab-cursor="false" :pagination="{
                             clickable: true
-                        }"
-                        >
+                        }">
                         <swiper-slide class="slide">Music</swiper-slide>
                         <swiper-slide class="slide">Posts</swiper-slide>
                         <swiper-slide class="slide">Photos</swiper-slide>
                     </swiper>
                 </div>
 
+                <div class="content-conteiner">
+                    <div class="custom-playlist">
+                        <div class="line-title"><span>playlists</span> <span class="text-more">show more</span></div>
+                        <div class="playlist_" v-for="playlist in playlistList" :key="playlist.id">
+                            <img :src="playlist.img_url ? playlist.img_url : require('@/assets/playlist.png')" alt="" srcset="">
+                            <div class="title-playlist"><span>{{ playlist.title }}</span></div>
+                            <div class="avtor-title"><span>{{ playlist.avtor }}</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="line-bottom">
+                    <div class="upload-music" @click="() => {this.showDialogMenu = true}"><span>upload new music</span></div>
+                </div>
+
             </div>
 
         </div>
-        
+
     </div>
 </template>
 <script>
 
-import {UserApi} from '@/firebase-config/UserController.js'
-import { Pagination} from 'swiper'
+import { UserApi } from '@/firebase-config/UserController.js'
+import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-export default{
+export default {
     data() {
         return {
-            titleId: localStorage.getItem('user-id')
+            showDialogMenu: false,
+            titleId: localStorage.getItem('user-id'),
+            playlistList: [
+                { id: 0, title: 'for me', img_url: '@/assets/Ninja.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
+                { id: 1, title: 'for me', img_url: '@/assets/Ninja.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
+                { id: 2, title: 'for me', img_url: '@/assets/RedSpiritSpring.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
+                { id: 3, title: 'for me', img_url: null, arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
+                { id: 4, title: 'for me', img_url: null, arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
+                { id: 5, title: 'for me', img_url: '@/assets/Tiger.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
+            ]
         }
     },
 
     mounted() {
         UserApi.GetPersonalDataOfUser(this.titleId).then(user => {
-            if(!user) {
+            if (!user) {
                 console.log('user not found')
                 return
             }
@@ -84,15 +102,15 @@ export default{
     },
 
     components: {
-      Swiper,
-      SwiperSlide
+        Swiper,
+        SwiperSlide
     },
     setup() {
-      return {
-        modules: [Pagination]
-      }
+        return {
+            modules: [Pagination]
+        }
     }
-    
+
 }
 </script>
 <style lang="scss" scoped>
@@ -121,39 +139,32 @@ $color-back: rgba(0, 0, 0, 0.8);
 
 
 .main-viewProfile-comp {
+
     width: 100%;
     height: 100vh;
     padding-right: 10px;
     padding-left: 10px;
     padding-top: 45px;
     background: $color-back;
-
-    // background: rgba(10, 10, 10, 0.8);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    // overflow:auto;
-
-    // background-color: red;
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    font-family: Lato,sans-serif;
+    font-family: Lato, sans-serif;
     font-weight: 700;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: .02em;
     color: white;
-
     border-right: 1px solid #333;
     border-top: 1px solid #333;
 
     .inner-content {
         width: 100%;
         height: 100%;
-        // background-color: darkblue;
         overflow: auto;
+        padding-bottom: 50px;
 
 
         .bottom-n {
@@ -168,9 +179,115 @@ $color-back: rgba(0, 0, 0, 0.8);
             height: auto;
             padding: 5px;
 
+            .line-bottom {
+                width: 100%;
+                height: 50px;
+                padding: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 50px;
+                border: 1px solid #333;   
+
+                .upload-music {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 11px;
+
+                    &:hover {
+                        cursor: pointer;
+                        opacity: .6;
+                    }
+
+                }             
+            }
+
+            .content-conteiner {
+                width: 100%;
+                height: 100%;
+                padding: 5px;
+                display: flex;
+                align-items: center;
+                margin-top: 50px;
+                border-top: 1px solid #333;
+
+
+                .custom-playlist {
+                    margin-top: 20px;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: auto;
+
+                    .line-title {
+                        width: 100%;
+                        padding-left: 15px;
+                        margin-bottom: 10px;
+                        
+                        .text-more {
+                            text-transform:lowercase;
+                            font-size: 11px;
+                            float: right;
+
+                            &:hover {
+                                cursor: pointer;
+                                opacity: .7;
+                                text-decoration:underline;
+                            }
+                        }
+                    }
+
+                    .playlist_ {
+                        width: 100px;
+                        display: flex;
+                        flex-direction: column;
+                        position: relative;
+                        margin-left: 10px;
+                        margin-top: 10px;
+
+                        .avtor-title {
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            color: white;
+                            font-size: 8px;
+                            margin-top: 5px;
+                        }
+                        
+                        .title-playlist {
+                            margin-top: 8px;
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            color: white;
+                            font-size: 8px;
+                        }
+
+                        img {
+                            width: 100px;
+                            height: 100px;
+
+                        }
+
+                        &:hover {
+                            cursor: pointer;
+                            opacity: .6;
+                            transition: .4s;
+                        }
+                    }
+                }
+            }
+
             .spinner-container-navigation {
                 width: 100%;
-                height:50px;
+                height: 50px;
                 padding: 5px;
                 display: flex;
                 align-items: center;
@@ -193,6 +310,7 @@ $color-back: rgba(0, 0, 0, 0.8);
                     align-items: center;
 
                     cursor: default;
+
                     &:nth-child(1n) {
                         width: 30%;
                     }
@@ -200,6 +318,7 @@ $color-back: rgba(0, 0, 0, 0.8);
                     &:nth-child(2n) {
                         width: 40%;
                     }
+
                     &:nth-child(3n) {
                         width: 30%;
                     }
@@ -236,6 +355,7 @@ $color-back: rgba(0, 0, 0, 0.8);
                 display: flex;
                 justify-content: center;
                 align-items: center;
+
                 .btn-detail {
                     padding: 8px;
 
@@ -319,7 +439,7 @@ $color-back: rgba(0, 0, 0, 0.8);
                 display: flex;
                 justify-content: center;
                 margin-top: 10px;
-                
+
             }
 
             .img-box {

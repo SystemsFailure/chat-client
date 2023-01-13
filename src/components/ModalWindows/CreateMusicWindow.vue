@@ -1,0 +1,206 @@
+<template>
+    <div class="main-class-dialog-create-music">
+        <div class="inner-co">
+            <div class="title">
+                <span>create music</span>
+                <div class="close" @click="() => {this.$emit('closeCreateMusicWinodwFunction', false)}"><i class="fi fi-ss-cross"></i></div>
+            </div>
+            
+            <input type="text" placeholder="name music" v-model="name">
+            <input type="text" placeholder="name artist" v-model="artist">
+            <div class="check-box-container">
+                <input type="checkbox" name="" id="check-id-box-id" v-model="selected">
+                <span>names are default?</span>
+            </div>
+            <label for="myfile_phAvatar_" class="label_">Upload file</label>
+            <input type="file" class="my_" id="myfile_phAvatar_" name="myfile_phAvatar_" accept="audio/mpeg, audio/mp3" multiple @change="uploadFile">
+
+            <div class="btn-send" @click="sendFile"><span>upload</span></div>
+        </div>
+
+    </div>
+</template>
+<script>
+// import {MusicApi} from '@/firebase-config/MusicController'
+import { validName } from '@/CustomValidation'
+export default {
+    data() {
+        return {
+            name: '',
+            artist: '',
+            selected: '',
+            file_: null
+        }
+    },
+
+    methods: {
+        uploadFile(event) {
+            let file = event.target.files[0]
+            if(!file) {
+                if(file.type.split('/')[0] != 'audio') {
+                    console.log('error')
+                    return
+                }
+                console.log('file is null')
+                return
+            }
+            if (this.selected === false)
+            {
+                if(validName(this.name, typeof file) && validName(this.artist, typeof file))
+                {
+                    console.log(file)
+                    this.file_ = file
+                }
+            } else {
+                this.name = file.name
+                this.artist = 'unknown'
+                if(validName(this.name, typeof file) && validName(this.artist, typeof file))
+                {
+                    console.log(file)
+                    this.file_ = file
+                }
+            }
+        },
+
+        sendFile() {
+            if(this.file_)
+            {
+                console.log(this.file_, '0001')
+            }
+        },
+    },
+}
+</script>
+<style lang="scss" scoped>
+.main-class-dialog-create-music {
+    position: absolute;
+    width: 300px;
+    height: 400px;
+    padding: 15px;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba($color: #000000, $alpha: .8);
+    border: 1px solid #333;
+    z-index: 15;
+    color: white;
+    font-family: Lato, sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+
+    .inner-co {
+        width: 100%;
+        height: 100%;
+        position:relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 50px;
+
+
+        .btn-send {
+            width: 50%;
+            background-color: rgba($color: #000000, $alpha: .8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+            border: 1px solid #333;
+            margin-top: 50px;
+
+            &:hover {
+                cursor: pointer;
+                background: #00cec780;
+            }
+
+        }
+
+
+        .check-box-container {
+            width: 100%;
+            display: flex;
+            margin-top: 25px;
+
+            #check-id-box-id {
+                padding: 4px;
+                color: white;
+                background: none;
+                float: left;
+            }
+
+            span {
+                margin-left: 10px;
+            }
+        }
+
+        input[type='text'] {
+            padding: 10px;
+            background-color: rgba($color: #000000, $alpha: .8);            
+            outline: none;
+            border: none;
+            border: 1px solid #333;
+            color: white;
+            margin-top: 15px;
+            width: 100%;
+    
+        }
+    
+        .title {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .close {
+                margin-left: auto;
+                margin-right: 5px;
+                color: white;
+                font-size: 11px;
+
+                &:hover {
+                    cursor: pointer;
+                    opacity: .6;
+                }
+            }
+        }
+
+        .my_ {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .label_ {
+            margin-top: 20px;
+            width: 100%;
+            height: 30px;
+            background-color: none;
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: Lato,sans-serif;
+            font-weight: 700;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .02em;
+            color: white;
+        }
+
+        .label_:hover {
+            color: white;
+            background: #00cec780;
+        }
+    }
+}
+</style>

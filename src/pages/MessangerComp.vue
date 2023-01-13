@@ -3,6 +3,7 @@
         v-if="this.$store.state.showDialogDeleteWindow"
         @ShowOrCloseDialogWindowChatDeletedFunction="DialogMessageBoutDeletedChatFunc">
     </dialogWindow>
+    <CreateMusicWindow></CreateMusicWindow>
     <dialogChatDeleted v-if="showDialogWindowChatDeleted"></dialogChatDeleted>
     <ProfileCardComp v-if="$store.state.showProfile" @closeProfileFunction="(value) => {this.$store.state.showProfile = value}"></ProfileCardComp>
     <ListAllUsersComp v-if="show_list_all_users_comp" @closeListUsersCompFunction="(value) => {this.show_list_all_users_comp = value}"></ListAllUsersComp>
@@ -100,6 +101,7 @@ import ViewProfileComp from '@/components/ViewProfileComp.vue'
 import NotificationsComp from '@/components/NotificationsComp.vue'
 import MusicMenuComp from '@/components/MusicMenuComp.vue'
 import dialogWindow from '@/components/UI/dialogWindow.vue'
+import CreateMusicWindow from '@/components/ModalWindows/CreateMusicWindow.vue'
 import dialogChatDeleted from '@/components/UI/dialogChatDeleted.vue'
 import requestGetUsers from '@/hooks/hookRequestsToUser'
 import hookBackChange from '@/hooks/hookBackgroundChange'
@@ -263,6 +265,7 @@ export default {
         ViewProfileComp, dialogWindow,
         AudioListComp, MusicMenuComp,
         NotificationsComp, dialogChatDeleted,
+        CreateMusicWindow
 
     }
 
