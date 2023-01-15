@@ -134,7 +134,7 @@ export default {
 .main-class-dialog-create-music {
     position: absolute;
     width: 300px;
-    height: 400px;
+    height: 450px;
     padding: 15px;
     margin: 0;
     top: 50%;

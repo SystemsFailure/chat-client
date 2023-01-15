@@ -4,7 +4,7 @@
         <div class="inner-content">
 
             <div class="profile-title">
-                <div class="img-box">
+                <div class="img-box" style="color: white;">
                     <img id="avatar-profile-id" src="@/assets/user_profile.png" alt="" srcset="">
                 </div>
 
@@ -23,8 +23,14 @@
 
                 <div class="info-block-section">
                     <div class="wrapper-container">
-                        <span>followers</span>
-                        <span>following</span>
+                        <div class="wrap-box" id="followers-box-id">
+                            <span id="follower-id"></span>
+                            <h5>followers</h5>
+                        </div>
+                        <div class="wrap-box" id="following-box-id">
+                            <span id="following-id"></span>
+                            <h5>following</h5>
+                        </div>
                     </div>
                 </div>
 
@@ -50,7 +56,7 @@
                     <div class="custom-playlist">
                         <div class="line-title"><span>playlists</span> <span class="text-more">show more</span></div>
                         <div class="playlist_" v-for="playlist in playlistList" :key="playlist.id">
-                            <img :src="playlist.img_url ? playlist.img_url : require('@/assets/playlist.png')" alt="" srcset="">
+                            <img :src="playlist.img_url ? require('@/assets/' + playlist.img_url) : require('@/assets/playlist.png')" alt="" srcset="">
                             <div class="title-playlist"><span>{{ playlist.title }}</span></div>
                             <div class="avtor-title"><span>{{ playlist.avtor }}</span></div>
                         </div>
@@ -81,12 +87,12 @@ export default {
             showDialogMenu: false,
             titleId: localStorage.getItem('user-id'),
             playlistList: [
-                { id: 0, title: 'for me', img_url: '@/assets/Ninja.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
-                { id: 1, title: 'for me', img_url: '@/assets/Ninja.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
-                { id: 2, title: 'for me', img_url: '@/assets/RedSpiritSpring.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
+                { id: 0, title: 'for me', img_url: 'Ninja.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
+                { id: 1, title: 'for me', img_url: 'Rock-Clouds.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
+                { id: 2, title: 'for me', img_url: 'Tumblr.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
                 { id: 3, title: 'for me', img_url: null, arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
                 { id: 4, title: 'for me', img_url: null, arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
-                { id: 5, title: 'for me', img_url: '@/assets/Tiger.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
+                // { id: 5, title: 'for me', img_url: '@/assets/Tiger.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
             ]
         }
     },
@@ -97,7 +103,11 @@ export default {
                 console.log('user not found')
                 return
             }
+            this.playlistList.push({ id: 5, title: 'new playlist', img_url: 'addPlaylist4.png', arrayMusic: [], desc: '', avtor: 'add playlist'})
             document.getElementById('username-id').innerHTML = user[0].name
+            document.getElementById('avatar-profile-id').src = user[0].img_url
+            document.getElementById('follower-id').textContent = user[0].arrayFollowers.length
+            document.getElementById('following-id').textContent = user[0].arrayFollowing.length
         })
     },
 
@@ -341,10 +351,54 @@ $color-back: rgba(0, 0, 0, 0.8);
                     padding: 5px;
                     width: 50%;
 
-                    span {
-                        font-size: 12px;
-                        text-transform: lowercase;
+                    #following-box-id{
+                        display: flex;
+                        align-items: center;
+
+                        #following-id {
+                            font-size: 11px;
+                            text-transform: lowercase;
+                            margin-right: 5px;
+                            color: rgb(0, 251, 255);
+    
+                        }
+                        
+                        h5 {
+                            font-size: 12px;
+                            text-transform: lowercase;
+                            margin-right: 5px;
+                            &:hover {
+                                cursor: pointer;
+                                opacity: .6;
+                                transition: .5s;
+                            }
+                        }
                     }
+                    
+                    #followers-box-id{
+                        display: flex;
+                        align-items: center;
+
+                        #follower-id {
+                            font-size: 11px;
+                            text-transform: lowercase;
+                            margin-right: 5px;
+                            color: rgb(0, 251, 255);
+    
+                        }
+                        
+                        h5 {
+                            font-size: 12px;
+                            text-transform: lowercase;
+                            margin-right: 5px;
+                            &:hover {
+                                cursor: pointer;
+                                opacity: .6;
+                                transition: .5s;
+                            }
+                        }
+                    }
+
                 }
 
             }
@@ -358,6 +412,12 @@ $color-back: rgba(0, 0, 0, 0.8);
 
                 .btn-detail {
                     padding: 8px;
+
+                    &:hover {
+                        cursor: pointer;
+                        opacity: .6;
+                        transition: .5s;
+                    }
 
                     span {
                         margin-left: 5px;

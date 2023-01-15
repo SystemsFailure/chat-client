@@ -55,12 +55,12 @@
 
                 <!-- <transition-group name="audiolist"> -->
                     <div class="item-audio" v-for="audio in audioList" :key="audio.id" @mouseover="itemAudioOver($event, audio.id)">
-                        <audio :src="audio.url" class="audioClassNameBy" @progress="displayBufferedAmount(audio.id)" @timeupdate="setValueInp" :id="audio.id" preload=”metadata” loop></audio>
+                        <audio :src="audio.url" class="audioClassNameBy" :id="audio.id" preload=”metadata” loop></audio>
                         <div class="inner-item" :id="`inner${audio.id}`" @mouseout="itemAudioLeave($event, audio.id)">
                             <div class="inner-image-audio">
                                 <div class="image-src">
-                                    <i class="fi fi-ss-play" @click="audioChange(audio.id)"></i>
-                                    <i class="fi fi-ss-pause"></i>
+                                    <i class="fi fi-ss-play" :id="`start-audio-btn-id--${audio.id}`" @click="startMusic($event, audio.id)"></i>
+                                    <i class="fi fi-ss-pause" style="font-size: 0px;" :id="`pause-audio-btn-id-${audio.id}`" @click="stopMusic($event, audio.id)"></i>
                                 </div>
                             </div>
                             <div class="tools-item">
@@ -95,9 +95,13 @@ import { MusicApi } from '@/firebase-config/MusicController'
 export default {
     data() {
         return {
+            startMisic: true,
             showPlay: true,
             audioList: [],
             currId: null,
+            secondsSlider: null,
+            timeAudio: document.getElementById('curr-time-id'),
+            timeAudioTotal: document.getElementById('time-container-id'),
             raf: null,
         }
     },
@@ -105,20 +109,16 @@ export default {
 
     mounted() {
         this.getAll().then(() => {
-            this.audioList.forEach(elem => {
+            this.secondsSlider = document.getElementById('volume-slider')
+            this.audioList.forEach((elem) => {
                 let id = elem.id
                 let audio = document.getElementById(id)
-                let secondsSlider = document.getElementById('volume-slider')
                 if(audio) {
                     if(audio.readyState > 0) {
-                        this.displayAudioDuration(audio.duration, id)
-                        this.setSliderMax(secondsSlider, audio.duration)
-                        this.displayBufferedAmount(id)
+                        this.setAllSongsTimeToInitialization(audio.duration, id)
                     } else {
                         audio.addEventListener('loadedmetadata', () => {
-                            this.displayAudioDuration(audio.duration, id)
-                            this.setSliderMax(secondsSlider, audio.duration)
-                            this.displayBufferedAmount(id)
+                            this.setAllSongsTimeToInitialization(audio.duration, id)
                         })
                     }
                 }
@@ -127,12 +127,58 @@ export default {
     },
 
     methods: {
-        audioChange(id){
+        abstractPlayMethod() {},
+        // audioChange(id) {this.currId = id},
+
+        startMusic(e, id) {
             this.currId = id
+            let audio = document.getElementById(this.currId)
+            this.setSliderMax(this.secondsSlider, audio.duration)
+            this.displayBufferedAmount(this.currId)
+            this.displayAudioDuration(audio.duration)
+            audio.addEventListener('progress', () => {
+                this.displayBufferedAmount(this.currId)
+            })
+            // audio.addEventListener('timeupdate', () => {
+            //     const duration = audio.duration;
+            //     let progress = document.getElementById('audioPlayerContainer')
+            //     if (duration > 0) {
+            //         progress.style.width = `${audio.currentTime / duration * 100}%`
+            //     }
+            // })
+            audio.play()
+            requestAnimationFrame(this.whilePlaying)
+            this.showPlay = false
+            e.target.style.fontSize = '0px'
+            document.getElementById('pause-audio-btn-id-' + id).style.fontSize = '14px'
         },
 
+        stopMusic(e, id) {
+            let audio = document.getElementById(this.currId)
+            audio.pause()
+            cancelAnimationFrame(this.raf)
+            this.showPlay = true
+            e.target.style.fontSize = '0px'
+            document.getElementById('start-audio-btn-id--' + id).style.fontSize = '14px'
+        },
+
+
+       ///////////////////////////////////////////////////////////////// // Play and pause methods - start /////////////////////////////////////////////////////////////////
         playSong() {
             let audio = document.getElementById(this.currId)
+            this.setSliderMax(this.secondsSlider, audio.duration)
+            this.displayBufferedAmount(this.currId)
+            this.displayAudioDuration(audio.duration)
+            audio.addEventListener('progress', () => {
+                this.displayBufferedAmount(this.currId)
+            })
+            // audio.addEventListener('timeupdate', () => {
+            //     const duration = audio.duration;
+            //     let progress = document.getElementById('audioPlayerContainer')
+            //     if (duration > 0) {
+            //         progress.style.width = `${audio.currentTime / duration * 100}%`
+            //     }
+            // })
             audio.play()
             requestAnimationFrame(this.whilePlaying)
             this.showPlay = false
@@ -144,6 +190,80 @@ export default {
             cancelAnimationFrame(this.raf)
             this.showPlay = true
         },
+        /////////////////////////////////////////////////////////////////// Play and pause methods - end /////////////////////////////////////////////////////////////////
+
+
+        ///////////////////////////////////////////////////////////////// Установка текущего положения аудио в input - changed - start /////////////////////////////////////////////////////////////////
+        setCurrentTimeToAudio(e) {
+            let cId = this.currId ? this.currId : null
+            if (cId)
+            {
+                let audio = document.getElementById(cId)
+                audio.currentTime = e.target.value
+                if(!audio.paused)
+                {
+                    requestAnimationFrame(this.whilePlaying)
+                }
+            } else return
+        },
+        ///////////////////////////////////////////////////////////////// Установка текущего положения аудио в input - emd /////////////////////////////////////////////////////////////////
+
+
+        ///////////////////////////////////////////////////////////////// Установка текущего положения аудио в input /////////////////////////////////////////////////////////////////
+        setCurrentTime() {
+            let audio = document.getElementById(this.currId)
+            document.getElementById('curr-time-id').textContent = this.calculateTime(this.secondsSlider.value)
+            if(!audio.paused)
+            {
+                cancelAnimationFrame(this.raf)
+            }
+        },
+        ///////////////////////////////////////////////////////////////// Установка текущего положения аудио в input /////////////////////////////////////////////////////////////////
+        
+
+        ///////////////////////////////////////////////////////////////// увеличение width прогресса /////////////////////////////////////////////////////////////////
+        displayBufferedAmount(id) {
+            let audio = document.getElementById(id)
+            let progress = document.getElementById('audioPlayerContainer')
+            const bufferedAmount = Math.floor(audio.buffered.end(audio.buffered.length - 1))
+            progress.style.setProperty('width', `${(bufferedAmount / this.secondsSlider.max) * 100}%`)
+        },
+        ///////////////////////////////////////////////////////////////// увеличение width прогресса /////////////////////////////////////////////////////////////////
+
+
+        ///////////////////////////////////////////////////////////////// установка максимального значения /////////////////////////////////////////////////////////////////
+        setSliderMax(secondsSlider, duration){
+            secondsSlider.max = Math.floor(duration)
+        },
+        ///////////////////////////////////////////////////////////////// установка максимального значения /////////////////////////////////////////////////////////////////
+
+
+        setAllSongsTimeToInitialization(duration, id) {
+            let timeContainerOnAduio = document.getElementById('time' + id)
+            timeContainerOnAduio.textContent = this.calculateTime(duration)
+        },
+
+        ///////////////////////////////////////////////////////////////// установка времени в input величину аудио, 2 и установка всем аудио свое время в процессе инициализации /////////////////////////////////////////////////////////////////
+        displayAudioDuration(duration)
+        {
+            let timeContainer = document.getElementById('time-container-id')
+            timeContainer.textContent = this.calculateTime(duration)
+        },
+        ///////////////////////////////////////////////////////////////// установка времени в input величину аудио, 2 и установка всем аудио свое время в процессе инициализации /////////////////////////////////////////////////////////////////
+
+
+        ///////////////////////////////////////////////////////////////// разчеты /////////////////////////////////////////////////////////////////
+        calculateTime(secs) {
+            const minutes = Math.floor(secs / 60);
+            const seconds = Math.floor(secs % 60);
+            const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+            return `${minutes}:${returnedSeconds}`;
+        },
+        ///////////////////////////////////////////////////////////////// разчеты /////////////////////////////////////////////////////////////////
+
+
+// NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+
 
         whilePlaying() {
             if(this.currId){
@@ -157,63 +277,26 @@ export default {
                     this.raf = requestAnimationFrame(this.whilePlaying)
                 }
             }
-
         },
 
-        // setValueInp(e) {
-        //     let secondsSlider = document.getElementById('volume-slider')
-        //     secondsSlider.value = Math.floor(e.target.currentTime);
-        // },
+// NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 
-        setCurrentTimeToAudio(e) {
-            let cId = this.currId ? this.currId : null
-            if (cId)
-            {
-                let audio = document.getElementById(cId)
-                audio.currentTime = e.target.value
-                if(!audio.paused)
-                {
-                    requestAnimationFrame(this.whilePlaying)
-                }
-            } else return
-        },
 
-        setCurrentTime() {
-            let secondsSlider = document.getElementById('volume-slider')
-            let audio = document.getElementById(this.currId)
-            document.getElementById('curr-time-id').textContent = this.calculateTime(secondsSlider.value)
-            if(!audio.paused)
-            {
-                cancelAnimationFrame(this.raf)
-            }
-        },
 
-        displayBufferedAmount(id) {
-            let audio = document.getElementById(id)
-            let secondsSlider = document.getElementById('volume-slider')
-            let audioPlayerContainer = document.getElementById('audioPlayerContainer')
-            const bufferedAmount = Math.floor(audio.buffered.end(audio.buffered.length - 1))
-            audioPlayerContainer.style.setProperty('width', `${(bufferedAmount / secondsSlider.max) * 100}%`)
-        },
 
-        setSliderMax(secondsSlider, duration){
-            secondsSlider.max = Math.floor(duration)
-        },
 
-        displayAudioDuration(duration, id)
-        {
-            let timeContainer = document.getElementById('time-container-id')
-            let timeContainerOnAduio = document.getElementById('time' + id)
-            timeContainerOnAduio.textContent = this.calculateTime(duration);
-            timeContainer.textContent = this.calculateTime(duration);
-        },
 
-        calculateTime(secs) {
-            const minutes = Math.floor(secs / 60);
-            const seconds = Math.floor(secs % 60);
-            const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-            return `${minutes}:${returnedSeconds}`;
-        },
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -249,19 +332,6 @@ export default {
                 
             }
         },
-
-        // showPlayFunc(id) {
-        //     if(this.currCount === null) {
-        //         this.currentAudio = id
-        //         this.showPlay = true
-        //     } else {
-        //         if (this.currCount === id) {
-        //             this.showPlay = true
-        //         } else {
-        //             this.showPlay = false
-        //         }
-        //     }
-        // }
     }
 }
 </script>
@@ -657,6 +727,7 @@ export default {
                         border-radius: 5px;
 
                         .image-src {
+                            font-size: 14px;
                             width: 45px;
                             height: 45px;
                             position: absolute;
@@ -674,6 +745,7 @@ export default {
                             border-radius: 10px;
 
                             i {
+                                margin-top: 4px;
                                 &:hover {
                                     transition: .3s;
                                     color: rgba($color: #00fff2, $alpha: 1.0);
