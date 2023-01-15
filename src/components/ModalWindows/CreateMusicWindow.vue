@@ -12,8 +12,18 @@
                 <input type="checkbox" name="" id="check-id-box-id" v-model="selected">
                 <span>names are default?</span>
             </div>
+
+            <span class="line-box-file" id="file-text-id-2">{{ file_ ? file_.name : 'file not choice'}}</span>
             <label for="myfile_phAvatar_" class="label_">Upload file</label>
             <input type="file" class="my_" id="myfile_phAvatar_" name="myfile_phAvatar_" accept="audio/mpeg, audio/mp3" multiple @change="uploadFile">
+
+            <span class="line-box-file" id="file-image-text">{{ file_img ? file_img : undefined}}</span>
+            <label for="file_image_for_song" style="margin-top: 10px;" class="label_">Upload image for song</label>
+            <input type="file" class="my_" id="file_image_for_song" name="file_image_for_song" accept="image/jpeg, image/png" multiple @change="uploadFileImage">
+            <!-- <div class="check-box-container">
+                <input type="checkbox" name="" id="check-id-box-id" v-model="selected">
+                <span>not use image</span>
+            </div> -->
 
             <button class="btn-send" @click="sendFile" style="color: white;"><span>upload</span></button>
 
@@ -35,16 +45,35 @@ export default {
             artist: '',
             selected: '',
             file_: null,
+            file_img: null,
             userId: localStorage.getItem('user-id')
         }
     },
 
     methods: {
+        uploadFileImage(event) {
+            const file = event.target.files[0]
+            if(event.target.file[0]) {
+                this.file_img = event.target.file[0]
+            }
+            if(file.type.split('/')[0] != 'image') {
+                console.log('so type data not support')
+                this.file_img = 'so type data not support'
+                return
+            }
+            if(this.file_img)
+            {
+                document.getElementById('file-image-text').style.color = '#00ffe1'
+                console.log('image file been upload successful')
+            }
+        },
+
         uploadFile(event) {
             let file = event.target.files[0]
             if(!file) {
                 if(file.type.split('/')[0] != 'audio') {
                     console.log('error')
+                    this.file_ = 'so type data not support'
                     return
                 }
                 console.log('file is null')
@@ -60,6 +89,7 @@ export default {
             } else {
                 this.name = file.name
                 this.artist = 'unknown'
+                document.getElementById('file-text-id-2').style.color = '#00ffe1'
                 if(validName(this.name, typeof file) && validName(this.artist, typeof file))
                 {
                     console.log(file)
@@ -130,6 +160,19 @@ export default {
         align-items: center;
         padding-top: 50px;
 
+
+        .line-box-file {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+            color:red;
+            font-size: 13px;
+            text-transform: lowercase;
+            
+        }
+
         .loader {
             // position: relative;
             // bottom: 0;
@@ -181,6 +224,7 @@ export default {
             border: 1px solid #333;
             margin-top: 50px;
 
+
             &:hover {
                 cursor: pointer;
                 background: #00cec780;
@@ -213,7 +257,7 @@ export default {
             border: none;
             border: 1px solid #333;
             color: white;
-            margin-top: 15px;
+            // margin-top: 15px;
             width: 100%;
     
         }
@@ -248,7 +292,7 @@ export default {
         }
 
         .label_ {
-            margin-top: 20px;
+            // margin-top: 20px;
             width: 100%;
             height: 30px;
             background-color: none;

@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="line-bottom">
-                    <div class="upload-music" @click="() => {this.showDialogMenu = true}"><span>upload new music</span></div>
+                    <div class="upload-music" @click="() => {this.$emit('showCreateMusicWindowFunction', true)}"><span>upload new music</span></div>
                 </div>
 
             </div>

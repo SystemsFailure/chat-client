@@ -304,31 +304,27 @@ $color-text-izumrud: #00ff80;
 
 
 .main-comp {
-    width: 100%;
-    height: 100%;
-    // background-color: #333;
-    // background: $color-back;
+    position: absolute;
+    width: 500px;
+    height: 620px;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    border-right: 1px solid #333;
+    border: 1px solid #333;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
 }
 
 .main-settings-comp{
     width: 100%;
     height: auto;
-    padding-right: 10px;
-    padding-left: 10px;
-    padding-top: 45px;
-    // background: $color-back;
-    // overflow:auto;
-
-    // background-color: red;
-
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-
     font-family: Lato,sans-serif;
     font-weight: 700;
     font-size: 11px;
@@ -370,13 +366,9 @@ $color-text-izumrud: #00ff80;
     }
 
     .sett-box {
-        margin-top: 10px;
         width: 100%;
         padding: 10px 10px 10px 0;
-        // background-color: #4e5f7d;
         display: flex;
-        // flex-direction: column;
-        // justify-content: center;
         align-items: center;
 
         .i-item-class {
@@ -386,7 +378,7 @@ $color-text-izumrud: #00ff80;
 
         input {
             // background-color: #333;
-            width: 300px;
+            width: 200px;
             background: none;
             outline: none;
             color: white;
@@ -398,7 +390,7 @@ $color-text-izumrud: #00ff80;
         }
 
         textarea {
-            width: 250px;
+            width: 200px;
             font-size: 12px;
             padding: 8px;
             border-radius: 5px;

@@ -3,7 +3,7 @@
         v-if="this.$store.state.showDialogDeleteWindow"
         @ShowOrCloseDialogWindowChatDeletedFunction="DialogMessageBoutDeletedChatFunc">
     </dialogWindow>
-    <CreateMusicWindow></CreateMusicWindow>
+    <CreateMusicWindow v-if="showCreateMusicWindow" @closeCreateMusicWinodwFunction="(v) => {this.showCreateMusicWindow = v}"></CreateMusicWindow>
     <dialogChatDeleted v-if="showDialogWindowChatDeleted"></dialogChatDeleted>
     <ProfileCardComp v-if="$store.state.showProfile" @closeProfileFunction="(value) => {this.$store.state.showProfile = value}"></ProfileCardComp>
     <ListAllUsersComp v-if="show_list_all_users_comp" @closeListUsersCompFunction="(value) => {this.show_list_all_users_comp = value}"></ListAllUsersComp>
@@ -40,7 +40,7 @@
                 <Transition name="up-profile-card-slide">
                     <SearchUsersBoxComp v-if="showMenuChats" v-model="searchQuery" @clearTextFunction="() => {this.searchQuery = ''}"></SearchUsersBoxComp>
                 </Transition>
-                <div class="btn-add-new-contact-chat" @click="() => {this.show_list_all_users_comp = true}">
+                <div v-if="showChatWindowComp" class="btn-add-new-contact-chat" @click="() => {this.show_list_all_users_comp = true}">
                     <div class="icon=box"></div>
                     <div class="title-btn-new-cont"><span>new comunicated</span></div>
                 </div>
@@ -78,7 +78,7 @@
                 <Transition name="up-profile-card-slide">
                     <SettingsComp v-show="showMenuSettings" @setImageToBack="setImage"></SettingsComp>
                 </Transition>
-                    <ViewProfileComp v-show="showMenuMail"></ViewProfileComp>
+                    <ViewProfileComp v-show="showMenuMail" @showCreateMusicWindowFunction="(v) => {this.showCreateMusicWindow = true}"></ViewProfileComp>
                 <Transition name="up-profile-card-slide">
                     <MusicMenuComp v-show="showMenuMusics"></MusicMenuComp>
                 </Transition>
@@ -127,6 +127,7 @@ export default {
             showMenuMail: false,
             showMenuSettings: false,
             showMenuMusics: false,
+            showCreateMusicWindow: false,
             showDialogWindowChatDeleted: false,
         }
     },
@@ -346,6 +347,7 @@ $color-text-izumrud: #00ff80;
         }
 
         .left-block{
+            // position: relative;
             width: 25%;
             height: 100vh;
             // background: $color-back;
