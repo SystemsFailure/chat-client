@@ -5,7 +5,7 @@
             <div class="line-comp">
                 <div class="toggle-line-tools">
                     <div class="icon"><i class="fi fi-br-search"></i></div>
-                    <input type="text" placeholder="search music">
+                    <input type="text" placeholder="search music" v-model="searchValue">
                     <div class="close-btn"><i class="fi fi-ss-cross"></i></div>
                 </div>
                 
@@ -52,7 +52,7 @@
 
 
             <div class="list-audio">
-                    <div class="item-audio" v-for="audio in audioList" :key="audio.id" @mouseover="itemAudioOver($event, audio.id)" :id="`innerItem-${audio.id}`">
+                    <div class="item-audio" v-for="audio in filterdMusicList" :key="audio.id" @mouseover="itemAudioOver($event, audio.id)" :id="`innerItem-${audio.id}`">
                         <audio :src="audio.url" class="audioClassNameBy" :id="audio.id"  loop></audio>
                         <div class="inner-item" :id="`inner${audio.id}`" @mouseout="itemAudioLeave($event, audio.id)">
                             <div class="inner-image-audio">
@@ -99,6 +99,7 @@ export default {
             currId: null,
             indexMusic: null,
             progressInput: null,
+            searchValue: '',
         }
     },
 
@@ -120,6 +121,14 @@ export default {
                 }
             })
         })
+    },
+
+    computed: {
+        filterdMusicList() {
+            return this.audioList.filter(audio => {
+                return audio.name.includes(this.searchValue) 
+            })
+        }
     },
 
     methods: {

@@ -19,19 +19,17 @@
         </div>
 
         <div class="sett-box">
-            <!-- <div class="i-item-class">
-                <i class="fi fi-ss-building"></i>
-            </div> -->
-            <h5>Name</h5>
+            <div class="i-item-class">
+                <i class="fi fi-sr-user"></i>
+            </div>
             <input type="text" placeholder="Name" v-model="queryName">
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="name">Change</div>
         </div>
     
         <div class="sett-box">
-            <!-- <div class="i-item-class">
-                <i class="fi fi-ss-building"></i>
-            </div> -->
-            <h5>Bio</h5>
+            <div class="i-item-class">
+                <i class="fi fi-ss-info"></i>
+            </div>
             <textarea type="text" placeholder="Bio" v-model="queryBio" style="margin-left: 10px;"></textarea>
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="bio_info">Change</div>
         </div>
@@ -305,8 +303,8 @@ $color-text-izumrud: #00ff80;
 
 .main-comp {
     position: absolute;
-    width: 500px;
-    height: 620px;
+    width: 400px;
+    height: 560px;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
@@ -316,6 +314,7 @@ $color-text-izumrud: #00ff80;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
+    overflow: auto;
 }
 
 .main-settings-comp{
@@ -399,9 +398,8 @@ $color-text-izumrud: #00ff80;
             color: white;
             border: 1px solid #777;
             padding: 5px;
-            // margin-left: 35px;
-            max-width: 250px;
-            min-width: 250px;
+            max-width: 200px;
+            min-width: 200px;
             max-height: 300px;
             min-height: 50px;
         }

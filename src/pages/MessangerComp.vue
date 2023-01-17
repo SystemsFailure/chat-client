@@ -78,11 +78,18 @@
                 <Transition name="up-profile-card-slide">
                     <SettingsComp v-show="showMenuSettings" @setImageToBack="setImage"></SettingsComp>
                 </Transition>
-                    <ViewProfileComp v-show="showMenuMail" @showCreateMusicWindowFunction="(v) => {this.showCreateMusicWindow = true}"></ViewProfileComp>
+                    <ViewProfileComp 
+                    v-show="showMenuMail" 
+                    @showCreateMusicWindowFunction="(v) => {this.showCreateMusicWindow = true}"
+                    @showDialogWindowCreatePlalistFunction="(value) => {this.showDialogCreatePlaylist = value}"
+                    @showDetailWindowCompFunction="(value) => {this.showDetailWindow = value}"
+                    ></ViewProfileComp>
                 <Transition name="up-profile-card-slide">
                     <MusicMenuComp v-show="showMenuMusics"></MusicMenuComp>
                 </Transition>
 
+                <CreatePlaylistWindow v-if="showDialogCreatePlaylist" @closeCreateWindowPlaylistFunction="(value) => {this.showDialogCreatePlaylist = value}"></CreatePlaylistWindow>
+                <DetailWindowComp v-if="showDetailWindow" @closeDetailWindowFunction="(value) => {this.showDetailWindow = value}"></DetailWindowComp>
 
             </div>
         </div>
@@ -102,6 +109,8 @@ import NotificationsComp from '@/components/NotificationsComp.vue'
 import MusicMenuComp from '@/components/MusicMenuComp.vue'
 import dialogWindow from '@/components/UI/dialogWindow.vue'
 import CreateMusicWindow from '@/components/ModalWindows/CreateMusicWindow.vue'
+import CreatePlaylistWindow from '@/components/ModalWindows/CreatePlaylistWindow.vue'
+import DetailWindowComp from '@/components/ModalWindows/DetailWindowComp.vue'
 import dialogChatDeleted from '@/components/UI/dialogChatDeleted.vue'
 import requestGetUsers from '@/hooks/hookRequestsToUser'
 import hookBackChange from '@/hooks/hookBackgroundChange'
@@ -129,6 +138,8 @@ export default {
             showMenuMusics: false,
             showCreateMusicWindow: false,
             showDialogWindowChatDeleted: false,
+            showDialogCreatePlaylist: false,
+            showDetailWindow: false,
         }
     },
 
@@ -273,7 +284,8 @@ export default {
         ViewProfileComp, dialogWindow,
         AudioListComp, MusicMenuComp,
         NotificationsComp, dialogChatDeleted,
-        CreateMusicWindow
+        CreateMusicWindow, CreatePlaylistWindow,
+        DetailWindowComp,
 
     }
 

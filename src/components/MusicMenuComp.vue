@@ -14,7 +14,7 @@
                     class="itemMyMusic"
                     v-for="music in MyMusicsListFiltered" 
                     :key="music.id" 
-                    :style="cheachExitMusicInArray(music.id) ? {'backgroundColor' : 'teal'} : {'backgroundColor' : 'none'}"
+                    :style="cheachExitMusicInArray(music.id) ? {'backgroundColor' : 'teal'} : {'backgroundColor' : 'rgba(51, 51, 51, 0)'}"
                     @dblclick="addToSelectedArray(music.id)"
                     @click="removeElementFromSelectedArray(music.id)"
                     >
@@ -94,8 +94,9 @@ export default {
                 this.selectedItem.forEach(elem => {
                     if(elem.id === id)
                     {
-                        let index = this.selectedItem.indexOf(elem)
-                        delete(this.selectedItem[index])
+                        this.selectedItem = this.selectedItem.filter(item => {
+                            return item.id != id
+                        })
                     }
                 })
             }

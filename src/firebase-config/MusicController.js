@@ -52,12 +52,10 @@ const MusicApi = {
                 }).catch(err => console.log(err))
             }
         }
-        console.log(musics, 'its musics list of id')
         return musics
     },
 
     sendFile: async ( data ) => {
-        console.log(data, 'start')
         let file_url = null
         if(!data)
         {
@@ -65,15 +63,12 @@ const MusicApi = {
             return
         }
         const storageRef = ref(storage, 'musics/' + `${data.name} - ` + data.userId)
-        console.log(storageRef, 'storageReference')
         await uploadBytes(storageRef, data.file).then( async (snapshot) => {
             const starsRef = ref(storage, snapshot.metadata.fullPath)
-            console.log(starsRef, 'file been upload successful')
             if(!starsRef) {
                 console.log(starsRef, 'not found', 'MessageController -> file not found' + ``)
             }
             await getDownloadURL(starsRef).then((url) => {
-                console.log(url, 'url return successful')
                 file_url = url
               }).catch((error) => {
                 console.log(error)  
@@ -108,7 +103,6 @@ const MusicApi = {
             }
             musicsList.push(data_message)
         })
-        console.log(musicsList, 'array')
         return musicsList
     },
 

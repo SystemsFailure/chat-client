@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="line-main-informations">
-                    <div class="btn-detail">
+                    <div class="btn-detail" @click="() => {this.$emit('showDetailWindowCompFunction', true)}">
                         <i class="fi fi-ss-interrogation"></i>
                         <span>detail</span>
                     </div>
@@ -55,7 +55,7 @@
                 <div class="content-conteiner">
                     <div class="custom-playlist">
                         <div class="line-title"><span>playlists</span> <span class="text-more">show more</span></div>
-                        <div class="playlist_" v-for="playlist in playlistList" :key="playlist.id">
+                        <div class="playlist_" v-for="playlist in playlistList" :key="playlist.id" @click="createNewPlaylist(playlist.id)">
                             <img :src="playlist.img_url ? require('@/assets/' + playlist.img_url) : require('@/assets/playlist.png')" alt="" srcset="">
                             <div class="title-playlist"><span>{{ playlist.title }}</span></div>
                             <div class="avtor-title"><span>{{ playlist.avtor }}</span></div>
@@ -119,7 +119,17 @@ export default {
         return {
             modules: [Pagination]
         }
-    }
+    },
+
+    methods: {
+        createNewPlaylist(id)
+        {
+            if(id === this.playlistList.length - 1)
+            {
+                this.$emit('showDialogWindowCreatePlalistFunction', true)
+            }
+        }
+    },
 
 }
 </script>
