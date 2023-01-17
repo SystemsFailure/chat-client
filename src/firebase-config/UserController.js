@@ -61,6 +61,8 @@ const UserApi = {
             arrayConfigurations: [],
             arrayMuteNotificationsUsers: [],
             arrayСertainUsers: [],
+            arrayMusicsFastAccess: [],
+            arrayPlaylists: [],
         }).then(user => {
             local.setItem('user-id', user.id)
             console.log(user.id, 'daddada')
@@ -89,11 +91,14 @@ const UserApi = {
                     arrayFollowing: user.data().arrayFollowing,
                     arrayNotReadMessages: user.data().arrayNotReadMessages,
                     arrayConfigurations: user.data().arrayConfigurations,
+                    arrayMusicsFastAccess: user.data().arrayMusicsFastAccess,
+                    arrayPlaylists: user.data().arrayPlaylists,
                     city: user.data().city,
                     country: user.data().country,
                     bio_info: user.data().bio_info,
                     status: user.data().status,
-                    atCreated: user.data().atCreated
+                    atCreated: user.data().atCreated,
+
                 }
                 dataUser.push(data)
             }
@@ -125,6 +130,8 @@ const UserApi = {
                             arrayFollowing: user.data().arrayFollowing,
                             arrayNotReadMessages: user.data().arrayNotReadMessages,
                             arrayConfigurations: user.data().arrayConfigurations,
+                            arrayMusicsFastAccess: user.data().arrayMusicsFastAccess,
+                            arrayPlaylists: user.data().arrayPlaylists,
                             city: user.data().city,
                             country: user.data().country,
                             bio_info: user.data().bio_info,

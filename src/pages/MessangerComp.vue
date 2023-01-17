@@ -148,6 +148,9 @@ export default {
 
 
     mounted() {
+        this.$store.state.USERID = localStorage.getItem('user-id')
+        // this.$store.state.UserPersonalData = 
+
         if(this.getCookieValueByName('imgId') != '' && document.cookie) {
             document.body.style.backgroundImage = `url(${require('@/assets/' + this.imgs_path_list[this.getCookieValueByName('imgId')].img_path)})`
         } else { console.log('cookie is empty!') }
@@ -155,6 +158,10 @@ export default {
         users.then(data => {
             this.list_users = data
         })
+    },
+
+    unmounted() {
+        this.$store.state.USERID = null
     },
 
     computed: {

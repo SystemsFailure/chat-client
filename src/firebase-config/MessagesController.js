@@ -87,7 +87,7 @@ const MessagesApi = {
           else
           {
             console.log('text')
-            return true
+            return await MessagesApi.getAllMessage(data_r)
           }
         }).catch(err => {
             console.log(err, 'error from createMessage')

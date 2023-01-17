@@ -251,6 +251,7 @@ export default {
         }
 
         input[type='text'] {
+            margin-top: 15px;
             padding: 10px;
             background-color: rgba($color: #000000, $alpha: .8);            
             outline: none;

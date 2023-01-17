@@ -13,7 +13,8 @@ const store = createStore({
         showProfile: false,
         itemByProfile: [],
         online: false,
-        USERID: localStorage.getItem('user-id'),
+        USERID: null,
+        UserPersonalData: [],
         showDialogDeleteWindow: false,
         // showCycyleNotifyItem: false
 

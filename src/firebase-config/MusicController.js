@@ -1,11 +1,60 @@
 // import { ref, list} from "firebase/storage";
 import { ref, list, getDownloadURL, uploadBytes} from "firebase/storage";
-import {addDoc, collection, query, getDocs} from "firebase/firestore"
+import {addDoc, collection, query, getDocs, getDoc, doc, updateDoc, arrayUnion, arrayRemove} from "firebase/firestore"
 
 import { storage } from "@/main";
 import { db } from "@/main";
 
 const MusicApi = {
+    deleteFromArrayMusicsList: async (userId, removedValue) => {
+        const user = doc(db, 'users', userId)
+        if(user) {
+            await updateDoc(user, {
+                arrayMusicsFastAccess: arrayRemove(removedValue)
+            })
+            return true
+        } else {
+            console.log('user is not found!')
+            return false
+        }
+    },
+
+    setMusicInArrayPersonalMusicList: async (userId, newValue) => {
+        const user = doc(db, "users", userId)
+        if(!user.id) console.log('userId is not defined')
+        await updateDoc(user, {
+            arrayMusicsFastAccess: arrayUnion(newValue)
+        })
+        return 'successful'
+    },
+
+    getAllPersonalMusicsDoc: async(arrayMusicsList) => {
+        let musics = []
+        const listMusics = arrayMusicsList
+        if(listMusics) {
+            for (let index = 0; index < listMusics.length; index++) {
+                const elementId = listMusics[index]
+                const musicRef = doc(db, 'musics', elementId)
+                await getDoc(musicRef).then(music => {
+                    if(music.exists()) {
+                        const data = {
+                            id: music.id,
+                            artist: music.data().artist,
+                            name: music.data().name,
+                            playlistId: music.data().playlistId,
+                            size: music.data().size,
+                            type: music.data().type,
+                            url: music.data().url,
+                            userId: music.data().userId
+                        }
+                        musics.push(data)
+                    }
+                }).catch(err => console.log(err))
+            }
+        }
+        console.log(musics, 'its musics list of id')
+        return musics
+    },
 
     sendFile: async ( data ) => {
         console.log(data, 'start')

@@ -40,7 +40,8 @@
                                     @mouseout="hideDetailDataMessage($event)"
                                     v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : 'rgba(0, 248, 248, 0.581)', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
                                     >{{n.content}}
-                                    <div v-if="n.result === true && n.fromId === user_id" class="bomb-s-loader" :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}"><i class="fi fi-ss-check"></i></div>
+                                    <div v-if="n.result === true && n.fromId === user_id && !showLoaderMessage" class="bomb-s-loader" :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}"><i class="fi fi-ss-check"></i></div>
+                                    
                                     <div v-if="n.result === false || showFailureMessage && n.id === message_lst[message_lst.length - 1].id" class="bomb-s-loader" style="color: red;">failure</div>
                                     <div v-if="showLoaderMessage && n.id === message_lst[message_lst.length - 1].id" class="loadingio-spinner-eclipse-pguwq2zyapl"><div class="ldio-irfwm47jvi"><div></div></div></div>
 
@@ -378,7 +379,7 @@ export default {
                         this.showFailureMessage = true
                     }
                 }, 5000)
-                // this.message_lst = data
+                this.message_lst = data
                 this.showLoaderMessage = false
                 setTimeout(() => {
                     let block_ = document.getElementById("block-chat-window-id")
