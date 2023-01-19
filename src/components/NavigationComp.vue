@@ -9,8 +9,15 @@
                 <i class="fi fi-rr-comment"></i>
                 <!-- <img src="@/assets/chat-right-fill.svg" alt="chats" srcset=""> -->
             </div>
-            <div @click="openMenuAny(3)" class="item-im" :class="{'item-selected' : showMenuMusics}">
-                <i class="fi fi-ss-music-alt"></i>
+            <div @mouseenter="showDetailMenuFunction" @mouseleave="closeDetailMenuFunction" class="item-im" :class="{'item-selected' : showMenuMusics}">
+                <div class="three-points"><i class="fi fi-ss-menu-dots-vertical"></i></div>
+                <div class="detailmenu" v-if="showDetailMenu">
+                    <div class="myaudio" @click="showMyMusic"><i class="fi fi-ss-list-check"></i></div>
+                    <div class="allaudio" @click="GlobalListMusicss"><i class="fi fi-ss-music-alt"></i></div>
+                </div>
+                <i v-if="myMusicIcon" class="fi fi-ss-list-check"></i>
+                <i v-else class="fi fi-ss-music-alt">
+                </i>
             </div>
             <div @click="openMenuAny(2)" class="item-im" :class="{'item-selected' : showMenuSettings}">
                 <i class="fi fi-br-settings-sliders"></i>
@@ -26,13 +33,41 @@
 export default {
     data() {
         return {
+            myMusicIcon: false,
             showMenuChats: true,
             showMenuMail: false,
             showMenuSettings: false,
             showMenuMusics: false,
+            showDetailMenu: false,
         }
     },
     methods: {
+        showDetailMenuFunction() {
+            this.showDetailMenu = true
+        },
+        closeDetailMenuFunction() {
+            this.showDetailMenu = false
+        },
+        showMyMusic() {
+            console.log('click1')
+            this.$emit('showMyMusicCompFunction', false)
+            this.myMusicIcon = true
+
+            this.showMenuMusics = true
+            this.showMenuSettings = false
+            this.showMenuMail = false
+            this.showMenuChats = false
+        },
+        GlobalListMusicss() {
+            console.log('click2')
+            this.$emit('openMenu', 3)
+            this.myMusicIcon = false
+
+            this.showMenuMusics = true
+            this.showMenuSettings = false
+            this.showMenuMail = false
+            this.showMenuChats = false
+        },
         openMenuAny(integer) {
             switch (integer) {
                 case 0:
@@ -99,7 +134,8 @@ $color-text-izumrud: #00ff80;
     display: flex;
     flex-direction: column;
     align-items: center;
-    z-index: 10;
+    // z-index: 10;
+    z-index: 100;
 
     background: rgba(10, 10, 10, 0.65);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -117,6 +153,7 @@ $color-text-izumrud: #00ff80;
             .item-im {
                 width: auto;
                 height: 40px;
+                position: relative;
                 // background-color: rgba(0, 0, 0, 0.2);
 
                 display: flex;
@@ -130,8 +167,78 @@ $color-text-izumrud: #00ff80;
                     height: 25px;
                     color: white;
                 }
+
+                .detailmenu {
+                    right: 0;
+                    height: 100%;
+                    width: 120px;
+                    position: absolute;
+                    // background-color: red;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transform: translateX(121px);
+
+                    .myaudio {
+                        width: 60px;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        backdrop-filter: blur(5px);
+                        border: 1px solid #333;
+                        background-color: #111;
+                        
+                        &:hover {
+                            cursor: pointer;
+                            background: rgba(0, 179, 176, 0.889);
+                            transition: .3s;
+                        }
+                    }
+
+                    .allaudio {
+                        width: 60px;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        backdrop-filter: blur(5px);
+                        border: 1px solid #333;
+                        background-color: #111;
+
+
+
+                        &:hover {
+                            cursor: pointer;
+                            background: rgba(0, 179, 176, 0.889);
+                            transition: .3s;
+                        }
+
+                    }
+                }
+
+                .three-points {
+                    right: 0;
+                    height: 100%;
+                    width: 30%;
+                    position: absolute;
+
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 12;
+
+                    .fi-ss-menu-dots-vertical {
+                        font-size: 12px;
+                        margin-top: 4px;
+                    }
+
+                }
                 i {
                     color:white;
+
                 }
             }
         }

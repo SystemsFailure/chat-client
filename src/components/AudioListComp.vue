@@ -69,7 +69,7 @@
 
 
                         <div class="image-audio">
-                            <img src="@/assets/airPods.png" alt="" srcset="">
+                            <img src="@/assets/voice-chat.png" alt="" srcset="">
                             <!-- <Transition name="anim-fade-effect">
                             </Transition> -->
     
@@ -500,17 +500,21 @@ export default {
 </script>
 <style lang="scss" scoped>
 .main-AudioComp {
-    width: 100%;
-    height: 100vh;
-    z-index: 100;
+    position: absolute;
+    width: 96%;
+    height: 100%;
+    right: 0;
+    z-index: 20;
     display: flex;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(12.2px);
+    -webkit-backdrop-filter: blur(12.2px);
     .inner-container-deep {
         width: 100%;
         height: 100%;
-        background: rgba($color: #000000, $alpha: .3);
-        z-index: 1000;
+        background: rgba($color: #000000, $alpha: .5);
+        // z-index: 99;
 
         .line-comp {
             height: 100px;
@@ -819,7 +823,7 @@ export default {
                     position: absolute;
                     width: 100%;
                     height: 100%;
-                    background-color: rgba($color: #272727, $alpha: .5);
+                    background-color: rgba($color: #059e91, $alpha: .5);
                     display: none;
                     align-items: center;
                     padding-left: 8px;

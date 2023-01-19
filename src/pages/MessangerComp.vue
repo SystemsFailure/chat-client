@@ -19,7 +19,7 @@
     <div class="main_div">
         <div class="global-content">
 
-            <NavigationComp @openMenu="openMenu"></NavigationComp>
+            <NavigationComp @openMenu="openMenu" @showMyMusicCompFunction="() => {this.openMenu(5)}"></NavigationComp>
 
             <div class="right-block">
                 <Transition name="up-profile-card-slide">
@@ -33,6 +33,7 @@
                 <Transition name="up-profile-card-slide">
                     <AudioListComp v-if="showMenuMusics"></AudioListComp>
                 </Transition>
+                <PersonalAudioListComp v-if="shiwMyMusic" ></PersonalAudioListComp>
             </div>
 
             <div class="left-block">
@@ -85,7 +86,7 @@
                     @showDetailWindowCompFunction="(value) => {this.showDetailWindow = value}"
                     ></ViewProfileComp>
                 <Transition name="up-profile-card-slide">
-                    <MusicMenuComp v-show="showMenuMusics"></MusicMenuComp>
+                    <MusicMenuComp v-show="false"></MusicMenuComp>
                 </Transition>
 
                 <CreatePlaylistWindow v-if="showDialogCreatePlaylist" @closeCreateWindowPlaylistFunction="(value) => {this.showDialogCreatePlaylist = value}"></CreatePlaylistWindow>
@@ -100,6 +101,7 @@
 import NavigationComp from '@/components/NavigationComp.vue'
 import ChatWindowComp from '@/components/ChatWindowCompFolder/ChatWindowComp.vue'
 import AudioListComp from '@/components/AudioListComp.vue'
+import PersonalAudioListComp from '@/components/PersonalAudioListComp.vue'
 import SearchUsersBoxComp from '@/components/SearchUsersBoxComp.vue'
 import SettingsComp from '@/components/SettingsComp.vue'
 import ProfileCardComp from '@/components/ProfileCardComp.vue'
@@ -140,6 +142,7 @@ export default {
             showDialogWindowChatDeleted: false,
             showDialogCreatePlaylist: false,
             showDetailWindow: false,
+            shiwMyMusic: false,
         }
     },
 
@@ -235,11 +238,20 @@ export default {
 
         openMenu(id_) {
             switch (id_) {
+                case 5:
+                    this.showMenuMail = false
+                    this.showMenuChats = false
+                    this.showMenuSettings = false
+                    this.showMenuMusics = false
+                    this.showChatWindowComp = false
+                    this.shiwMyMusic = true
+                    break;
                 case 0:
                     this.showMenuMail = true
                     this.showMenuChats = false
                     this.showMenuSettings = false
                     this.showMenuMusics = false
+                    this.shiwMyMusic = false
                     break;
                 case 1:
                     this.showMenuChats = true
@@ -247,18 +259,21 @@ export default {
                     this.showMenuMail = false
                     this.showMenuSettings = false
                     this.showMenuMusics = false
+                    this.shiwMyMusic = false
                     break;
                 case 2:
                     this.showMenuSettings = true
                     this.showMenuMail = false
                     this.showMenuChats = false
                     this.showMenuMusics = false
+                    this.shiwMyMusic = false
                     break;
                 case 3:
                     this.showMenuMusics = true
                     this.showChatWindowComp = false
                     this.showMenuSettings = false
                     this.showMenuMail = false
+                    this.shiwMyMusic = false
                     this.showMenuChats = false
                     break;
                 default:
@@ -285,7 +300,7 @@ export default {
         AudioListComp, MusicMenuComp,
         NotificationsComp, dialogChatDeleted,
         CreateMusicWindow, CreatePlaylistWindow,
-        DetailWindowComp,
+        DetailWindowComp, PersonalAudioListComp
 
     }
 
