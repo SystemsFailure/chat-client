@@ -40,7 +40,7 @@
                                             @contextmenu="() => {this.deleteMessage(n.id); return false}"
                                             @mouseover="showDetailDataMessage($event, n.id)"
                                             @mouseout="hideDetailDataMessage($event)"
-                                            v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : '#111;', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
+                                            v-bind:style="n.fromId===user_id?{'float':'right', 'background-color' : '#666;', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
                                             >{{n.content}}
                                         </h6>
                                     </div>
@@ -402,7 +402,8 @@ export default {
 
 .anime-bubble-message {
     animation: change-background 3s ease infinite;
-    background: linear-gradient(-90deg, #dbdbdb, #b5b5b5, #707070, #484848);
+    // background: linear-gradient(-90deg, #dbdbdb, #b5b5b5, #707070, #00ff80);
+    background: linear-gradient(-90deg, #cacaca, #a7a7a7, #7e7e7e, #484848);
     transition: .6s;
 }
 
@@ -452,12 +453,13 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
 .main-window-chat{
     width: 100%;
     height: 100%;
+    background: rgba(5, 5, 5, 0.85);
 
     .content-win-chat {
         .chat-window {
             width: 100%;
             height: 100vh;
-            background-color:rgba(0, 0, 0, 0.8);
+            background: rgba(5, 5, 5, 0.85);
             padding-top: 40px;
             padding-bottom: 40px;
 
@@ -569,6 +571,8 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                     color: rgb(232, 230, 230);
                     font-size: 14px;
                     background-color:$color-back-message-bubble;
+                    // background-color: #00ff80;
+                    // background: #38bdf8;
                     background-size: 300% 300%;
                     word-wrap: break-word;
                     width: auto;

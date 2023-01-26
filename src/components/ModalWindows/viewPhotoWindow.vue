@@ -18,7 +18,7 @@
                 :thumbs="{ swiper: thumbsSwiper }"
                 >
                     <swiper-slide class="slide" v-for="index in arrayListImages" :key="index">
-                        <img :src="index.img_url" />
+                        <img :src="index.img_url" sizes="(max-width: 1000px) 1000px, (min-width: 1000px) 1000px" />
                     </swiper-slide>
                 </swiper>
                 
@@ -127,7 +127,8 @@ export default {
         display: block;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
+        // image-rendering: pixelated;
       }
     }
   }

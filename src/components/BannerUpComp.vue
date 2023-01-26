@@ -65,7 +65,7 @@ $color-text-izumrud: #00ff80;
     height: 40px;
 
 
-    background: rgba(10, 10, 10, 0.65);
+    background: rgba(5, 5, 5, 0.85);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
