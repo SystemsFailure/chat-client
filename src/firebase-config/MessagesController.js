@@ -68,7 +68,6 @@ const MessagesApi = {
               return
             }
         })
-        console.log(mess_lst, '00002')
         return mess_lst
     },
 
@@ -78,15 +77,14 @@ const MessagesApi = {
         if(!data.toId) throw IError('toId as null -> MessageApi')
 
         const array = await addDoc(collection(db, "messages"), data).then( async () => {
-          // console.log(data_r)
           if (data.img_url != null)
           {
-            console.log('file')
+            //Это для image сообщения
             return await MessagesApi.getAllMessage(data_r)
           }
           else
           {
-            console.log('text')
+            //Это текстовое сообщение
             return await MessagesApi.getAllMessage(data_r)
           }
         }).catch(err => {

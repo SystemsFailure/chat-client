@@ -38,10 +38,7 @@
 
 <script>
 import dragApi from '@/hooks/hookDragComposition'
-// import {UserApi} from '@/firebase-config/UserController.js'
-// import { ref, getDownloadURL } from "firebase/storage";
-// import { storage } from '@/main';
-// import IError from '@/IError';
+import { mapState } from 'vuex'
 
 export default {
     data() {
@@ -49,6 +46,12 @@ export default {
             itemByProfile: this.$store.state.itemByProfile
 
         }
+    },
+
+    computed: {
+        ...mapState([
+            'player',
+        ]),
     },
 
     mounted() {
@@ -88,23 +91,18 @@ $color-text-izumrud: #00ff80;
 .content-card {
     width: 400px;
     height: 70%;
-
     margin: 0;
     top: 50%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
-
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(10, 10, 10, 0.65);
-
+    background: rgba(0, 0, 0, 0.65);
     position: absolute;
-
     z-index: 1000;
-
     font-family: Lato,sans-serif;
     font-weight: 700;
     font-size: 11px;

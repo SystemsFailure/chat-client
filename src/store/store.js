@@ -1,6 +1,12 @@
 import {createStore} from "vuex";
+import playerModule from "@/store/modules/playerModule";
 
 const store = createStore({
+
+    modules: {
+        player: playerModule  
+    },
+
     state: () => ({
         user_data: [],
         validated: true,

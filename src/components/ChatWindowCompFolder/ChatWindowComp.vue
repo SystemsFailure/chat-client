@@ -34,16 +34,35 @@
                                         <div class="data-created-img" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}"><span>{{ n.atCreated }}</span></div>
                                     </div>
                                     <h6 v-else
+                                    :id="n.id"
                                     class="im-message-content"
                                     @contextmenu="() => {this.deleteMessage(n.id); return false}"
                                     @mouseover="showDetailDataMessage($event, n.id)"
                                     @mouseout="hideDetailDataMessage($event)"
-                                    v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : 'rgba(0, 248, 248, 0.581)', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
+                                    v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : '#111;', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
                                     >{{n.content}}
-                                    <div v-if="n.result === true && n.fromId === user_id && !showLoaderMessage" class="bomb-s-loader" :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}"><i class="fi fi-ss-check"></i></div>
+                                    <!-- <div
+                                        class="bomb-s-loader" 
+                                        :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}">
+                                    </div>
+                                    <div
+                                        v-if="n.fromId === user_id && !showLoaderMessage" 
+                                        class="bomb-s-loader" 
+                                        :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}">
+                                        <i class="fi fi-bs-check"></i>
+                                    </div>
                                     
-                                    <div v-if="n.result === false || showFailureMessage && n.id === message_lst[message_lst.length - 1].id" class="bomb-s-loader" style="color: red;">failure</div>
-                                    <div v-if="showLoaderMessage && n.id === message_lst[message_lst.length - 1].id" class="loadingio-spinner-eclipse-pguwq2zyapl"><div class="ldio-irfwm47jvi"><div></div></div></div>
+                                    <div
+                                        v-if="n.result === false || showFailureMessage && n.id === message_lst[message_lst.length - 1].id"
+                                        class="bomb-s-loader" 
+                                        style="color: red;">
+                                        failure
+                                    </div>
+                                    <div 
+                                        v-if="showLoaderMessage && n.id === message_lst[message_lst.length - 1].id" 
+                                        class="loadingio-spinner-eclipse-pguwq2zyapl">
+                                        <div class="ldio-irfwm47jvi"><div></div></div>
+                                    </div> -->
 
                                     </h6>
                                 </div>
@@ -83,9 +102,9 @@ export default {
             message_lst: [],
             USERTO: null,
             showMiniChatValue: false,
-            showMiniListComp: true,
-            showLoaderMessage: false,
-            showFailureMessage: false,
+            showMiniListComp: false,
+            // showLoaderMessage: false,
+            // showFailureMessage: false,
             imageURL: null,
         }
     },
@@ -111,6 +130,7 @@ export default {
             console.log(err)
         })
 
+        // Здесь устанавливается onSnapshoot для слежения за index - это колл-во сообщений в чате, которое меняется каждый раз когда оправляется сообщение
         await UserApi.getAllChats(this.user_id).then(chats => {
             chats.forEach(async elem => {
                 await ChatApi.getChat({toID: elem.id, fromID: this.user_id}).then( async chat => {
@@ -123,9 +143,10 @@ export default {
                             fromId: this.user_id,
                         }
                         await MessagesApi.getAllMessage(data_).then(arr => {
-                            this.message_lst = arr
-                            let block = document.getElementById("block-chat-window-id")
-                            block.scrollTop = block.scrollHeight
+                            console.log(arr)
+                            // this.message_lst = arr
+                            // let block = document.getElementById("block-chat-window-id")
+                            // block.scrollTop = block.scrollHeight
                         }).catch(err => {
                             console.log(err)
                         })
@@ -331,17 +352,20 @@ export default {
         },
 
         async add_message(text) {
-            this.showLoaderMessage = true
-            this.message_lst.push({fromId: this.user_id, content: text})
+            let countMess = 0
+            const data_ = { message_lst: this.message_lst, toId: this.user_to_id, fromId: this.user_id }
+            // this.showLoaderMessage = true
+
+            new Promise((resolve, failure) => {
+                this.message_lst.push({fromId: this.user_id, content: text, toId: this.user_to_id, size: new Blob([text]).size, result: true})
+                resolve('success')
+                failure('failure')
+            }).then(() => {
+                document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('anime-bubble-message')
+            })
+
             let block = document.getElementById("block-chat-window-id")
             block.scrollTop = block.scrollHeight
-
-            let countMess = 0
-            const data_ = {
-                message_lst: this.message_lst,
-                toId: this.user_to_id,
-                fromId: this.user_id,
-            }
 
             if(this.user_to_id && this.user_id) {
                 await ChatApi.getChat({toID: this.user_to_id, fromID: this.user_id}).then( async chat => {
@@ -361,7 +385,7 @@ export default {
                     console.log(err)
                 })
             }
-            await MessagesApi.createMessage({
+            let messageContent = {
                 content: text,
                 fromId: this.user_id,
                 toId: this.user_to_id != null && this.user_to_id != 0 ? this.user_to_id : false,
@@ -373,39 +397,13 @@ export default {
                 img_url: null,
                 img_name: null,
                 index: countMess,
-            }, data_).then( async data => {
-                setTimeout(() => {
-                    if(data === 'failure') {
-                        this.showFailureMessage = true
-                    }
-                }, 5000)
-                this.message_lst = data
-                this.showLoaderMessage = false
-                setTimeout(() => {
-                    let block_ = document.getElementById("block-chat-window-id")
-                    block_.scrollTop = block_.scrollHeight
-                }, 200)
-
-                // this.$emit('setContentOfLastMessageFunction', content)
-
-                // let collectionMessages = document.getElementsByClassName('message-bubble')
-                // let lastElement = collectionMessages[collectionMessages.length - 1]
-
-                // let options = {
-                //     rootMargin: '5px',
-                //     threshold: 0.5
-                // }
-                // let callback = function(entries, observer){
-                //     console.log('Просмотренно', entries, observer)
-                // }
-                // let observer_ = new IntersectionObserver(callback, options)
-                // observer_.observe(lastElement)
-                // let moreVoice = new Audio()
-
+            }
+            await MessagesApi.createMessage(messageContent, data_).then( async () => {
+                document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.remove('anime-bubble-message')
             }).catch(err => {
                 console.log(err)
-                this.showLoaderMessage = false
-                this.showFailureMessage = true
+                document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('failure-bubble-message')
+                localStorage.setItem('fail-message', messageContent)
             })
         },
     },
@@ -423,6 +421,43 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.failure-bubble-message {
+    background: #ff0000;
+}
+
+.anime-bubble-message {
+    animation: change-background 3s ease infinite;
+    background: linear-gradient(-90deg, #dbdbdb, #b5b5b5, #707070, #484848);
+    transition: .6s;
+}
+
+@keyframes change-background {
+	0% {
+		background-position: 0% 25%;
+	}
+    15% {
+        background-position: 25% 50%;
+    }
+    25% {
+        background-position: 50% 75%;
+    }
+    40% {
+        background-position: 75% 100%;
+    }
+	50% {
+		background-position: 100% 75%;
+	}
+    75% {
+        background-position: 75% 50%;
+    }
+    85% {
+        background-position: 50% 25%;
+    }
+	100% {
+        background-position: 25% 0%;
+	}
+}
 
 $color-back: rgba(19, 19, 19, 0.4);
 $color-back-message-bubble: rgba(34, 34, 34, 0.8);
@@ -555,25 +590,27 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                     cursor:default;
                 }
                 .im-message-content {
-                    border-radius: 15px;
-
+                    border-radius: 10px;
                     float: right;
                     color: rgb(232, 230, 230);
-                    font-size: 15px;
-                    // background-color:#ff6600;
+                    font-size: 14px;
                     background-color:$color-back-message-bubble;
+                    background-size: 300% 300%;
                     word-wrap: break-word;
                     width: auto;
                     max-width: 47%;
                     height: auto;
-                    padding: 10px 10px 5px 10px;
+                    padding: 7px 7px 7px 7px;
                     display: flex;
                     flex-direction: column;
-
+                    transition: .6s;
                     .bomb-s-loader {
                         margin-left: auto;
+                        margin-right: 10px;
                         font-size: 10px;
                         padding-left: 10px;
+                        width: 10px;
+                        height: 10px;
                     }
                     }
             }
