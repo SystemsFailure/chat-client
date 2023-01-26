@@ -25,7 +25,7 @@
                             <h5  class="mess-content-example" style="color: white;" id="q5"></h5>
                         </div>
 
-                        <!-- <transition-group name="fade" tag="div"> -->
+                        <transition-group name="bounce-bubble-message" tag="div">
                             <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
                                 <div class="message-bubble">
                                     <div class="image-content" v-if="n.img_url">
@@ -41,33 +41,10 @@
                                     @mouseout="hideDetailDataMessage($event)"
                                     v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : '#111;', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
                                     >{{n.content}}
-                                    <!-- <div
-                                        class="bomb-s-loader" 
-                                        :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}">
-                                    </div>
-                                    <div
-                                        v-if="n.fromId === user_id && !showLoaderMessage" 
-                                        class="bomb-s-loader" 
-                                        :style="n.fromId===user_id? {'margin-left':'auto'}:{'padding-bottom':'0px'}">
-                                        <i class="fi fi-bs-check"></i>
-                                    </div>
-                                    
-                                    <div
-                                        v-if="n.result === false || showFailureMessage && n.id === message_lst[message_lst.length - 1].id"
-                                        class="bomb-s-loader" 
-                                        style="color: red;">
-                                        failure
-                                    </div>
-                                    <div 
-                                        v-if="showLoaderMessage && n.id === message_lst[message_lst.length - 1].id" 
-                                        class="loadingio-spinner-eclipse-pguwq2zyapl">
-                                        <div class="ldio-irfwm47jvi"><div></div></div>
-                                    </div> -->
-
                                     </h6>
                                 </div>
                             </div>
-                        <!-- </transition-group> -->
+                        </transition-group>
 
                     </div>
                 </div>
@@ -103,8 +80,6 @@ export default {
             USERTO: null,
             showMiniChatValue: false,
             showMiniListComp: false,
-            // showLoaderMessage: false,
-            // showFailureMessage: false,
             imageURL: null,
         }
     },
@@ -134,7 +109,6 @@ export default {
         await UserApi.getAllChats(this.user_id).then(chats => {
             chats.forEach(async elem => {
                 await ChatApi.getChat({toID: elem.id, fromID: this.user_id}).then( async chat => {
-                    console.log(chat)
                     onSnapshot(doc(db, "ChatId", chat[0].id), async (doc) => {
                         console.log(doc.data())
                         const data_ = {
@@ -144,9 +118,6 @@ export default {
                         }
                         await MessagesApi.getAllMessage(data_).then(arr => {
                             console.log(arr)
-                            // this.message_lst = arr
-                            // let block = document.getElementById("block-chat-window-id")
-                            // block.scrollTop = block.scrollHeight
                         }).catch(err => {
                             console.log(err)
                         })
@@ -193,7 +164,6 @@ export default {
 
 
     methods: {
-
         async createIndex() {
             let countMess = null
             if(this.user_to_id && this.user_id) {
@@ -219,7 +189,7 @@ export default {
 
         deleteMessage(messId) {
             MessagesApi.deleteMessageById(messId).then(() => {
-                console.log('mes')
+                console.log('bubble message')
             })
             return false
         },
@@ -272,15 +242,11 @@ export default {
             let coords = event.target.getBoundingClientRect()
             let mess_OnId = 0
 
-
             message.style = "position:fixed";
-
             this.showDialogWindow = true
-
             mess_OnId = this.message_lst.filter(mess => {
                 return mess.id === id
             })
-
             q1.innerHTML = mess_OnId[0].result !== 'Success' 
             ? "result" + " : " + "<font color=#00cec7>"+mess_OnId[0].result+"</font>" 
             : "result" + " : " + "<font color=red>"+mess_OnId[0].result+"</font>"
@@ -289,9 +255,10 @@ export default {
             q3.innerText = "size" + " : " + mess_OnId[0].size + 'kb'
             q4.innerText = mess_OnId[0].view ? "Viewed" + " : " +  'Yah' : "Viewed" + " : " +   'No'
 
-            if(event.target.style.float === 'left') {
-                if(this.message_lst.findIndex(i => i.id === mess_OnId[0].id) === this.message_lst.length - 1) {
-                    console.log('Это последний элемент', new Date().toLocaleString())
+            if(event.target.style.float === 'left') 
+            {
+                if(this.message_lst.findIndex(i => i.id === mess_OnId[0].id) === this.message_lst.length - 1) 
+                {
                     message.style.left = coords.right + 'px'
                     message.style.top = coords.bottom  - coords.height*2.5 + 'px'
                     return
@@ -299,10 +266,11 @@ export default {
                 message.style.left = coords.right + 'px'
                 message.style.top = coords.bottom + 'px'
             } else {
-                if(this.message_lst.findIndex(i => i.id === mess_OnId[0].id) === this.message_lst.length - 1) {
-                    console.log('Это последний элемент')
+                if(this.message_lst.findIndex(i => i.id === mess_OnId[0].id) === this.message_lst.length - 1) 
+                {
                     message.style.right = coords.width + 20 + 'px'
-                    if(coords.height < 50) {
+                    if(coords.height < 50) 
+                    {
                         message.style.top = coords.bottom  - coords.height*2 + 'px'
                         return
                     }
@@ -319,7 +287,8 @@ export default {
         },
 
         async add_file_message(file) {
-            if(file) {
+            if(file) 
+            {
                 const data_ = {
                     message_lst: this.message_lst,
                     toId: this.user_to_id,
@@ -354,18 +323,21 @@ export default {
         async add_message(text) {
             let countMess = 0
             const data_ = { message_lst: this.message_lst, toId: this.user_to_id, fromId: this.user_id }
-            // this.showLoaderMessage = true
-
             new Promise((resolve, failure) => {
-                this.message_lst.push({fromId: this.user_id, content: text, toId: this.user_to_id, size: new Blob([text]).size, result: true})
+                this.message_lst.push(
+                    {
+                        fromId: this.user_id, content: text, 
+                        toId: this.user_to_id, size: new Blob([text]).size, 
+                        result: true,
+                        atCreated: new Date().toLocaleString(),
+                        atUpdated: new Date().toLocaleString(),
+                    })
                 resolve('success')
                 failure('failure')
             }).then(() => {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('anime-bubble-message')
             })
 
-            let block = document.getElementById("block-chat-window-id")
-            block.scrollTop = block.scrollHeight
 
             if(this.user_to_id && this.user_id) {
                 await ChatApi.getChat({toID: this.user_to_id, fromID: this.user_id}).then( async chat => {
@@ -400,6 +372,8 @@ export default {
             }
             await MessagesApi.createMessage(messageContent, data_).then( async () => {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.remove('anime-bubble-message')
+                let block = document.getElementById("block-chat-window-id")
+                block.scrollTop = block.scrollHeight
             }).catch(err => {
                 console.log(err)
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('failure-bubble-message')
@@ -676,5 +650,24 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
 .ldio-irfwm47jvi div { box-sizing: content-box; }
 
 
+.bounce-bubble-message-enter-active {
+  animation: bounce-in .3s ease-out both;
+}
+
+.bounce-bubble-message-leave-active {
+  animation: bounce-in .3s reverse ease-in both;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.10);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 
 </style>

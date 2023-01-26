@@ -45,7 +45,7 @@
                         </div>
                     </Transition>
 
-                    <transition-group name="bounce">
+                    <transition-group name="bounce-item-notify">
                         <div class="message-box" v-for="message in list_requests" :key="message.id" :style="message.status ? {'border-left' : '5px solid teal'} : {'border' : '1px solid #333'}">
                             <div class="check-box-bpx">
                                 <input type="checkbox" name="" id="check-id" :value="message.id" v-model="SelectedMessagesList" class="checkbox-class">
@@ -440,8 +440,6 @@ export default {
                             color: white;
                             background: none;
                         }
-                        #check-id {
-                        }
 
                     }
 
@@ -564,11 +562,11 @@ export default {
 
 
 
-.bounce-enter-active {
+.bounce-item-notify-enter-active {
   animation: bounce-in .3s ease-out both;
 }
 
-.bounce-leave-active {
+.bounce-item-notify-leave-active {
   animation: bounce-in .3s reverse ease-in both;
 }
 
