@@ -2,7 +2,7 @@
 
     <div class="search-users">
         <input type="text" placeholder="searching..." class="inp-search" id="search_e" v-bind:value="modelValue" @input="(event) => {this.$emit('update:modelValue', event.target.value)}">
-        <div class="clearInp" @click="() => {this.$emit('clearTextFunction')}"><i class="fi fi-ss-cross"></i></div>
+        <div class="clearInp" @click="() => {this.$emit('clearTextFunction')}"><i class="fi fi-bs-cross"></i></div>
     </div>
 
 </template>

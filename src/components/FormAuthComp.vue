@@ -20,11 +20,11 @@
 
               <Transition name="slide-up" mode="out-in">
                 <div class="successInput" v-if="resultInputEnter === true">
-                  <i class="fi fi-br-check"></i>
+                  <i class="fi fi-bs-check"></i>
                 </div>
 
                 <div class="FailInput" v-else-if="resultInputEnter === false">
-                  <i class="fi fi-ss-cross"></i>
+                  <i class="fi fi-bs-cross"></i>
                 </div>
               </Transition>
 
@@ -39,11 +39,11 @@
 
               <Transition name="slide-up" mode="out-in">
                 <div class="successInput" v-if="resultInputEnterPassword === true">
-                  <i class="fi fi-br-check"></i>
+                  <i class="fi fi-bs-check"></i>
                 </div>
   
                 <div class="FailInput" v-else-if="resultInputEnterPassword === false">
-                  <i class="fi fi-ss-cross"></i>
+                  <i class="fi fi-bs-cross"></i>
                 </div>
               </Transition>
             </div>

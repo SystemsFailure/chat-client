@@ -3,7 +3,7 @@
         <div class="inner-co">
             <div class="title">
                 <span>create music</span>
-                <div class="close" @click="() => {this.$emit('closeCreateMusicWinodwFunction', false)}"><i class="fi fi-ss-cross"></i></div>
+                <div class="close" @click="() => {this.$emit('closeCreateMusicWinodwFunction', false)}"><i class="fi fi-bs-cross"></i></div>
             </div>
             
             <input type="text" placeholder="name music" v-model="name">

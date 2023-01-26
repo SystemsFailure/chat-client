@@ -3,11 +3,11 @@
     <div class="main-class-mini-list-favorite-user" id="btn-pop-up-down">
         <div class="btn-expand-to-express-mini-menu" id="btn-expand-to-express-id-element">
 
-            <div v-if="reverse_btn" class="nav-btn-expand" @click="ExpandLeftMiniMenu($event)"><i class="fi fi-rr-angle-double-left"></i></div>
-            <div v-else class="nav-btn-expand" @click="ExpressRightMiniMenu_($event)"><i class="fi fi-rr-angle-double-right"></i></div>
+            <div v-if="reverse_btn" class="nav-btn-expand" @click="ExpandLeftMiniMenu($event)"><i class="fi fi-bs-angle-double-left"></i></div>
+            <div v-else class="nav-btn-expand" @click="ExpressRightMiniMenu_($event)"><i class="fi fi-bs-angle-double-right"></i></div>
 
-            <div v-if="!reverse_btn_" class="nav-btn-express" @click="ExpressDownMiniMenu($event)"><i class="fi fi-rr-angle-small-down"></i></div>
-            <div v-else class="nav-btn-express" @click="ExpandUpMiniMenu_($event)"><i class="fi fi-rr-angle-small-up"></i></div>
+            <div v-if="!reverse_btn_" class="nav-btn-express" @click="ExpressDownMiniMenu($event)"><i class="fi fi-bs-angle-small-down"></i></div>
+            <div v-else class="nav-btn-express" @click="ExpandUpMiniMenu_($event)"><i class="fi fi-bs-angle-small-up"></i></div>
             
         </div>
         <div class="inner-container-of-contant" v-for="element in lst" :key="element.id" @click="showMiniChatWindow(element)">

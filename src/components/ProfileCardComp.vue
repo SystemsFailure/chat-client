@@ -1,7 +1,7 @@
 <template>
     <!-- <div class="main-comp-profile-card"> -->
         <div class="content-card" id="divDrag" v-for="n in itemByProfile" :key="n.id">
-            <div class="btn0-close-profile"><i @click="() => {this.$emit('closeProfileFunction', false)}" class="fi fi-ss-cross"></i></div>
+            <div class="btn0-close-profile"><i @click="() => {this.$emit('closeProfileFunction', false)}" class="fi fi-bs-cross"></i></div>
             <div class="header-drag-simple" id="divDragheader-simple"></div>
 
             <div class="inside-content">

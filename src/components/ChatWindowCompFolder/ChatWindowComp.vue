@@ -25,27 +25,27 @@
                             <h5  class="mess-content-example" style="color: white;" id="q5"></h5>
                         </div>
 
-                        <transition-group name="bounce-bubble-message" tag="div">
-                            <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
+                    <transition-group name="bounce-bubble-message" tag="h6">
+                        <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
                                 <div class="message-bubble">
-                                    <div class="image-content" v-if="n.img_url">
+                                        <div class="image-content" v-if="n.img_url">
                                         <!-- <img :src="n.img_url" :style="n.fromId === user_id ? {'float' : 'right'} : {'float' : 'left'}" @click="openImageToWindow(n.img_url)"> -->
-                                        <img :src="n.img_url" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" @click="openImageToWindow(n.img_url)">
-                                        <div class="data-created-img" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}"><span>{{ n.atCreated }}</span></div>
+                                            <img :src="n.img_url" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" @click="openImageToWindow(n.img_url)">
+                                            <div class="data-created-img" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}"><span>{{ n.atCreated }}</span></div>
+                                        </div>
+                                        
+                                        <h6 v-else
+                                            :id="n.id"
+                                            class="im-message-content"
+                                            @contextmenu="() => {this.deleteMessage(n.id); return false}"
+                                            @mouseover="showDetailDataMessage($event, n.id)"
+                                            @mouseout="hideDetailDataMessage($event)"
+                                            v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : '#111;', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
+                                            >{{n.content}}
+                                        </h6>
                                     </div>
-                                    <h6 v-else
-                                    :id="n.id"
-                                    class="im-message-content"
-                                    @contextmenu="() => {this.deleteMessage(n.id); return false}"
-                                    @mouseover="showDetailDataMessage($event, n.id)"
-                                    @mouseout="hideDetailDataMessage($event)"
-                                    v-bind:style="n.fromId===user_id?{'float':'right', 'backgroundColor' : '#111;', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
-                                    >{{n.content}}
-                                    </h6>
                                 </div>
-                            </div>
                         </transition-group>
-
                     </div>
                 </div>
             </div>
@@ -336,6 +336,8 @@ export default {
                 failure('failure')
             }).then(() => {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('anime-bubble-message')
+                let block = document.getElementById("block-chat-window-id")
+                block.scrollTop = block.scrollHeight
             })
 
 
@@ -372,8 +374,6 @@ export default {
             }
             await MessagesApi.createMessage(messageContent, data_).then( async () => {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.remove('anime-bubble-message')
-                let block = document.getElementById("block-chat-window-id")
-                block.scrollTop = block.scrollHeight
             }).catch(err => {
                 console.log(err)
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('failure-bubble-message')
@@ -651,7 +651,7 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
 
 
 .bounce-bubble-message-enter-active {
-  animation: bounce-in .3s ease-out both;
+  animation: bounce-in .9s ease-out both;
 }
 
 .bounce-bubble-message-leave-active {
@@ -669,5 +669,20 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
     transform: scale(1);
   }
 }
+
+// .bounce-bubble-message-enter-active {
+//   transition: all .2s ease-out;
+// }
+
+// .bounce-bubble-message-leave-active {
+//   transition: all .2s cubic-bezier(1, 0.5, 0.8, 1);
+// }
+
+// .bounce-bubble-message-enter-from,
+// .bounce-bubble-message-leave-to {
+//   transform: translateX(20px);
+//   opacity: 0;
+// }
+
 
 </style>

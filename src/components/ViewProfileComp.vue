@@ -36,7 +36,7 @@
 
                 <div class="line-main-informations">
                     <div class="btn-detail" @click="() => {this.$emit('showDetailWindowCompFunction', true)}">
-                        <i class="fi fi-ss-interrogation"></i>
+                        <i class="fi fi-bs-interrogation"></i>
                         <span>detail</span>
                     </div>
                 </div>

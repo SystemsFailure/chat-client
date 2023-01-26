@@ -20,7 +20,7 @@
 
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-sr-user"></i>
+                <i class="fi fi-bs-user"></i>
             </div>
             <input type="text" placeholder="Name" v-model="queryName">
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="name">Change</div>
@@ -28,7 +28,7 @@
     
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-ss-info"></i>
+                <i class="fi fi-bs-info"></i>
             </div>
             <textarea type="text" placeholder="Bio" v-model="queryBio" style="margin-left: 10px;"></textarea>
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="bio_info">Change</div>
@@ -36,7 +36,7 @@
 
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-ss-envelope"></i>
+                <i class="fi fi-bs-envelope"></i>
             </div>
             <input type="email" placeholder="Email" v-model="queryEmail">
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="email">Change</div>
@@ -44,7 +44,7 @@
 
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-sr-link"></i>
+                <i class="fi fi-bs-link"></i>
             </div>
             <input type="text" placeholder="Website" v-model="queryStatus">
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="status">Change</div>
@@ -52,7 +52,7 @@
 
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-ss-flag"></i>
+                <i class="fi fi-bs-flag"></i>
             </div>
             <input type="text" placeholder="Country" v-model="queryCountry">
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="country">Change</div>
@@ -60,7 +60,7 @@
 
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-ss-building"></i>
+                <i class="fi fi-bs-building"></i>
             </div>
             <input type="text" placeholder="Company" v-model="queryCity">
             <div class="btn-changed" @click="changeValueSetting($event)" data-value="city">Change</div>

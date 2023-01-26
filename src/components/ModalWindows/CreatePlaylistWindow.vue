@@ -3,7 +3,7 @@
         <div class="inner-cotainer">
             <div class="inline-">
                 <span>create new playlist</span>
-                <div class="close-btn" @click="() => {this.$emit('closeCreateWindowPlaylistFunction', false)}"><i class="fi fi-ss-cross"></i></div>
+                <div class="close-btn" @click="() => {this.$emit('closeCreateWindowPlaylistFunction', false)}"><i class="fi fi-bs-cross"></i></div>
             </div>
             <div class="wrap-container">
                 <div class="field-data-playlist">
@@ -23,9 +23,9 @@
                 </div>
 
                 <div class="two-inner-container">
-                    <i class="fi fi-br-search"></i>
+                    <i class="fi fi-bs-search"></i>
                     <input type="text" placeholder="global search music">
-                    <i class="fi fi-ss-cross"></i>
+                    <i class="fi fi-bs-cross"></i>
                 </div>
                 
             </div>

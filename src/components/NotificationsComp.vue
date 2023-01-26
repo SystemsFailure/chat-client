@@ -16,8 +16,8 @@
             
             <div class="right-block-content-global-mess" v-if="showGlobalMessWindow">
                 <div class="line-up-content">
-                    <div class="close-btn" @click="() => {this.$emit('closeNotificationsCompFunction', false)}"><i class="fi fi-ss-cross"></i></div>
-                    <div class="expend-window"><i class="fi fi-ss-expand"></i></div>
+                    <div class="close-btn" @click="() => {this.$emit('closeNotificationsCompFunction', false)}"><i class="fi fi-bs-cross"></i></div>
+                    <div class="expend-window"><i class="fi fi-bs-expand"></i></div>
                 </div>
                 <div class="no-message" v-if="noMessage && systemMessagesList.length === 0"><span>You don't have system notifications</span></div>
             </div>
@@ -26,8 +26,8 @@
                 <div class="line-up-content">
                     <div class="title-box"><span>list messages</span></div>
                     <div class="wrapper-boc">
-                        <div class="expend-window"><i class="fi fi-ss-expand"></i></div>
-                        <div class="close-btn" @click="() => {this.$emit('closeNotificationsCompFunction', false)}"><i class="fi fi-ss-cross"></i></div>
+                        <div class="expend-window"><i class="fi fi-bs-expand"></i></div>
+                        <div class="close-btn" @click="() => {this.$emit('closeNotificationsCompFunction', false)}"><i class="fi fi-bs-cross"></i></div>
                     </div>
                 </div>
                 <div class="list-messages-of-request">
@@ -40,7 +40,7 @@
                             </div>
                             <div class="wrapper-settings-window">
                                 <div class="close" @click="() => {this.SelectedMessagesList = []}">cancel</div>
-                                <div class="settings"><i class="fi fi-ss-settings"></i></div>
+                                <div class="settings"><i class="fi fi-bs-settings"></i></div>
                             </div>
                         </div>
                     </Transition>

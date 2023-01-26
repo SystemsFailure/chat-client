@@ -4,7 +4,7 @@
         <div class="title-mini-chat">
             <img :src="USERTO.img_url" alt="">
             <span style="color:white;">{{ USERTO.name || 'undefined'}}</span>
-            <div class="bittle-juice"><i @click="() => {this.$emit('closeMiniChatCompFunction', false)}" class="fi fi-ss-cross" style="color:wheat;"></i></div>
+            <div class="bittle-juice"><i @click="() => {this.$emit('closeMiniChatCompFunction', false)}" class="fi fi-bs-cross" style="color:wheat;"></i></div>
         </div>
 
         <div class="inner-container-mini-chate-window">

@@ -11,7 +11,7 @@
         <div class="banner" :style="$store.state.user_data.length === 0 ? {'width' : '100%'} : {'width' : '30%'}">
             <div class="notifycation-container">
                 <div class="nityfy-iecon">
-                    <i class="fi fi-ss-bell" @click="() => {this.$emit('showNotificationWindowFunction', true)}">
+                    <i class="fi fi-bs-bell" @click="() => {this.$emit('showNotificationWindowFunction', true)}">
                         <div class="cycle-box"></div>
                     </i>
                 </div>

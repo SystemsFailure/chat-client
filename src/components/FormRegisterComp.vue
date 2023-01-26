@@ -21,11 +21,11 @@
 
             <Transition name="slide-up" mode="out-in">
                 <div class="successInput" v-if="resultInputEnterName === true">
-                  <i class="fi fi-br-check"></i>
+                  <i class="fi fi-bs-check"></i>
                 </div>
 
                 <div class="FailInput" v-else-if="resultInputEnterName === false">
-                  <i class="fi fi-ss-cross"></i>
+                  <i class="fi fi-bs-cross"></i>
                 </div>
             </Transition>
 
@@ -40,11 +40,11 @@
 
             <Transition name="slide-up" mode="out-in">
                 <div class="successInput" v-if="resultInputEnter === true">
-                  <i class="fi fi-br-check"></i>
+                  <i class="fi fi-bs-check"></i>
                 </div>
 
                 <div class="FailInput" v-else-if="resultInputEnter === false">
-                  <i class="fi fi-ss-cross"></i>
+                  <i class="fi fi-bs-cross"></i>
                 </div>
             </Transition>
 
@@ -59,15 +59,15 @@
 
             <Transition name="slide-up" mode="out-in">
                 <div class="successInput" v-if="resultInputEnterPassword === true">
-                  <i class="fi fi-br-check"></i>
+                  <i class="fi fi-bs-check"></i>
                 </div>
 
                 <div class="FailInput" v-else-if="resultInputEnterPassword === false">
-                  <i class="fi fi-ss-cross"></i>
+                  <i class="fi fi-bs-cross"></i>
                 </div>
             </Transition>
 
-            <div class="view-password"><i @click="showAndHidePassword" v-if="show_password" :style="{'color' : 'white'}" class="fi fi-ss-eye"></i><i @click="showAndHidePassword" v-else class="fi fi-ss-eye-crossed"></i></div>
+            <div class="view-password"><i @click="showAndHidePassword" v-if="show_password" :style="{'color' : 'white'}" class="fi fi-bs-eye"></i><i @click="showAndHidePassword" v-else class="fi fi-ss-eye-crossed"></i></div>
           </div>
         </div>
 

@@ -7,7 +7,7 @@
                 <div class="inp-box">
                     <input type="text" placeholder="search" v-model="searchValue">
                 </div>
-                <div class="updateList-btn"><i class="fi fi-ss-refresh" @click="updateList"></i></div>
+                <div class="updateList-btn"><i class="fi fi-bs-refresh" @click="updateList"></i></div>
             </div>
             <div class="listMyMusics">
                 <div

@@ -3,24 +3,24 @@
         <div class="content">
 
             <div @click="openMenuAny(0)" class="item-im" :class="{'item-selected' : showMenuMail}">
-                <i class="fi fi-ss-mode-portrait"></i>
+                <i class="fi fi-bs-mode-portrait"></i>
             </div>
             <div @click="openMenuAny(1)" class="item-im" :class="{'item-selected' : showMenuChats}">
-                <i class="fi fi-rr-comment"></i>
+                <i class="fi fi-bs-comment"></i>
                 <!-- <img src="@/assets/chat-right-fill.svg" alt="chats" srcset=""> -->
             </div>
             <div @mouseenter="showDetailMenuFunction" @mouseleave="closeDetailMenuFunction" class="item-im" :class="{'item-selected' : showMenuMusics}">
-                <div class="three-points"><i class="fi fi-ss-menu-dots-vertical"></i></div>
+                <div class="three-points"><i class="fi fi-bs-menu-dots-vertical"></i></div>
                 <div class="detailmenu" v-if="showDetailMenu">
                     <div class="myaudio" @click="showMyMusic"><i class="fi fi-ss-list-check"></i></div>
                     <div class="allaudio" @click="GlobalListMusicss"><i class="fi fi-ss-music-alt"></i></div>
                 </div>
-                <i v-if="myMusicIcon" class="fi fi-ss-list-check"></i>
-                <i v-else class="fi fi-ss-music-alt">
+                <i v-if="myMusicIcon" class="fi fi-bs-list-check"></i>
+                <i v-else class="fi fi-bs-music-alt">
                 </i>
             </div>
             <div @click="openMenuAny(2)" class="item-im" :class="{'item-selected' : showMenuSettings}">
-                <i class="fi fi-br-settings-sliders"></i>
+                <i class="fi fi-bs-settings-sliders"></i>
                 <!-- <img src="@/assets/setting.png" alt="chats" srcset=""> -->
             </div>
 

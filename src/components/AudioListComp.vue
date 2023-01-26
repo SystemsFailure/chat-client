@@ -4,21 +4,21 @@
 
             <div class="line-comp">
                 <div class="toggle-line-tools">
-                    <div class="icon"><i class="fi fi-br-search"></i></div>
+                    <div class="icon"><i class="fi fi-bs-search"></i></div>
                     <input type="text" placeholder="search music" v-model="searchValue">
-                    <div class="close-btn"><i class="fi fi-ss-cross"></i></div>
+                    <div class="close-btn"><i class="fi fi-bs-cross"></i></div>
                 </div>
                 
                 <div class="player">
                     <div class="inner-container-player">
 
                         <div class="controller">
-                            <div class="priview"><i class="fi fi-ss-angle-double-left" @click="PlayerPreviewMusic"></i></div>
+                            <div class="priview"><i class="fi fi-bs-angle-double-left" @click="PlayerPreviewMusic"></i></div>
                             <div class="play-and-stop">
-                                <i v-if="showPlay" class="fi fi-ss-play" @click="PlayerplaySong"></i>
-                                <i v-else class="fi fi-ss-pause" @click="PlayerStopSong"></i>
+                                <i v-if="showPlay" class="fi fi-bs-play" @click="PlayerplaySong"></i>
+                                <i v-else class="fi fi-bs-pause" @click="PlayerStopSong"></i>
                             </div>
-                            <div class="next"><i class="fi fi-ss-angle-double-right" @click="PlayerMextMusic"></i></div>
+                            <div class="next"><i class="fi fi-bs-angle-double-right" @click="PlayerMextMusic"></i></div>
                         </div>
 
                         <div class="data-music">
@@ -38,10 +38,10 @@
                         </div>
 
                         <div class="tools">
-                            <div class="add"><i class="fi fi-ss-plus"></i></div>
-                            <div class="mix"><i class="fi fi-ss-shuffle"></i></div>
-                            <div class="repeat"><i class="fi fi-ss-arrows-repeat-1"></i></div>
-                            <div class="share"><i class="fi fi-ss-redo"></i></div>
+                            <div class="add"><i class="fi fi-bs-plus"></i></div>
+                            <div class="mix"><i class="fi fi-bs-shuffle"></i></div>
+                            <div class="repeat"><i class="fi fi-bs-arrows-repeat-1"></i></div>
+                            <div class="share"><i class="fi fi-bs-redo"></i></div>
                         </div>
 
                     </div>
@@ -57,13 +57,13 @@
                         <div class="inner-item" :id="`inner${audio.id}`" @mouseout="itemAudioLeave($event, audio.id)">
                             <div class="inner-image-audio">
                                 <div class="image-src">
-                                    <i class="fi fi-ss-play" :id="`start-audio-btn-id--${audio.id}`" @click="playMusic(audio.id, audio)"></i>
-                                    <i class="fi fi-ss-pause" style="font-size: 0px;" :id="`pause-audio-btn-id-${audio.id}`" @click="pauseMusic($event, audio.id)"></i>
+                                    <i class="fi fi-bs-play" :id="`start-audio-btn-id--${audio.id}`" @click="playMusic(audio.id, audio)"></i>
+                                    <i class="fi fi-bs-pause" style="font-size: 0px;" :id="`pause-audio-btn-id-${audio.id}`" @click="pauseMusic($event, audio.id)"></i>
                                 </div>
                             </div>
                             <div class="tools-item">
-                                <div class="add-audio"><i @click="addMusicToPersonalArray(audio.id)" class="fi fi-ss-plus"></i></div>
-                                <div class="sett-audio"><i class="fi fi-ss-menu-dots-vertical"></i></div>
+                                <div class="add-audio"><i @click="addMusicToPersonalArray(audio.id)" class="fi fi-bs-plus"></i></div>
+                                <div class="sett-audio"><i class="fi fi-bs-menu-dots-vertical"></i></div>
                             </div>
                         </div>
 

@@ -5,7 +5,7 @@
                 <span>Detail info</span>
                 <span class="uuid-span" style="margin-left: 20px;">ID : UC39PXZKT8HABLOT7SLC</span>
                 <span class="online-offline" style="margin-left: 20px;"><div class="cycle"></div> online</span>
-                <div class="close-btn" @click="() => {this.$emit('closeDetailWindowFunction', false)}"><i class="fi fi-ss-cross"></i></div>
+                <div class="close-btn" @click="() => {this.$emit('closeDetailWindowFunction', false)}"><i class="fi fi-bs-cross"></i></div>
             </div>
 
             <div class="two-container">
@@ -18,15 +18,15 @@
                     </div>
                     <div class="info-container">
                         <div class="r0-w1-class">
-                            <i class="fi fi-sr-link"></i>
+                            <i class="fi fi-bs-link"></i>
                             <span class="status">working</span>
                         </div>
                         <div class="r0-w1-class">
-                            <i class="fi fi-ss-flag"></i>
+                            <i class="fi fi-bs-flag"></i>
                             <span class="country">United States</span>
                         </div>
                         <div class="r0-w1-class">
-                            <i class="fi fi-ss-building"></i>
+                            <i class="fi fi-bs-building"></i>
                             <span class="city">Chicago</span>
                         </div>
                     </div>

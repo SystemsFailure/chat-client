@@ -16,20 +16,20 @@
                             <transition name="fade-menu">
                                 <div class="box-toggle-menu" v-if="show_toggle_menu" @click.stop.prevent>
                                     <div class="item-menu0 item-ofMenu-clip">
-                                        <i class="fi fi-sr-clip"></i>
+                                        <i class="fi fi-bs-clip"></i>
                                     </div>
                                     <div class="item-menu0 item-ofMenu-smile">
-                                        <i class="fi fi-ss-camera"></i>
+                                        <i class="fi fi-bs-camera"></i>
                                     </div>
                                     <div class="item-menu0 item-ofMenu-voice">
-                                        <i class="fi fi-rr-smile"></i>
+                                        <i class="fi fi-bs-smile"></i>
                                     </div>
                                 </div>
                             </transition>
                         </div>
 
                         <div class="video-capture">
-                            <i class="fi fi-sr-clip" style="color: white"></i>
+                            <i class="fi fi-bs-clip" style="color: white"></i>
                             <label for="myfile" class="label"></label>
                             <input type="file" class="my" id="myfile" name="myfile" multiple @change="send_photo($event)">
                         </div>

@@ -4,7 +4,7 @@
     </Transition>
     <div class="main-list-users-comp">
         <div class="inside-container-content">
-            <div class="slose-btn-box"><i @click="() => {this.$emit('closeListUsersCompFunction', false)}" class="fi fi-ss-cross"></i></div>
+            <div class="slose-btn-box"><i @click="() => {this.$emit('closeListUsersCompFunction', false)}" class="fi fi-bs-cross"></i></div>
             <div class="title-comp"><span>Search users</span></div>
 
             <div class="inside-box">

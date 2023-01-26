@@ -1,6 +1,6 @@
 <template>
     <div class="main-class-view-photo-window">
-        <div class="btn-container"><div><i @click="() => {this.$emit('closeWindowFunction', false)}" class="fi fi-ss-cross"></i></div></div>
+        <div class="btn-container"><div><i @click="() => {this.$emit('closeWindowFunction', false)}" class="fi fi-bs-cross"></i></div></div>
         <div class="wrap-wrapper-cont">
             <div class="wrapper-continer">
 
@@ -28,7 +28,7 @@
         <div class="animator-target" @mouseover="() => {this.showBottomSlider = true}">
             <div class="title-targer">
                 <span>swipe</span>
-                <i class="fi fi-ss-angle-double-small-down"></i>
+                <i class="fi fi-bs-angle-double-small-down"></i>
             </div>
             <transition name="bottom-slide">
                 <div class="list-images" @mouseleave="() => {this.showBottomSlider = false}" v-show="showBottomSlider">
