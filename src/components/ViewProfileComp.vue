@@ -207,7 +207,7 @@ $color-back: rgba(0, 0, 0, 0.8);
                 align-items: center;
                 justify-content: center;
                 margin-top: 50px;
-                border: 1px solid #333;   
+                border: 1px solid rgba(30, 30, 30, 0.6); 
 
                 .upload-music {
                     width: 100%;

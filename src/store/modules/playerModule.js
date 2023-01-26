@@ -1,7 +1,7 @@
 const playerModule = {
     state: () => ({
         isArray: [],
-
+        currentSong: null,
     }),
     mutations: {
 

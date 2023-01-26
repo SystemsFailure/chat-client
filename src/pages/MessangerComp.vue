@@ -395,7 +395,7 @@ $color-text-izumrud: #00ff80;
                     bottom: 0;
                     height: 40px;
                     background-color: rgba($color: #000000, $alpha: 1.0);
-                    border: 1px solid #333;
+                    border: 1px solid rgba(30, 30, 30, 0.6);
                     display: flex;
                     padding: 10px;
                     align-items: center;
@@ -434,7 +434,7 @@ $color-text-izumrud: #00ff80;
                 -webkit-backdrop-filter: blur(4.2px);
                 // box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
                 padding-bottom: 40px;
-                border-right: 1px solid #333;
+                border-right: 1px solid rgba(30, 30, 30, 0.6);
 
 
                 .item-list:hover {
@@ -454,7 +454,7 @@ $color-text-izumrud: #00ff80;
                     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
                     backdrop-filter: blur(8.2px);
                     -webkit-backdrop-filter: blur(8.2px);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    border: 1px solid rgba(30, 30, 30, 0.6);
 
                     span {
                         margin-right: 5px;

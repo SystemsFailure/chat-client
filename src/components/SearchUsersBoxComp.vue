@@ -37,7 +37,7 @@ $color-text: #4e5f7d;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(30, 30, 30, 0.6);
     position: fixed;
     z-index: 1;
 

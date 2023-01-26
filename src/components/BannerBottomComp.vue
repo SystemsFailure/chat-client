@@ -140,7 +140,7 @@ $color-text-izumrud: #00ff80;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-top: 1px solid rgba(30, 30, 30, 0.6);
 
 
     z-index: 12;
