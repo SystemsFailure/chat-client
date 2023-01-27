@@ -50,6 +50,10 @@ export default {
         }
     },
 
+    mounted() {
+
+    },
+
     methods: {
         uploadFileImage(event) {
             const file = event.target.files[0]

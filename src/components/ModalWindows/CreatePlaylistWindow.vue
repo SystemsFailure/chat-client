@@ -3,10 +3,6 @@
         <div class="inner-cotainer">
             <div class="inline-">
                 <span>create new playlist</span>
-                <span
-                    id="list-added-files-id"
-                    style="color: teal; font-size: 11px;"
-                ></span>
                 <div class="close-btn" @click="() => {this.$emit('closeCreateWindowPlaylistFunction', false)}"><i class="fi fi-bs-cross"></i></div>
             </div>
             <div class="wrap-container">
@@ -59,7 +55,7 @@
                                     {{ music.artist }}
                                 </span>
                             </div>
-                            <div class="add-btn">add</div>
+                            <div class="add-btn" @click="addInMyPlaylist(music.id)">add</div>
                         </div>
                     </transition-group>
                 </div>
@@ -71,20 +67,13 @@
     </div>
 </template>
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex'
+import {MusicApi} from '@/firebase-config/MusicController'
 export default {
     data() {
         return {
-            foundMusicsList: [
-                {id: 0, name: 'Moon sanata', imgURL: '', url: '', artist: 'Image Dragons'},
-                {id: 1, name: 'Rivver Flows in you', imgURL: '', url: '', artist: 'Fall out boy'},
-                {id: 2, name: 'Monster', imgURL: '', url: '', artist: 'Starset'},
-                {id: 3, name: 'Bruclin house', imgURL: '', url: '', artist: 'NF'},
-                {id: 4, name: '100 seconds to mars', imgURL: '', url: '', artist: 'Neffex'},
-                {id: 5, name: 'Moonlight', imgURL: '', url: '', artist: 'Better light'},
-                {id: 6, name: 'build your life', imgURL: '', url: '', artist: 'Take my hade'},
-                {id: 7, name: 'never give up', imgURL: '', url: '', artist: 'Rour flows to you'},
-            ],
+            foundMusicsList: [],
+            selectedMusicsList: [],
             name: '',
             description: '',
             privateMode: false,
@@ -96,6 +85,9 @@ export default {
     },
     mounted() {
         this.userId = localStorage.getItem('user-id');
+        MusicApi.getAllMusicsDocs().then((musics) => {
+            this.foundMusicsList = musics
+        })
     },
     computed: {
         ...mapState('playlist', {
@@ -119,16 +111,20 @@ export default {
         }),
         ...mapMutations('playlist', {
             setData: 'setData',
-            setToZeroList: 'setToZeroList'
+            setToZeroList: 'setToZeroList',
+            setplaylistIdList: 'setplaylistIdList',
         }),
+        addInMyPlaylist(id) {
+            this.selectedMusicsList.push(id)
+            this.selectedMusicsList = [...new Set(this.selectedMusicsList)]
+        },
         downloadSelfList() {
-
+            // Here download user list of songs and to add in foundlist
         },
         clearImage() {
             let img = document.getElementById('img-playlist-id')
             img.src = ''
             img.style.display = 'none'
-            document.getElementById('list-added-files-id').innerText = ''
             this.setToZeroList()
         },
         setImage() {
@@ -137,7 +133,6 @@ export default {
             if(this.filesList.length > 1) {
                 this.setToZeroList()
             }
-            document.getElementById('list-added-files-id').innerText = 'File added'
             document.getElementById('img-playlist-id').style.display = 'block'
             document.getElementById('img-playlist-id').src = URL.createObjectURL(files[0])
         },
@@ -145,6 +140,13 @@ export default {
             if (this.name === '' || this.description === '' || this.privateMode === false) {
                 alert('Please fill all fields')
             } else {
+                if(this.selectedMusicsList.length != 0)
+                {
+                    this.setplaylistIdList(this.selectedMusicsList)
+                } else {
+                    console.log('length list ids of songs is zero! Selected please minimum one song')
+                    return
+                }
                 this.setData(
                     {
                         arrayMusicsId: [],

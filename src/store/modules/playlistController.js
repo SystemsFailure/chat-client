@@ -1,4 +1,4 @@
-import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc, arrayUnion } from "firebase/firestore";
 import { query, where, getDocs } from "firebase/firestore"; 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/main";
@@ -11,6 +11,8 @@ const playlistModule = {
         data: {},
         arrayIds: [],
         currentUserId: null,
+        playlistList: [],
+        playlistIdList: [],
     }),
     mutations: {
         setplaylistId(state, id) {
@@ -28,6 +30,12 @@ const playlistModule = {
         setCerrentUserId(state, value) {
             state.currentUserId = value
         },
+        setPlaylistList(state, value) {
+            state.playlistList = value
+        },
+        setplaylistIdList(state, value) {
+            state.playlistIdList = value
+        }
     },
     actions: {
         async uploadImages(context) {
@@ -60,11 +68,22 @@ const playlistModule = {
                         }
                     }, () => {
                         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                            console.log('context.state.playlistID', context.state.playlistID)
                             const docRef = doc(db, "playlist", context.state.playlistID);
                             await updateDoc(docRef, {
                                 imgUrl: downloadURL
                             });
+                            if(context.state.playlistIdList.length === 0)
+                            {
+                                console.log('not choiced songs')
+                                return
+                            }
+                            for (let index = 0; index < context.state.playlistIdList.length; index++) {
+                                const element = context.state.playlistIdList[index];
+                                const playlist = doc(db, "playlist", context.state.playlistID)
+                                await updateDoc(playlist, {
+                                    arrayMusic: arrayUnion(element)
+                                })
+                            }
                             context.commit('setToZeroList')
                         });
                     }
@@ -87,7 +106,7 @@ const playlistModule = {
             context.commit('setplaylistId', doc.id)
         },
         async getAllPlayList(context) {
-            console.log(context.state.currentUserId)
+            context.commit('setPlaylistList', [])
             if(context.state.currentUserId === null) 
             {
                 console.log('user id into global store === null')
@@ -96,8 +115,10 @@ const playlistModule = {
             const q = query(collection(db, "playlist"), where("userId", "==", context.state.currentUserId));
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
-                console.log(doc.id, " => ", doc.data(), 'playlist dt');
+                context.state.playlistList.push(doc.data())
             });
+            context.state.playlistList.push({ id: 'addPlaylistSuka', title: 'new playlist', img_url: 'addPlaylist4.png', arrayMusic: [], desc: '', avtor: 'add playlist'})
+
         },
         async getLimitPlaylist() {
 

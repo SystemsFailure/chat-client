@@ -7,7 +7,7 @@
     <dialogChatDeleted v-if="showDialogWindowChatDeleted"></dialogChatDeleted>
     <ProfileCardComp v-if="$store.state.showProfile" @closeProfileFunction="(value) => {this.$store.state.showProfile = value}"></ProfileCardComp>
     <ListAllUsersComp v-if="show_list_all_users_comp" @closeListUsersCompFunction="(value) => {this.show_list_all_users_comp = value}"></ListAllUsersComp>
-    
+    <ViewPlaylistComp></ViewPlaylistComp>
     <Transition name="transition-notifi-comp">
         <NotificationsComp 
             v-if="showNotificationComp" 
@@ -107,6 +107,7 @@ import SettingsComp from '@/components/SettingsComp.vue'
 import ProfileCardComp from '@/components/ProfileCardComp.vue'
 import ListAllUsersComp from '@/components/ListAllUsersCompFolder/ListAllUsersComp.vue'
 import ViewProfileComp from '@/components/ViewProfileComp.vue'
+import ViewPlaylistComp from '@/components/ViewPlaylistComp.vue'
 import NotificationsComp from '@/components/NotificationsComp.vue'
 import MusicMenuComp from '@/components/MusicMenuComp.vue'
 import dialogWindow from '@/components/UI/dialogWindow.vue'
@@ -298,8 +299,8 @@ export default {
         AudioListComp, MusicMenuComp,
         NotificationsComp, dialogChatDeleted,
         CreateMusicWindow, CreatePlaylistWindow,
-        DetailWindowComp, PersonalAudioListComp
-
+        DetailWindowComp, PersonalAudioListComp,
+        ViewPlaylistComp,
     }
 
 }

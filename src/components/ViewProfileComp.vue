@@ -55,11 +55,13 @@
                 <div class="content-conteiner">
                     <div class="custom-playlist">
                         <div class="line-title"><span>playlists</span> <span class="text-more">show more</span></div>
-                        <div class="playlist_" v-for="playlist in playlistList" :key="playlist.id" @click="createNewPlaylist(playlist.id)">
-                            <img :src="playlist.img_url ? require('@/assets/' + playlist.img_url) : require('@/assets/playlist.png')" alt="" srcset="">
-                            <div class="title-playlist"><span>{{ playlist.title }}</span></div>
+
+                        <div class="playlist_" v-for="playlist in playlistList" :key="playlist.id" @click="createNewPlaylist(playlist.name)">
+                            <img :src="playlist.imgUrl ? playlist.imgUrl : require('@/assets/playlist.png')" alt="" srcset="">
+                            <div class="title-playlist"><span>{{ playlist.name }}</span></div>
                             <div class="avtor-title"><span>{{ playlist.avtor }}</span></div>
                         </div>
+
                     </div>
                 </div>
 
@@ -74,7 +76,7 @@
     </div>
 </template>
 <script>
-import {mapActions, mapMutations} from 'vuex'
+import {mapActions, mapMutations, mapState} from 'vuex'
 import { UserApi } from '@/firebase-config/UserController.js'
 import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
@@ -87,25 +89,25 @@ export default {
             showDialogMenu: false,
             titleId: localStorage.getItem('user-id'),
             playlistList: [
-                { id: 0, title: 'for me', img_url: 'Ninja.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
-                { id: 1, title: 'for me', img_url: 'Rock-Clouds.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
-                { id: 2, title: 'for me', img_url: 'Tumblr.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
-                { id: 3, title: 'for me', img_url: null, arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
-                { id: 4, title: 'for me', img_url: null, arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
-                // { id: 5, title: 'for me', img_url: '@/assets/Tiger.jpeg', arrayMusic: [], desc: 'This is just my playlist', avtor: 'Eric Leonhard'},
+                // { id: 0, name: 'for me', imgUrl: 'Ninja.jpeg', arrayMusicsId: [], description: 'This is just my playlist', avtor: 'Eric Leonhard', privatemode: true},
+                // { id: 1, name: 'for me', imgUrl: 'Rock-Clouds.jpeg', arrayMusicsId: [], description: 'This is just my playlist', avtor: 'Eric Leonhard', privatemode: true},
+                // { id: 2, name: 'for me', imgUrl: 'Tumblr.jpeg', arrayMusicsId: [], description: 'This is just my playlist', avtor: 'Eric Leonhard', privatemode: true},
+                // { id: 3, name: 'for me', imgUrl: null, arrayMusicsId: [], description: 'This is just my playlist', avtor: 'Eric Leonhard', privatemode: true},
+                // { id: 4, name: 'for me', imgUrl: null, arrayMusicsId: [], description: 'This is just my playlist', avtor: 'Eric Leonhard', privatemode: true},
             ]
         }
     },
 
     mounted() {
         this.setCerrentUserId(localStorage.getItem('user-id'))
-        this.getAllPlayList()
+        this.getAllPlayList().then(() => {
+            this.playlistList = this.playlistList_
+        })
         UserApi.GetPersonalDataOfUser(this.titleId).then(user => {
             if (!user) {
                 console.log('user not found')
                 return
             }
-            this.playlistList.push({ id: 5, title: 'new playlist', img_url: 'addPlaylist4.png', arrayMusic: [], desc: '', avtor: 'add playlist'})
             document.getElementById('username-id').innerHTML = user[0].name
             document.getElementById('avatar-profile-id').src = user[0].img_url
             document.getElementById('follower-id').textContent = user[0].arrayFollowers.length
@@ -123,6 +125,12 @@ export default {
         }
     },
 
+    computed: {
+        ...mapState('playlist', {
+            playlistList_: 'playlistList',
+        }),
+    },
+
     methods: {
         ...mapMutations('playlist', {
             setCerrentUserId: 'setCerrentUserId'
@@ -130,9 +138,10 @@ export default {
         ...mapActions('playlist', {
             getAllPlayList: 'getAllPlayList',
         }),
-        createNewPlaylist(id)
+        createNewPlaylist(name)
         {
-            if(id === this.playlistList.length - 1)
+            console.log('click')
+            if(name === this.playlistList[this.playlistList.length - 1].name)
             {
                 this.$emit('showDialogWindowCreatePlalistFunction', true)
             }
