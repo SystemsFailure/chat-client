@@ -9,7 +9,7 @@
         <div class="content-win-chat">
             
             <div class="chat-window">
-                <div class="empty-title-won" v-if="Object.keys(message_lst).length == 0"><span>You not choiced user, please current however user in your contacts...</span></div>
+                <div class="empty-title-won" v-if="Object.keys(message_lst).length == 0"><span>No chat selected</span></div>
 
                 <Transition name="fade-comp-settChatId-v">
                     <SettingsMenuChatIdComp v-if="showSettingsChatId"></SettingsMenuChatIdComp>
@@ -348,7 +348,7 @@ export default {
                         if (chat.length === 1)
                         {
                             await ChatApi.updataField(chat[0].id)
-                            countMess = chat[0].countMessages
+                            countMess = chat[0].countOfMessages
                         }
                         else
                         {

@@ -10,7 +10,7 @@
                     <div class="img-container">
                         <label for="select-playlist-image" class="label_3">+</label>
                         <span style="font-size: 13px;">Cover</span>
-                        <input type="file" class="my" id="select-playlist-image" name="select-playlist-image" multiple @change="setBackImage">
+                        <input type="file" class="my" id="select-playlist-image" name="select-playlist-image" multiple @change="setImage">
                     </div>
                     <div class="input-continer">
                         <input type="text" placeholder="name playlist">
@@ -59,6 +59,7 @@
     </div>
 </template>
 <script>
+import { mapState, mapActions } from 'vuex';
 export default {
     data() {
         return {
@@ -74,6 +75,23 @@ export default {
             ],
         }
     },
+    computed: {
+        ...mapState('playlist', {
+            filesList: 'filesList',
+        })
+    },
+    methods: {
+        ...mapActions('playlist', {
+            createdNewPlayList: 'createdNewPlayList',
+            uploadImages: 'uploadImages',
+        }),
+        setImage() {
+            let files = document.getElementById('select-playlist-image').files
+            this.filesList.push(...files)
+            this.uploadImages()
+            console.log(this.filesList)
+        }
+    }
 }
 </script>
 <style lang="scss" scoped>

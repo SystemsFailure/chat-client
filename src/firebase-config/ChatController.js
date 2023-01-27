@@ -37,7 +37,7 @@ const ChatApi = {
                     atCreated: doc.data().atCreated,
                     atUpdated: doc.data().atUpdated,
                     lastMessage: doc.data().lastMessage,
-                    countMessages: doc.data().countMessages
+                    countOfMessages: doc.data().countOfMessages
                 }
                 chat_lst.push(data_chat)
             } else {
@@ -55,7 +55,7 @@ const ChatApi = {
         const docRef = doc(db, 'ChatId', chatId);
 
         const count = await updateDoc(docRef, {
-            countMessages: increment(1)
+            countOfMessages: increment(1)
         })
         return count
     },

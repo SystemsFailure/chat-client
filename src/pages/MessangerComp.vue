@@ -118,7 +118,7 @@ import requestGetUsers from '@/hooks/hookRequestsToUser'
 import hookBackChange from '@/hooks/hookBackgroundChange'
 import { UserApi } from '@/firebase-config/UserController'
 // import { ChatApi } from '@/firebase-config/ChatController'
-
+import { mapState, mapMutations } from 'vuex'
 
 export default {
     data() {
@@ -163,7 +163,7 @@ export default {
 
     mounted() {
         this.$store.state.USERID = localStorage.getItem('user-id')
-        // this.$store.state.UserPersonalData = 
+        this.setCerrentUserId(localStorage.getItem('user-id'))
 
         if(this.getCookieValueByName('imgId') != '' && document.cookie) {
             document.body.style.backgroundImage = `url(${require('@/assets/' + this.imgs_path_list[this.getCookieValueByName('imgId')].img_path)})`
@@ -179,6 +179,9 @@ export default {
     },
 
     computed: {
+        ...mapState('playlist', {
+            currentUserId: 'currentUserId'
+        }),
         filteredUsers() {
             if(this.searchQuery) {
                 return this.list_users.filter(user => {
@@ -190,6 +193,10 @@ export default {
     },
 
     methods: {
+        ...mapMutations('playlist', {
+            setCerrentUserId: 'setCerrentUserId'
+        }),
+
         DialogMessageBoutDeletedChatFunc(value) {
             this.showDialogWindowChatDeleted = value
             this.cleaningChatModel++
