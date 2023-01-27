@@ -3,17 +3,23 @@
         <div class="inner-cotainer">
             <div class="inline-">
                 <span>create new playlist</span>
+                <span
+                    id="list-added-files-id"
+                    style="color: teal; font-size: 11px;"
+                ></span>
                 <div class="close-btn" @click="() => {this.$emit('closeCreateWindowPlaylistFunction', false)}"><i class="fi fi-bs-cross"></i></div>
             </div>
             <div class="wrap-container">
                 <div class="field-data-playlist">
                     <div class="img-container">
-                        <span 
-                        id="list-added-files-id"
-                        style="color: teal; font-size: 9px;"
-                        ></span>
-
-                        <label for="select-playlist-image" class="label_3" id="lable-id">+</label>
+                        
+                        <div class="img-box-">
+                            <img src="" alt="" srcset="" id="img-playlist-id" style="display: none;">
+                            <div class="delete-img" @click="clearImage"><i class="fi fi-bs-trash"></i></div>
+                        </div>
+                        <label for="select-playlist-image" class="label_3" id="lable-id">
+                            +
+                        </label>
                         <span style="font-size: 13px;">Cover</span>
                         <input type="file" class="my" id="select-playlist-image" name="select-playlist-image" multiple @change="setImage">
                     </div>
@@ -29,21 +35,21 @@
 
                 <div class="two-inner-container">
                     <i class="fi fi-bs-search"></i>
-                    <input type="text" placeholder="global search music">
+                    <input type="text" placeholder="global search music" v-model="searchQuery">
                     <i class="fi fi-bs-cross"></i>
                 </div>
                 
             </div>
 
             <div class="download-from-my-list">
-                <div class="btn">download my list</div>
+                <div class="btn" @click="downloadSelfList">download my list</div>
             </div>
                 
             <div class="list-finded-musics">
                 <span v-if="foundMusicsList.length <= 0">Here just not musics</span>
                 <div class="list">
                     <transition-group name="bouncetwo">
-                        <div class="item" v-for="music in foundMusicsList" :key="music.id">
+                        <div class="item" v-for="music in filteredPlaylist" :key="music.id">
                             <img src="@/assets/voice-chat.png" alt="">
                             <div class="music-data">
                                 <span class="name-music">
@@ -53,6 +59,7 @@
                                     {{ music.artist }}
                                 </span>
                             </div>
+                            <div class="add-btn">add</div>
                         </div>
                     </transition-group>
                 </div>
@@ -69,19 +76,22 @@ export default {
     data() {
         return {
             foundMusicsList: [
-                {id: 0, name: 'name', imgURL: '', url: '', artist: 'Image Dragons'},
-                {id: 1, name: 'name', imgURL: '', url: '', artist: 'Image Dragons'},
-                {id: 2, name: 'name', imgURL: '', url: '', artist: 'Image Dragons'},
-                {id: 3, name: 'name', imgURL: '', url: '', artist: 'Image Dragons'},
-                {id: 4, name: 'name', imgURL: '', url: '', artist: 'Image Dragons'},
-                {id: 5, name: 'name', imgURL: '', url: '', artist: 'Image Dragons'},
-                {id: 6, name: 'name', imgURL: '', url: '', artist: 'Image Dragons'},
-                {id: 7, name: 'name', imgURL: '', url: '', artist: 'Image Dragons'},
+                {id: 0, name: 'Moon sanata', imgURL: '', url: '', artist: 'Image Dragons'},
+                {id: 1, name: 'Rivver Flows in you', imgURL: '', url: '', artist: 'Fall out boy'},
+                {id: 2, name: 'Monster', imgURL: '', url: '', artist: 'Starset'},
+                {id: 3, name: 'Bruclin house', imgURL: '', url: '', artist: 'NF'},
+                {id: 4, name: '100 seconds to mars', imgURL: '', url: '', artist: 'Neffex'},
+                {id: 5, name: 'Moonlight', imgURL: '', url: '', artist: 'Better light'},
+                {id: 6, name: 'build your life', imgURL: '', url: '', artist: 'Take my hade'},
+                {id: 7, name: 'never give up', imgURL: '', url: '', artist: 'Rour flows to you'},
             ],
             name: '',
             description: '',
             privateMode: false,
             userId: null,
+            showPluse: true,
+            addedSongsList: [],
+            searchQuery: '',
         }
     },
     mounted() {
@@ -90,7 +100,17 @@ export default {
     computed: {
         ...mapState('playlist', {
             filesList: 'filesList',
-        })
+        }),
+        filteredPlaylist: {
+            get() {
+                return this.foundMusicsList.filter(music => {
+                    return music.name.toLowerCase().includes(this.searchQuery.toLowerCase());
+                });
+            },
+            set(val) {
+                this.foundMusicsList = val;
+            }
+        }
     },
     methods: {
         ...mapActions('playlist', {
@@ -101,6 +121,16 @@ export default {
             setData: 'setData',
             setToZeroList: 'setToZeroList'
         }),
+        downloadSelfList() {
+
+        },
+        clearImage() {
+            let img = document.getElementById('img-playlist-id')
+            img.src = ''
+            img.style.display = 'none'
+            document.getElementById('list-added-files-id').innerText = ''
+            this.setToZeroList()
+        },
         setImage() {
             let files = document.getElementById('select-playlist-image').files
             this.filesList.push(...files)
@@ -108,6 +138,8 @@ export default {
                 this.setToZeroList()
             }
             document.getElementById('list-added-files-id').innerText = 'File added'
+            document.getElementById('img-playlist-id').style.display = 'block'
+            document.getElementById('img-playlist-id').src = URL.createObjectURL(files[0])
         },
         create() {
             if (this.name === '' || this.description === '' || this.privateMode === false) {
@@ -220,6 +252,23 @@ export default {
                     display: flex;
                     align-items: center;
 
+                    .add-btn {
+                        padding: 7px;
+                        font-family: Lato,sans-serif;
+                        font-weight: 700;
+                        font-size: 10px;
+                        text-transform: uppercase;
+                        letter-spacing:.02em;
+                        margin-left: auto;
+                        border: 1px solid #333;
+
+                        &:hover {
+                            cursor: pointer;
+                            opacity: 0.7;
+                            transition: 0.3s;
+                        }
+                    }
+
                     img {
                         width: 30px;
                         height: 30px;
@@ -267,13 +316,14 @@ export default {
                     outline: none;
                     color: azure;
                 }
-                .fi-br-search {
+                .fi-bs-search {
                     width: 10%;
                     color: white;
                     margin-top: 4px;
+                    font-size: 12px;
                 }
 
-                .fi-ss-cross {
+                .fi-bs-cross {
                     color: white;
                     margin-top: 4px;
                     font-size: 11px;
@@ -297,6 +347,26 @@ export default {
 
                 .img-container {
                     margin-right: 10px;
+
+                    .img-box- {
+                        position: relative;
+
+                        .delete-img {
+                            position: absolute;
+                            top: 5px;
+                            right: 5px;
+                            cursor: pointer;
+                            transition: 0.3s;
+                            font-size: 14px;
+                        }
+
+                        #img-playlist-id {
+                            width: 100px;
+                            height: 100px;
+                            position: absolute;
+                            border-radius: 10px;
+                        }
+                    }
                     .my {
                         width: 0.1px;
                         height: 0.1px;
@@ -406,7 +476,7 @@ export default {
             letter-spacing: .02em;
 
             span {
-                margin-left: auto;
+                margin-left: 10px;
 
             }
             .close-btn {
@@ -427,11 +497,11 @@ export default {
 }
 
 .bouncetwo-enter-active {
-  animation: bounceListMusics-in .3s ease-out both;
+  animation: bounceListMusics-in .5s ease-out both;
 }
 
 .bouncetwo-leave-active {
-  animation: bouncetwo-in .3s reverse ease-in both;
+  animation: bouncetwo-in .5s reverse ease-in both;
 }
 
 @keyframes bouncetwo-in {
