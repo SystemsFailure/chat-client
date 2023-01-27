@@ -72,18 +72,22 @@ const playlistModule = {
             }
         },
         async createdNewPlayList(context) {
-            const doc = await addDoc(collection(db, "playlist"), {
-                arrayMusicsId: [],
-                name: 'name',
-                description: 'desc',
-                imgUrl: null,
-                privatemode: false,
-                userId: '01',
-            });
+            if(context.state.currentUserId === null)
+            {
+                console.log('userid in global storage is null')
+                return
+            }
+            if(context.state.data === null)
+            {
+                console.log('data in global store is null')
+                return
+            }
+            const doc = await addDoc(collection(db, "playlist"), context.state.data);
             console.log('start commit set id')
             context.commit('setplaylistId', doc.id)
         },
         async getAllPlayList(context) {
+            console.log(context.state.currentUserId)
             if(context.state.currentUserId === null) 
             {
                 console.log('user id into global store === null')
@@ -92,7 +96,7 @@ const playlistModule = {
             const q = query(collection(db, "playlist"), where("userId", "==", context.state.currentUserId));
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
-                console.log(doc.id, " => ", doc.data());
+                console.log(doc.id, " => ", doc.data(), 'playlist dt');
             });
         },
         async getLimitPlaylist() {

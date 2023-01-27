@@ -8,15 +8,20 @@
             <div class="wrap-container">
                 <div class="field-data-playlist">
                     <div class="img-container">
-                        <label for="select-playlist-image" class="label_3">+</label>
+                        <span 
+                        id="list-added-files-id"
+                        style="color: teal; font-size: 9px;"
+                        ></span>
+
+                        <label for="select-playlist-image" class="label_3" id="lable-id">+</label>
                         <span style="font-size: 13px;">Cover</span>
                         <input type="file" class="my" id="select-playlist-image" name="select-playlist-image" multiple @change="setImage">
                     </div>
                     <div class="input-continer">
-                        <input type="text" placeholder="name playlist">
-                        <textarea type="text" placeholder="description playlist"></textarea>
+                        <input type="text" placeholder="name playlist" v-model="name">
+                        <textarea type="text" placeholder="description playlist" v-model="description"></textarea>
                         <div class="private-box">
-                            <input type="checkbox" name="" id="sl-private-mode">
+                            <input type="checkbox" name="" id="sl-private-mode" v-model="privateMode">
                             <span>private mode</span>
                         </div>
                     </div>
@@ -52,14 +57,14 @@
                     </transition-group>
                 </div>
             </div>
-            <div class="save" v-if="this.foundMusicsList.length > 0">
+            <div class="save" v-if="this.foundMusicsList.length > 0" @click="create">
                 save
             </div>
         </div>
     </div>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 export default {
     data() {
         return {
@@ -73,7 +78,14 @@ export default {
                 {id: 6, name: 'name', imgURL: '', url: '', artist: 'Image Dragons'},
                 {id: 7, name: 'name', imgURL: '', url: '', artist: 'Image Dragons'},
             ],
+            name: '',
+            description: '',
+            privateMode: false,
+            userId: null,
         }
+    },
+    mounted() {
+        this.userId = localStorage.getItem('user-id');
     },
     computed: {
         ...mapState('playlist', {
@@ -85,13 +97,36 @@ export default {
             createdNewPlayList: 'createdNewPlayList',
             uploadImages: 'uploadImages',
         }),
+        ...mapMutations('playlist', {
+            setData: 'setData',
+            setToZeroList: 'setToZeroList'
+        }),
         setImage() {
             let files = document.getElementById('select-playlist-image').files
             this.filesList.push(...files)
-            this.uploadImages()
-            console.log(this.filesList)
+            if(this.filesList.length > 1) {
+                this.setToZeroList()
+            }
+            document.getElementById('list-added-files-id').innerText = 'File added'
+        },
+        create() {
+            if (this.name === '' || this.description === '' || this.privateMode === false) {
+                alert('Please fill all fields')
+            } else {
+                this.setData(
+                    {
+                        arrayMusicsId: [],
+                        description: this.description,
+                        name: this.name,
+                        privateMode: this.privateMode,
+                        userId: this.userId,
+                    }
+                )
+                this.uploadImages()
+                console.log(this.filesList)
+            }
         }
-    }
+    },
 }
 </script>
 <style lang="scss" scoped>

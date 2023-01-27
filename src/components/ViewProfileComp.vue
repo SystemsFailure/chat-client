@@ -74,7 +74,7 @@
     </div>
 </template>
 <script>
-
+import {mapActions, mapMutations} from 'vuex'
 import { UserApi } from '@/firebase-config/UserController.js'
 import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
@@ -98,6 +98,8 @@ export default {
     },
 
     mounted() {
+        this.setCerrentUserId(localStorage.getItem('user-id'))
+        this.getAllPlayList()
         UserApi.GetPersonalDataOfUser(this.titleId).then(user => {
             if (!user) {
                 console.log('user not found')
@@ -122,6 +124,12 @@ export default {
     },
 
     methods: {
+        ...mapMutations('playlist', {
+            setCerrentUserId: 'setCerrentUserId'
+        }),
+        ...mapActions('playlist', {
+            getAllPlayList: 'getAllPlayList',
+        }),
         createNewPlaylist(id)
         {
             if(id === this.playlistList.length - 1)
