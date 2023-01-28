@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <div class="spinner-container-navigation">
+                <div class="spinner-container-navigation" v-if="showSpiner">
                     <swiper class="swiper" :modules="modules" :slides-per-view="1" :centered-slides="true"
                         :space-between="50" :grab-cursor="false" :pagination="{
                             clickable: true
@@ -88,13 +88,8 @@ export default {
         return {
             showDialogMenu: false,
             titleId: localStorage.getItem('user-id'),
-            playlistList: [
-                // { id: 0, name: 'for me', imgUrl: 'Ninja.jpeg', arrayMusicsId: [], description: 'This is just my playlist', avtor: 'Eric Leonhard', privatemode: true},
-                // { id: 1, name: 'for me', imgUrl: 'Rock-Clouds.jpeg', arrayMusicsId: [], description: 'This is just my playlist', avtor: 'Eric Leonhard', privatemode: true},
-                // { id: 2, name: 'for me', imgUrl: 'Tumblr.jpeg', arrayMusicsId: [], description: 'This is just my playlist', avtor: 'Eric Leonhard', privatemode: true},
-                // { id: 3, name: 'for me', imgUrl: null, arrayMusicsId: [], description: 'This is just my playlist', avtor: 'Eric Leonhard', privatemode: true},
-                // { id: 4, name: 'for me', imgUrl: null, arrayMusicsId: [], description: 'This is just my playlist', avtor: 'Eric Leonhard', privatemode: true},
-            ]
+            playlistList: [],
+            showSpiner: false,
         }
     },
 

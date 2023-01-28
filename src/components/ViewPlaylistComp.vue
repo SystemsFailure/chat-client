@@ -3,6 +3,22 @@
         <div class="close-btn"><i class="fi fi-bs-cross"></i></div>
         <div class="img-view">
             <img src="@/assets/Tumblr.jpeg" alt="" id="img-view-id">
+            <div class="mix"></div>
+        </div>
+        <div class="list">
+            <div class="it" v-for="it in listSongs" :key="it.id" :id="it.id">
+                <div class="img-box-it">
+                    <!-- <img src="@/assets/playlist.png" alt=""> -->
+                    <i class="fi fi-bs-play" @click="PlayerplaySong"></i>
+                </div>
+                <div class="inner-content">
+                    <span class="name-music">
+                        {{ it.name }}
+                    </span>
+                    <span class="name-artist">{{ it.artist }}</span>
+                    <span id="time-duration">03:46</span>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -10,6 +26,12 @@
 export default {
     data() {
         return {
+            listSongs: [
+                {id: 0, name: 'War of change', url: 'url', artist: 'thirty seconds to mars'},
+                {id: 1, name: 'Pretense', url: 'url', artist: ''},
+                {id: 2, name: 'Pretense', url: 'url', artist: ''},
+                {id: 3, name: 'Pretense', url: 'url', artist: ''},
+            ]
             
         }
     },
@@ -19,9 +41,9 @@ export default {
 
 .main-playlist0view-class {
     position: absolute;
-    width: 1200px;
+    width: 800px;
     height: 600px;
-    background-color: rgba($color: #000000, $alpha: .8);
+    background-color: rgba($color: #000000, $alpha: 1);
     margin: 0;
     top: 50%;
     left: 50%;
@@ -37,14 +59,73 @@ export default {
     text-transform: uppercase;
     letter-spacing: .02em;
 
+    .list {
+        width: 100%;
+        height: 100%;
+        padding: 5px;
+        padding-top: 275px;
+        .it {
+            width: 100%;
+            padding: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+
+            .img-box-it {
+                i {
+                    font-size: 15px;
+
+                    &:hover {
+                        cursor: pointer;
+                        opacity: .6;
+                    }
+                }
+            }
+
+            .inner-content {
+                display: flex;
+                align-items: center;
+                margin-left: 10px;
+                width: 100%;
+
+                .name-music {
+
+                }
+
+                #time-duration {
+                    margin-left: auto;
+                    font-size: 9px;
+                    color: #555;
+                }
+
+                .name-artist {
+                    font-size: 9px;
+                    margin-left: 10px;
+                    color: #555;
+                }
+            }
+        }
+    }
+
     .img-view {
         position: absolute;
         width: 100%;
         height: 45%;
+        
+        .mix {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: red;
+            position: absolute;
+            top: 0;
+        }
 
         #img-view-id {
             width:100%;
             height: 100%;
+
         }
 
         

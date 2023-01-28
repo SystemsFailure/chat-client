@@ -7,7 +7,7 @@
     <dialogChatDeleted v-if="showDialogWindowChatDeleted"></dialogChatDeleted>
     <ProfileCardComp v-if="$store.state.showProfile" @closeProfileFunction="(value) => {this.$store.state.showProfile = value}"></ProfileCardComp>
     <ListAllUsersComp v-if="show_list_all_users_comp" @closeListUsersCompFunction="(value) => {this.show_list_all_users_comp = value}"></ListAllUsersComp>
-    <ViewPlaylistComp></ViewPlaylistComp>
+    <ViewPlaylistComp v-if="showViewPlaylistComp"></ViewPlaylistComp>
     <Transition name="transition-notifi-comp">
         <NotificationsComp 
             v-if="showNotificationComp" 
@@ -143,6 +143,7 @@ export default {
             showDialogCreatePlaylist: false,
             showDetailWindow: false,
             shiwMyMusic: false,
+            showViewPlaylistComp: false,
         }
     },
 

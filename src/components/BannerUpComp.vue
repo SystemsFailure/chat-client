@@ -8,6 +8,7 @@
             <div class="recently-ok" style="color:white; font-size: 12px;">{{ $store.state.user_data[0].online ? 'online' : 'seen at 9:46' }}</div>
         </div>
 
+        <MusicUnixSystem></MusicUnixSystem>
         <div class="banner" :style="$store.state.user_data.length === 0 ? {'width' : '100%'} : {'width' : '30%'}">
             <div class="notifycation-container">
                 <div class="nityfy-iecon">
@@ -28,6 +29,7 @@
 </template>
 
 <script>
+import MusicUnixSystem from '@/components/ModalWindows/MusicUnixSystem.vue'
 export default {
     data() {
         return {
@@ -43,6 +45,9 @@ export default {
         showOrHideProfile_() {
             this.$store.commit('showEventMutation')
         },
+    },
+    components: {
+        MusicUnixSystem
     }
 }
 </script>
@@ -63,8 +68,6 @@ $color-text-izumrud: #00ff80;
     width: 71%;
     position: fixed;
     height: 40px;
-
-
     background: rgba(5, 5, 5, 0.85);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4.2px);
@@ -154,7 +157,8 @@ $color-text-izumrud: #00ff80;
         }
 
         .user-box {
-            margin-left: 20px;
+            margin-left: 10px;
+            width: 150px;
             height: 40px;
             display:flex;
             flex-direction: column;
