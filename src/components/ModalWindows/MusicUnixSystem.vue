@@ -26,11 +26,19 @@
 </template>
 <script>
 import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
+let name = document.getElementById('name-songs-id');
+let artist = document.getElementById('name-artist-id');
+let progress = document.getElementById('progress-id');
+let currentTime = document.getElementById('current-time-id');
+
 export default {
     data() {
         return {
             showBtnPlay: true,
         }
+    },
+    mounted() {
+        console.log(name, artist, progress, currentTime)
     },
     computed: {
         ...mapState('player', {
