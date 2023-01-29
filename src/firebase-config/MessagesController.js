@@ -1,6 +1,6 @@
 import IError from "@/IError"
 import { db } from "@/main"
-import { collection, addDoc, orderBy, where, query, getDocs, deleteDoc, doc, runTransaction} from "firebase/firestore"
+import { collection, addDoc, orderBy, where, query, getDocs, deleteDoc, doc, runTransaction, limit, startAfter} from "firebase/firestore"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/main";
 import { ChatApi } from "./ChatController";
@@ -41,32 +41,51 @@ const MessagesApi = {
 
 
     getAllMessage: async (data_) => {
-        const q = query(collection(db, "messages"), orderBy("index"), where("toId", "in", [data_.toId, data_.fromId]))
+      //Это Legacy код,
+        // const q = query(collection(db, "messages"), orderBy("index"), where("toId", "in", [data_.toId, data_.fromId]))
+        // if(doc.data().fromId === data_.fromId || doc.data().fromId === data_.toId)
+        // {
+        //     if(doc.data().fromId === doc.data().toId) return
+        //     let data_message = {
+        //         id: doc.id,
+        //         content: doc.data().content,
+        //         toId: doc.data().toId,
+        //         fromId: doc.data().fromId,
+        //         result: doc.data().result,
+        //         size: doc.data().size,
+        //         atCreated: doc.data().atCreated,
+        //         atUpdated: doc.data().atUpdated,
+        //         view: doc.data().view,
+        //         img_url: doc.data().img_url,
+        //         img_name: doc.data().img_name,
+        //         totalCount: doc.data().totalCount,
+        //         index: doc.data().index
+        //     }
+        //     mess_lst.push(data_message)
+        // } else {
+        //   return
+        // }
+
+        const requestQuery = query(collection(db, "messages"), orderBy("index", 'asc'), where("togetherId", 'in', [`${data_.fromId}-${data_.toId}`, `${data_.toId}-${data_.fromId}`]))
         let mess_lst = []
-        const querySnapshot = await getDocs(q)
+        const querySnapshot = await getDocs(requestQuery)
         querySnapshot.forEach((doc) => {
-            if(doc.data().fromId === data_.fromId || doc.data().fromId === data_.toId)
-            {
-                if(doc.data().fromId === doc.data().toId) return
-                let data_message = {
-                    id: doc.id,
-                    content: doc.data().content,
-                    toId: doc.data().toId,
-                    fromId: doc.data().fromId,
-                    result: doc.data().result,
-                    size: doc.data().size,
-                    atCreated: doc.data().atCreated,
-                    atUpdated: doc.data().atUpdated,
-                    view: doc.data().view,
-                    img_url: doc.data().img_url,
-                    img_name: doc.data().img_name,
-                    totalCount: doc.data().totalCount,
-                    index: doc.data().index
-                }
-                mess_lst.push(data_message)
-            } else {
-              return
-            }
+          let data_message = {
+            id: doc.id,
+            content: doc.data().content,
+            toId: doc.data().toId,
+            fromId: doc.data().fromId,
+            result: doc.data().result,
+            size: doc.data().size,
+            atCreated: doc.data().atCreated,
+            atUpdated: doc.data().atUpdated,
+            view: doc.data().view,
+            img_url: doc.data().img_url,
+            img_name: doc.data().img_name,
+            totalCount: doc.data().totalCount,
+            index: doc.data().index
+        }
+        mess_lst.push(data_message)
         })
         return mess_lst
     },
@@ -180,6 +199,43 @@ const MessagesApi = {
         console.log("Transaction failed: ", e)
       }
       
+    },
+
+    getUniqueElement: async(data) => {
+      //'Ayk4NuXMWVQxWOC4r4OF-1xfJL8tIUqMlojvBji3N' example togetherId
+      const uniqueElement = query(collection(db, "messages"), where("togetherId", 'in', [`${data.fromId}-${data.toId}`, `${data.toId}-${data.fromId}`]), orderBy("index", 'desc'));
+      const docs_ = await getDocs(uniqueElement)
+      docs_.forEach(elem => {
+        if(elem.exists())
+        {
+          console.log(elem.data().content, elem.data().togetherId)
+        } else {
+          console.log('element is not exist ---')
+        }
+      })
+    },
+
+    getLimitedPage: async () => {
+      const first = query(collection(db, "messages"), orderBy("index", 'desc'), limit(3));
+      const documentSnapshots = await getDocs(first)
+      documentSnapshots.forEach(elem => {
+        console.log(elem.data().content)
+      })
+      const lastElement = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+      return lastElement
+    },
+
+    getNextPage: async(lastElement) => {
+      if(!lastElement)
+      {
+        console.log('next cycle')
+        return
+      }
+      const next = query(collection(db, 'messages'), orderBy('index', 'desc'), startAfter(lastElement), limit(3))
+      const nextDocumentSnapshots = await getDocs(next)
+      nextDocumentSnapshots.forEach(elem => {
+        console.log('next page', elem.data().content)
+      })
     },
 
     deleteAllMessage: () => {

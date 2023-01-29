@@ -26,7 +26,7 @@
                         </div>
 
                     <transition-group name="bounce-bubble-message" tag="h6">
-                        <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
+                        <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content" @click="tFunc">
                                 <div class="message-bubble">
                                         <div class="image-content" v-if="n.img_url">
                                         <!-- <img :src="n.img_url" :style="n.fromId === user_id ? {'float' : 'right'} : {'float' : 'left'}" @click="openImageToWindow(n.img_url)"> -->
@@ -90,6 +90,8 @@ export default {
     },
 
     async mounted() {
+        MessagesApi.getLimitedPage()
+        
         const data_ = {
             message_lst: this.message_lst,
             toId: this.user_to_id,
@@ -109,16 +111,15 @@ export default {
         await UserApi.getAllChats(this.user_id).then(chats => {
             chats.forEach(async elem => {
                 await ChatApi.getChat({toID: elem.id, fromID: this.user_id}).then( async chat => {
-                    onSnapshot(doc(db, "ChatId", chat[0].id), async (doc) => {
-                        console.log(doc.data())
+                    //Здесь получаем array в then()
+                    onSnapshot(doc(db, "ChatId", chat[0].id), async () => {
                         const data_ = {
                             message_lst: this.message_lst,
                             toId: this.user_to_id,
                             fromId: this.user_id,
                         }
-                        await MessagesApi.getAllMessage(data_).then(arr => {
-                            console.log(arr)
-                        }).catch(err => {
+                        //Здесь получаем array в then()
+                        await MessagesApi.getAllMessage(data_).catch(err => {
                             console.log(err)
                         })
 
@@ -164,6 +165,15 @@ export default {
 
 
     methods: {
+        tFunc() {
+            const data_ = {
+            message_lst: this.message_lst,
+            toId: this.user_to_id,
+            fromId: this.user_id,
+        }
+        MessagesApi.getUniqueElement(data_)
+        },
+
         async createIndex() {
             let countMess = null
             if(this.user_to_id && this.user_id) {
@@ -363,6 +373,7 @@ export default {
                 content: text,
                 fromId: this.user_id,
                 toId: this.user_to_id != null && this.user_to_id != 0 ? this.user_to_id : false,
+                togetherId: this.user_id + '-' + this.user_to_id,
                 size: new Blob([text]).size,
                 result: true,
                 atCreated: new Date().toLocaleString(),
