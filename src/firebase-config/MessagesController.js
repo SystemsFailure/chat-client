@@ -41,32 +41,11 @@ const MessagesApi = {
 
 
     getAllMessage: async (data_) => {
-      //Это Legacy код,
-        // const q = query(collection(db, "messages"), orderBy("index"), where("toId", "in", [data_.toId, data_.fromId]))
-        // if(doc.data().fromId === data_.fromId || doc.data().fromId === data_.toId)
-        // {
-        //     if(doc.data().fromId === doc.data().toId) return
-        //     let data_message = {
-        //         id: doc.id,
-        //         content: doc.data().content,
-        //         toId: doc.data().toId,
-        //         fromId: doc.data().fromId,
-        //         result: doc.data().result,
-        //         size: doc.data().size,
-        //         atCreated: doc.data().atCreated,
-        //         atUpdated: doc.data().atUpdated,
-        //         view: doc.data().view,
-        //         img_url: doc.data().img_url,
-        //         img_name: doc.data().img_name,
-        //         totalCount: doc.data().totalCount,
-        //         index: doc.data().index
-        //     }
-        //     mess_lst.push(data_message)
-        // } else {
-        //   return
-        // }
-
-        const requestQuery = query(collection(db, "messages"), orderBy("index", 'asc'), where("togetherId", 'in', [`${data_.fromId}-${data_.toId}`, `${data_.toId}-${data_.fromId}`]))
+        const requestQuery = query(
+          collection(db, "messages"),
+          orderBy("index", 'asc'),
+          where("togetherId", 'in', [`${data_.fromId}-${data_.toId}`, `${data_.toId}-${data_.fromId}`]),
+        )
         let mess_lst = []
         const querySnapshot = await getDocs(requestQuery)
         querySnapshot.forEach((doc) => {
@@ -88,7 +67,7 @@ const MessagesApi = {
         mess_lst.push(data_message)
         })
         return mess_lst
-    },
+      },
 
     createMessage: async (data, data_r=null) => {
         if(!data) {IError('data is empty -> MessageApi')}
@@ -124,7 +103,7 @@ const MessagesApi = {
           return 'failure'
       })
       return array
-  },
+    },
 
     deleteMessageById: async (MESSAGEID) => {
       await deleteDoc(doc(db, "messages", MESSAGEID)).then(() => {
@@ -144,22 +123,6 @@ const MessagesApi = {
           console.log('delete mess', USERID)
         }
       })
-
-
-      // const docRef = doc(db, "messages", '7z8j6LMnSwLKAJkkyOpA');
-      // deleteDoc(docRef).then(() => {
-      //   console.log("Entire Document has been deleted successfully.", USERID)
-
-      // })
-      // const todoRef = collection(db, 'messages')
-      // let allMessages = await getDocs(todoRef)
-      // allMessages.forEach(doc => {
-      //   deleteDoc(doc).then(() => {
-      //     console.log(doc.data(), USERID)
-      //   }).catch(err => {
-      //     console.log()
-      //   })
-      // })
     },
 
     returnTotalNumberOfDocuments: async () => {
@@ -215,27 +178,73 @@ const MessagesApi = {
       })
     },
 
-    getLimitedPage: async () => {
-      const first = query(collection(db, "messages"), orderBy("index", 'desc'), limit(3));
+    getLimitedPage: async (data_) => {
+      let arr = []
+      const first = query(
+        collection(db, "messages"),
+        where("togetherId", 'in', [`${data_.fromId}-${data_.toId}`, `${data_.toId}-${data_.fromId}`]),
+        orderBy("index", 'desc'),
+        orderBy('atCreated', 'asc'),
+        limit(10)
+      )
       const documentSnapshots = await getDocs(first)
-      documentSnapshots.forEach(elem => {
-        console.log(elem.data().content)
-      })
       const lastElement = documentSnapshots.docs[documentSnapshots.docs.length - 1];
-      return lastElement
+      console.log('start 1 page')
+      documentSnapshots.forEach(doc => {
+        let data_message = {
+          id: doc.id,
+          content: doc.data().content,
+          toId: doc.data().toId,
+          fromId: doc.data().fromId,
+          result: doc.data().result,
+          size: doc.data().size,
+          atCreated: doc.data().atCreated,
+          atUpdated: doc.data().atUpdated,
+          view: doc.data().view,
+          img_url: doc.data().img_url,
+          img_name: doc.data().img_name,
+          totalCount: doc.data().totalCount,
+          index: doc.data().index,
+          togetherId: doc.data().togetherId,
+        }
+        arr.push(data_message)
+      })
+      return {lastElement: lastElement, array: arr}
     },
 
-    getNextPage: async(lastElement) => {
-      if(!lastElement)
-      {
-        console.log('next cycle')
-        return
-      }
-      const next = query(collection(db, 'messages'), orderBy('index', 'desc'), startAfter(lastElement), limit(3))
+    getNextPage: async(lastElement, data_) => {
+      if(!lastElement) {console.log('next cycle'); return}
+      let array = []
+      const next = query(
+        collection(db, 'messages'),
+        where("togetherId", 'in', [`${data_.fromId}-${data_.toId}`, `${data_.toId}-${data_.fromId}`]),
+        orderBy('index', 'desc'),
+        orderBy('atCreated', 'asc'),
+        startAfter(lastElement),
+        limit(10)
+      )
       const nextDocumentSnapshots = await getDocs(next)
-      nextDocumentSnapshots.forEach(elem => {
-        console.log('next page', elem.data().content)
+      const lastElement_ = nextDocumentSnapshots.docs[nextDocumentSnapshots.docs.length - 1];
+      nextDocumentSnapshots.forEach(doc => {
+        let data_message = {
+          id: doc.id,
+          content: doc.data().content,
+          toId: doc.data().toId,
+          fromId: doc.data().fromId,
+          result: doc.data().result,
+          size: doc.data().size,
+          atCreated: doc.data().atCreated,
+          atUpdated: doc.data().atUpdated,
+          view: doc.data().view,
+          img_url: doc.data().img_url,
+          img_name: doc.data().img_name,
+          totalCount: doc.data().totalCount,
+          index: doc.data().index,
+          togetherId: doc.data().togetherId,
+        }
+        array.push(data_message)
       })
+      return {lastElement_: lastElement_, array: array}
     },
 
     deleteAllMessage: () => {

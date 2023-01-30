@@ -15,7 +15,7 @@
                     <SettingsMenuChatIdComp v-if="showSettingsChatId"></SettingsMenuChatIdComp>
                 </Transition>
 
-                <div class="generl-list-messages" id="block-chat-window-id">
+                <div class="generl-list-messages" id="block-chat-window-id"  @click="cl" @scroll="lv">
                     <div class="outer-container">
                         <div v-show="showDialogWindow" class="container-hide-box" id="query1">
                             <h5  class="mess-content-example" style="color: white;" id="q1"></h5>
@@ -26,7 +26,7 @@
                         </div>
 
                     <transition-group name="bounce-bubble-message" tag="h6">
-                        <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content" @click="tFunc">
+                        <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
                                 <div class="message-bubble">
                                         <div class="image-content" v-if="n.img_url">
                                         <!-- <img :src="n.img_url" :style="n.fromId === user_id ? {'float' : 'right'} : {'float' : 'left'}" @click="openImageToWindow(n.img_url)"> -->
@@ -66,7 +66,7 @@ import { MessagesApi } from '@/firebase-config/MessagesController'
 import { UserApi } from '@/firebase-config/UserController'
 import { ChatApi } from '@/firebase-config/ChatController'
 import { db } from '@/main'
-import { doc, onSnapshot} from "firebase/firestore"
+import { doc, onSnapshot, Timestamp} from "firebase/firestore"
 
 
 export default {
@@ -81,6 +81,8 @@ export default {
             showMiniChatValue: false,
             showMiniListComp: false,
             imageURL: null,
+
+            lastMessage: '',
         }
     },
 
@@ -90,23 +92,6 @@ export default {
     },
 
     async mounted() {
-        MessagesApi.getLimitedPage()
-        
-        const data_ = {
-            message_lst: this.message_lst,
-            toId: this.user_to_id,
-            fromId: this.user_id,
-        }
-        MessagesApi.getAllMessage(data_).then(arr => {
-            this.message_lst = arr
-            setTimeout(() => {
-                let block = document.getElementById("block-chat-window-id")
-                block.scrollTop = block.scrollHeight
-            },1000)
-        }).catch(err => {
-            console.log(err)
-        })
-
         // Здесь устанавливается onSnapshoot для слежения за index - это колл-во сообщений в чате, которое меняется каждый раз когда оправляется сообщение
         await UserApi.getAllChats(this.user_id).then(chats => {
             chats.forEach(async elem => {
@@ -129,30 +114,17 @@ export default {
         }).catch(err => {
             console.log(err)
         })
-
-
     },
-
-
     watch: {
         user_to_id: {
             async handler() {
-                const data_ = {
-                    message_lst: this.message_lst,
-                    toId: this.user_to_id,
-                    fromId: this.user_id,
-                }
-                await MessagesApi.getAllMessage(data_).then(arr => {
-                    this.message_lst = arr
-
-                }).catch(err => {
-                    console.log(err)
-                })
+                const data_ = { toId: this.user_to_id, fromId: this.user_id, }
+                const {lastElement, array} = await MessagesApi.getLimitedPage(data_)
+                this.message_lst = array.reverse()
+                this.lastMessage = lastElement
             },
             deep: true
-
         },
-
         cleaningChat: {
             handler() {
                 this.showSettingsChatId = false
@@ -160,18 +132,35 @@ export default {
             },
             deep: true
         },
-
     },
-
-
     methods: {
-        tFunc() {
-            const data_ = {
-            message_lst: this.message_lst,
-            toId: this.user_to_id,
-            fromId: this.user_id,
-        }
-        MessagesApi.getUniqueElement(data_)
+        async lv() {
+            let el = document.getElementById('block-chat-window-id')
+            let posTop = el.scrollTop
+            if(Math.ceil(posTop) === 0) {
+                const data_ = { toId: this.user_to_id, fromId: this.user_id}
+                let {lastElement_, array} = await MessagesApi.getNextPage(this.lastMessage, data_)
+                array.forEach(elem => {
+                    this.message_lst.unshift(elem)
+                })
+                let block = document.getElementById("block-chat-window-id")
+                console.log(block.scrollHeight/2, block.scrollHeight)
+                block.scrollTop = block.scrollHeight/2
+                this.lastMessage = lastElement_
+            }
+            // if(Math.ceil(posTop) < 50) {
+            //     const data_ = { toId: this.user_to_id, fromId: this.user_id}
+            //     let {lastElement_, array} = await MessagesApi.getNextPage(this.lastMessage, data_)
+            //     array.forEach(elem => {
+            //         this.message_lst.unshift(elem)
+            //     })
+            //     this.message_lst = [...new Set(this.message_lst)]
+            //     this.lastMessage = lastElement_
+            // }
+        },
+
+        async cl() {
+
         },
 
         async createIndex() {
@@ -376,8 +365,8 @@ export default {
                 togetherId: this.user_id + '-' + this.user_to_id,
                 size: new Blob([text]).size,
                 result: true,
-                atCreated: new Date().toLocaleString(),
-                atUpdated: new Date().toLocaleString(),
+                atCreated: Timestamp.fromDate(new Date()),
+                atUpdated: Timestamp.fromDate(new Date()),
                 view: false,
                 img_url: null,
                 img_name: null,
