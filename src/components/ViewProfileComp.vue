@@ -56,7 +56,7 @@
                     <div class="custom-playlist">
                         <div class="line-title"><span>playlists</span> <span class="text-more">show more</span></div>
 
-                        <div class="playlist_" v-for="playlist in playlistList" :key="playlist.id" @click="createNewPlaylist(playlist.name)">
+                        <div class="playlist_" v-for="playlist in playlistList" :key="playlist.id" @click="createNewPlaylist(playlist.name, playlist)">
                             <img :src="playlist.imgUrl ? playlist.imgUrl : require('@/assets/playlist.png')" alt="" srcset="">
                             <div class="title-playlist"><span>{{ playlist.name }}</span></div>
                             <div class="avtor-title"><span>{{ playlist.avtor }}</span></div>
@@ -123,22 +123,30 @@ export default {
     computed: {
         ...mapState('playlist', {
             playlistList_: 'playlistList',
+            playlistID: 'playlistID',
         }),
     },
 
     methods: {
         ...mapMutations('playlist', {
-            setCerrentUserId: 'setCerrentUserId'
+            setCerrentUserId: 'setCerrentUserId',
+            setplaylistId: 'setplaylistId',
         }),
         ...mapActions('playlist', {
             getAllPlayList: 'getAllPlayList',
         }),
-        createNewPlaylist(name)
+        openPlaylist(playlistInstance) {
+            this.setplaylistId(playlistInstance.id)
+        },
+        createNewPlaylist(name, playlistInstance)
         {
             console.log('click')
             if(name === this.playlistList[this.playlistList.length - 1].name)
             {
                 this.$emit('showDialogWindowCreatePlalistFunction', true)
+            } else {
+                this.openPlaylist(playlistInstance)
+                this.$emit('showViewPlaylistCompFunction', true)
             }
         }
     },

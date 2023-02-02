@@ -7,11 +7,11 @@
     <dialogChatDeleted v-if="showDialogWindowChatDeleted"></dialogChatDeleted>
     <ProfileCardComp v-if="$store.state.showProfile" @closeProfileFunction="(value) => {this.$store.state.showProfile = value}"></ProfileCardComp>
     <ListAllUsersComp v-if="show_list_all_users_comp" @closeListUsersCompFunction="(value) => {this.show_list_all_users_comp = value}"></ListAllUsersComp>
-    <ViewPlaylistComp v-if="showViewPlaylistComp"></ViewPlaylistComp>
+    <ViewPlaylistComp v-if="showViewPlaylistComp" @closeViewPlaylistComp="(val) => {this.showViewPlaylistComp = val}"></ViewPlaylistComp>
     <Transition name="transition-notifi-comp">
         <NotificationsComp 
             v-if="showNotificationComp" 
-            @closeNotificationsCompFunction="(value) => {this.showNotificationComp = value}" 
+            @closeNotificationsCompFunction="(value) => {this.showNotificationComp = value}"
             @updateUsersListFunction="updateUsersList"
             ></NotificationsComp>
     </Transition>
@@ -84,6 +84,7 @@
                     @showCreateMusicWindowFunction="(v) => {this.showCreateMusicWindow = true}"
                     @showDialogWindowCreatePlalistFunction="(value) => {this.showDialogCreatePlaylist = value}"
                     @showDetailWindowCompFunction="(value) => {this.showDetailWindow = value}"
+                    @showViewPlaylistCompFunction="(val) => {this.showViewPlaylistComp = val}"
                     ></ViewProfileComp>
                 <Transition name="up-profile-card-slide">
                     <MusicMenuComp v-show="false"></MusicMenuComp>

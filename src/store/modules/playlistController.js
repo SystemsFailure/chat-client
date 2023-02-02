@@ -1,5 +1,5 @@
-import { collection, addDoc, updateDoc, doc, arrayUnion } from "firebase/firestore";
-import { query, where, getDocs } from "firebase/firestore"; 
+import { collection, addDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { query, where, getDocs, doc, getDoc } from "firebase/firestore"; 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/main";
 
@@ -13,8 +13,13 @@ const playlistModule = {
         currentUserId: null,
         playlistList: [],
         playlistIdList: [],
+
+        musicsList: [],
+        musicsListLV: [],
+
     }),
     mutations: {
+        // secondary mutatuions sigment start
         setplaylistId(state, id) {
             state.playlistID = id
         },
@@ -35,7 +40,17 @@ const playlistModule = {
         },
         setplaylistIdList(state, value) {
             state.playlistIdList = value
-        }
+        },
+        setmusicsList(state, val) {
+            state.musicsList = val
+        },
+        setmusicsListLV(state, val) {
+            state.musicsListLV = val
+        },
+        // secondary mutations sigment end
+        // primary mutatuions sigment start
+        // primary mutatuions sigment end
+
     },
     actions: {
         async uploadImages(context) {
@@ -115,13 +130,60 @@ const playlistModule = {
             const q = query(collection(db, "playlist"), where("userId", "==", context.state.currentUserId));
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
-                context.state.playlistList.push(doc.data())
+                const data = {
+                    id: doc.id,
+                    name: doc.data().name,
+                    arrayMusic: doc.data().arrayMusic,
+                    description: doc.data().description,
+                    imgUrl: doc.data().imgUrl,
+                    privateMode: doc.data().privateMode,
+                    userId: doc.data().userId,
+                }
+                context.state.playlistList.push(data)
             });
             context.state.playlistList.push({ id: 'addPlaylistSuka', title: 'new playlist', img_url: 'addPlaylist4.png', arrayMusic: [], desc: '', avtor: 'add playlist'})
 
         },
         async getLimitPlaylist() {
 
+        },
+
+        async getDataFromPlaylist(context) {
+            if(context.state.playlistID != null)
+            {
+                const playlist_ = doc(db, "playlist", context.state.playlistID);
+                await getDoc(playlist_).then(playlist_Snap => {
+                    context.commit('setmusicsList', playlist_Snap.data().arrayMusic)
+                    console.log(playlist_Snap.data().arrayMusic, 'opps', context.state.musicsListLV)
+                })
+            } else {
+                console.log('2')
+            }
+            context.commit('setmusicsListLV', [])
+            if(context.state.musicsList) {
+                for (let index = 0; index < context.state.musicsList.length; index++) {
+                    const element = context.state.musicsList[index];
+                    const docRef = doc(db, "musics", element);
+                    const docSnap = await getDoc(docRef)
+                    console.log(docSnap.data().name)
+                    if(docSnap.exists()) {
+                        // context.commit('setmusicsListLV', docSnap)
+                        const data = {
+                            id: docSnap.id,
+                            url: docSnap.data().url,
+                            name: docSnap.data().name,
+                            artist: docSnap.data().artist,
+                            size: docSnap.data().size,
+                            type: docSnap.data().type,
+                            userId: docSnap.data().userId,
+                            playlist: docSnap.data().playlist,
+                        }
+                        context.state.musicsListLV.push(data)
+                    }
+                }
+            } else {
+                console.log('3')
+            }
         },
     },
     getters: {

@@ -120,8 +120,14 @@ export default {
             async handler() {
                 const data_ = { toId: this.user_to_id, fromId: this.user_id, }
                 const {lastElement, array} = await MessagesApi.getLimitedPage(data_)
-                this.message_lst = array.reverse()
-                this.lastMessage = lastElement
+                new Promise((resolve, failure) => {
+                    this.message_lst = array.reverse()
+                    this.lastMessage = lastElement
+                    resolve('success')
+                    failure('failure')
+                }).then(() => {
+                    this.scrollDownChat()
+                })
             },
             deep: true
         },
@@ -134,6 +140,11 @@ export default {
         },
     },
     methods: {
+        scrollDownChat() {
+            let block = document.getElementById("block-chat-window-id")
+            block.scrollTop = block.scrollHeight
+        },
+
         async lv() {
             let el = document.getElementById('block-chat-window-id')
             let posTop = el.scrollTop
@@ -144,19 +155,10 @@ export default {
                     this.message_lst.unshift(elem)
                 })
                 let block = document.getElementById("block-chat-window-id")
-                console.log(block.scrollHeight/2, block.scrollHeight)
-                block.scrollTop = block.scrollHeight/2
+                console.log((block.scrollHeight / 100), block.scrollHeight)
+                block.scrollTop = (block.scrollHeight / 100)
                 this.lastMessage = lastElement_
             }
-            // if(Math.ceil(posTop) < 50) {
-            //     const data_ = { toId: this.user_to_id, fromId: this.user_id}
-            //     let {lastElement_, array} = await MessagesApi.getNextPage(this.lastMessage, data_)
-            //     array.forEach(elem => {
-            //         this.message_lst.unshift(elem)
-            //     })
-            //     this.message_lst = [...new Set(this.message_lst)]
-            //     this.lastMessage = lastElement_
-            // }
         },
 
         async cl() {
@@ -335,8 +337,7 @@ export default {
                 failure('failure')
             }).then(() => {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('anime-bubble-message')
-                let block = document.getElementById("block-chat-window-id")
-                block.scrollTop = block.scrollHeight
+                this.scrollDownChat()
             })
 
 

@@ -185,7 +185,7 @@ const MessagesApi = {
         where("togetherId", 'in', [`${data_.fromId}-${data_.toId}`, `${data_.toId}-${data_.fromId}`]),
         orderBy("index", 'desc'),
         orderBy('atCreated', 'asc'),
-        limit(10)
+        limit(20)
       )
       const documentSnapshots = await getDocs(first)
       const lastElement = documentSnapshots.docs[documentSnapshots.docs.length - 1];
@@ -221,7 +221,7 @@ const MessagesApi = {
         orderBy('index', 'desc'),
         orderBy('atCreated', 'asc'),
         startAfter(lastElement),
-        limit(10)
+        limit(20)
       )
       const nextDocumentSnapshots = await getDocs(next)
       const lastElement_ = nextDocumentSnapshots.docs[nextDocumentSnapshots.docs.length - 1];

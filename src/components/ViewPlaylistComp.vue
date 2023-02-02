@@ -1,15 +1,19 @@
 <template>
     <div class="main-playlist0view-class">
-        <div class="close-btn"><i class="fi fi-bs-cross"></i></div>
+        <div class="close-btn">
+            <i class="fi fi-bs-cross" @click="$emit('closeViewPlaylistComp', false)"></i>
+            <i class="fi fi-ss-cross" style="color: red;" @click="pauseAudio()"></i>
+        </div>
         <div class="img-view">
             <img src="@/assets/Tumblr.jpeg" alt="" id="img-view-id">
             <div class="mix"></div>
         </div>
         <div class="list">
-            <div class="it" v-for="it in listSongs" :key="it.id" :id="it.id">
+            <div class="it" v-for="it in listSongs" :key="it.id" :id="it.id + '-class'">
+                <audio :src="it.url" :id="it.id"></audio>
                 <div class="img-box-it">
                     <!-- <img src="@/assets/playlist.png" alt=""> -->
-                    <i class="fi fi-bs-play" @click="PlayerplaySong"></i>
+                    <i class="fi fi-bs-play" @click="PlayerplaySong(it.id)"></i>
                 </div>
                 <div class="inner-content">
                     <span class="name-music">
@@ -23,17 +27,44 @@
     </div>
 </template>
 <script>
+import {mapState, mapActions, mapMutations} from 'vuex'
 export default {
     data() {
         return {
-            listSongs: [
-                {id: 0, name: 'War of change', url: 'url', artist: 'thirty seconds to mars'},
-                {id: 1, name: 'Pretense', url: 'url', artist: ''},
-                {id: 2, name: 'Pretense', url: 'url', artist: ''},
-                {id: 3, name: 'Pretense', url: 'url', artist: ''},
-            ]
-            
+            listSongs: [],
         }
+    },
+    mounted() {
+        this.getDataFromPlaylist().then(() => {
+            this.listSongs = this.musicsListLV
+        })
+    },
+    methods: {
+        ...mapActions('playlist', {
+            getDataFromPlaylist: 'getDataFromPlaylist',
+        }),
+        ...mapActions('player', {
+            displayAudioDurationUnix: 'displayAudioDurationUnix',
+        }),
+        ...mapMutations('player', {
+            playMusic: 'playMusic', setSliderMaxUnix: 'setSliderMaxUnix',
+            stopAudio: 'stopAudio',
+        }),
+        PlayerplaySong(id) {
+            let audio = document.getElementById(id)
+            this.currentAudioElement = audio
+            this.playMusic(audio)
+            this.displayAudioDurationUnix()
+            this.setSliderMaxUnix()
+        },
+        pauseAudio() {
+            this.stopAudio()
+        }
+    },
+    computed: {
+        ...mapState('playlist', {
+            musicsListLV: 'musicsListLV',
+        })
     },
 }
 </script>
@@ -112,6 +143,7 @@ export default {
         position: absolute;
         width: 100%;
         height: 45%;
+        z-index: 11;
         
         .mix {
             width: 12px;
