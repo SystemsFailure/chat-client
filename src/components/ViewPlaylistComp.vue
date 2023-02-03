@@ -1,19 +1,21 @@
 <template>
     <div class="main-playlist0view-class">
         <div class="close-btn">
-            <i class="fi fi-bs-cross" @click="$emit('closeViewPlaylistComp', false)"></i>
-            <i class="fi fi-ss-cross" style="color: red;" @click="pauseAudio()"></i>
+            <img src="@/assets/svgassets/icons8-удалить.svg" alt="close" title="close window" srcset="" @click="$emit('closeViewPlaylistComp', false)">
+            <!-- <i class="fi fi-ss-cross" style="color: red;" @click="pauseAudio()"></i> -->
         </div>
         <div class="img-view">
-            <img src="@/assets/Tumblr.jpeg" alt="" id="img-view-id">
-            <div class="mix"></div>
+            <img :src="require('@/assets/Tumblr.jpeg')" alt="" id="img-view-id">
+            <div class="mix">
+                <img src="@/assets/svgassets/icons8-воспроизведение-50.png" alt="" title="play by list">
+            </div>
         </div>
         <div class="list">
             <div class="it" v-for="it in listSongs" :key="it.id" :id="it.id + '-class'">
-                <audio :src="it.url" :id="it.id"></audio>
+                <audio :src="it.url" :id="it.id" class="audioList"></audio>
                 <div class="img-box-it">
                     <!-- <img src="@/assets/playlist.png" alt=""> -->
-                    <i class="fi fi-bs-play" @click="PlayerplaySong(it.id)"></i>
+                    <img src="@/assets/svgassets/icons8-воспроизведение-50.png" alt="" @click="PlayerplaySong(it.id)">
                 </div>
                 <div class="inner-content">
                     <span class="name-music">
@@ -43,19 +45,14 @@ export default {
         ...mapActions('playlist', {
             getDataFromPlaylist: 'getDataFromPlaylist',
         }),
-        ...mapActions('player', {
-            displayAudioDurationUnix: 'displayAudioDurationUnix',
-        }),
         ...mapMutations('player', {
-            playMusic: 'playMusic', setSliderMaxUnix: 'setSliderMaxUnix',
             stopAudio: 'stopAudio',
+            setMusicsInArray: 'setMusicsInArray',
+            setCurrentSongId: 'setCurrentSongId',
         }),
         PlayerplaySong(id) {
-            let audio = document.getElementById(id)
-            this.currentAudioElement = audio
-            this.playMusic(audio)
-            this.displayAudioDurationUnix()
-            this.setSliderMaxUnix()
+            this.setMusicsInArray(this.listSongs)
+            this.setCurrentSongId(id)
         },
         pauseAudio() {
             this.stopAudio()
@@ -104,7 +101,9 @@ export default {
             border-radius: 5px;
 
             .img-box-it {
-                i {
+                img {
+                    width: 15px;
+                    height: 15px;
                     font-size: 15px;
 
                     &:hover {
@@ -146,12 +145,28 @@ export default {
         z-index: 11;
         
         .mix {
-            width: 12px;
-            height: 12px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background-color: red;
+            background-color: black;
+            border: 1px solid #ffffff;
             position: absolute;
-            top: 0;
+            top: 210px;
+            left: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 2px;
+            img {
+                width: 20px;
+                height: 20px;
+            }
+
+            &:hover {
+                cursor: pointer;
+                opacity: 0.8;
+                transition: .3s;
+            }
         }
 
         #img-view-id {
@@ -170,8 +185,10 @@ export default {
         width: 100%;
         color: white;
         z-index: 15;
-
-        i {
+        
+        img {
+            width: 16px;
+            height: 16px;
             margin-left: auto;
             margin-top:10px;
             margin-right: 10px;

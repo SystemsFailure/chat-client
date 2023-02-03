@@ -3,6 +3,7 @@ import { db } from "@/main"
 const playerModule = {
     namespaced: true,
     state: () => ({
+        showBtnPlay: true,
         isArray: [],
         currentSong: null,
         currentSongId: null,
@@ -17,6 +18,7 @@ const playerModule = {
     mutations: {
         setMusicsInArray(state, value) {
             state.isArray = value
+            console.log('setMusicsInArray', value)
         },
         clearisArray(state) {
             state.isArray = []
@@ -27,6 +29,14 @@ const playerModule = {
         },
         setCurrentSongId(state, value) {
             state.currentSongId = value
+            console.log('setCurrentSongId', value)
+
+        },
+        closeBtnPlayMusic(state) {
+            state.showBtnPlay = false
+        },
+        showBtnPlayMusic(state) {
+            state.showBtnPlay = true
         },
 
 
@@ -48,25 +58,26 @@ const playerModule = {
         setAudioElement(state, value) {
             state.currentAudioElement = value
         },
-        playMusic(state, audio) {
+    },
+    actions: {
+        playMusicUnix({state, getters, commit}, audio) {
+            commit('closeBtnPlayMusic')
             state.currentAudioElement = audio
             let audioElement = state.currentAudioElement
             audioElement.play()
             audioElement.addEventListener('timeupdate', () => {
-                // const {duration, currentTime} = audioElement
-                // const progresscountPercent = (currentTime / duration) * 100
-                // let progrssBuffer = document.getElementById('audioPlayerContainer')
-                // progrssBuffer.style.width = `${progresscountPercent}%`
-                // this.progressInput.value = Math.floor(audio.currentTime)
-                // document.getElementById('curr-time-id').textContent = this.calculateTime(this.progressInput.value)
+                const {duration, currentTime} = audioElement
+                const progresscountPercent = (currentTime / duration) * 100
+                let progrssBuffer = state.ProgressInline
+                progrssBuffer.style.width = `${progresscountPercent}%`
+                state.inputElement.value = Math.floor(currentTime)
+                state.timeContainer.textContent = getters.calculateTimeUnixForCurrTime
             })
         },
-        stopAudio(state) {
+        stopAudio({state, commit}) {
+            commit('showBtnPlayMusic')
             state.currentAudioElement.pause()
-            console.log('stop', state.currentAudioElement)
         },
-    },
-    actions: {
         displayAudioDurationUnix(context)
         {
             context.state.timeContainer.textContent = context.getters.calculateTimeUnix
@@ -108,6 +119,9 @@ const playerModule = {
             const seconds = Math.floor(state.inputElement.value % 60);
             const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
             return `${minutes}:${returnedSeconds}`;
+        },
+        returnAudioElementId(state) {
+            return state.currentSongId
         }
     }
 }

@@ -79,7 +79,7 @@ export default {
             message_lst: [],
             USERTO: null,
             showMiniChatValue: false,
-            showMiniListComp: false,
+            showMiniListComp: true,
             imageURL: null,
 
             lastMessage: '',

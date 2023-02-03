@@ -57,7 +57,7 @@
                         <div class="line-title"><span>playlists</span> <span class="text-more">show more</span></div>
 
                         <div class="playlist_" v-for="playlist in playlistList" :key="playlist.id" @click="createNewPlaylist(playlist.name, playlist)">
-                            <img :src="playlist.imgUrl ? playlist.imgUrl : require('@/assets/playlist.png')" alt="" srcset="">
+                            <img :src="playlist.imgUrl !=null ? playlist.imgUrl : require('@/assets/playlist.png')" alt="" srcset="">
                             <div class="title-playlist"><span>{{ playlist.name }}</span></div>
                             <div class="avtor-title"><span>{{ playlist.avtor }}</span></div>
                         </div>
