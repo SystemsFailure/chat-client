@@ -61,18 +61,25 @@ const playerModule = {
     },
     actions: {
         playMusicUnix({state, getters, commit}, audio) {
-            commit('closeBtnPlayMusic')
-            state.currentAudioElement = audio
-            let audioElement = state.currentAudioElement
-            audioElement.play()
-            audioElement.addEventListener('timeupdate', () => {
-                const {duration, currentTime} = audioElement
-                const progresscountPercent = (currentTime / duration) * 100
-                let progrssBuffer = state.ProgressInline
-                progrssBuffer.style.width = `${progresscountPercent}%`
-                state.inputElement.value = Math.floor(currentTime)
-                state.timeContainer.textContent = getters.calculateTimeUnixForCurrTime
-            })
+            if(audio === 'last')
+            {
+                console.log('last element played', state.currentAudioElement)
+                state.currentAudioElement.play()
+                commit('closeBtnPlayMusic')
+            } else {
+                commit('closeBtnPlayMusic')
+                commit('setAudioElement', audio)
+                let audioElement = state.currentAudioElement
+                audioElement.play()
+                audioElement.addEventListener('timeupdate', () => {
+                    const {duration, currentTime} = audioElement
+                    const progresscountPercent = (currentTime / duration) * 100
+                    let progrssBuffer = state.ProgressInline
+                    progrssBuffer.style.width = `${progresscountPercent}%`
+                    state.inputElement.value = Math.floor(currentTime)
+                    state.timeContainer.textContent = getters.calculateTimeUnixForCurrTime
+                })
+            }
         },
         stopAudio({state, commit}) {
             commit('showBtnPlayMusic')

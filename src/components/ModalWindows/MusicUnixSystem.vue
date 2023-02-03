@@ -18,14 +18,15 @@
                 </div>
 
                 <div class="btn-expand">
-                    <img src="@/assets/svgassets/icons8-down-arrow-64.png" alt="" srcset="">
+                    <img v-if="visibleBtnExpand" src="@/assets/svgassets/icons8-down-arrow-64.png" alt="" srcset="" @click="() => {this.visibleBtnExpand = false; this.visiblehideSideUnix = true}">
+                    <img v-else src="@/assets/svgassets/icons8-up-chevron-50.png" alt="" srcset="" @click="() => {this.visibleBtnExpand = true; this.visiblehideSideUnix = false}">
                 </div>
 
 
             </div>
 
         </div>
-        <div class="hide-side-unix">
+        <div class="hide-side-unix" v-if="visiblehideSideUnix">
                 <span id="name-songs-id">Keep for you</span>
                 <span id="name-artist-id">Comele Francline</span>
 
@@ -51,7 +52,9 @@ let totalTime = document.getElementById('total-time');
 export default {
     data() {
         return {
-            listAudios: []
+            listAudios: [],
+            visibleBtnExpand: true,
+            visiblehideSideUnix: false,
         }
     },
     mounted() {
@@ -97,6 +100,9 @@ export default {
         })
     },
     methods: {
+        PlayerplaySong() {
+            this.playMusicUnix('last')
+        },
         ...mapMutations('player', {
             setCurrentTimeElement: 'setCurrentTimeElement', setProgressInline: 'setProgressInline',
             setInput: 'setInput',

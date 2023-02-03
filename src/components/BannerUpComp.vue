@@ -13,6 +13,7 @@
             <div class="notifycation-container">
                 <div class="nityfy-iecon">
                     <i class="fi fi-bs-bell" @click="() => {this.$emit('showNotificationWindowFunction', true)}">
+                        <img src="@/assets/svgassets/icons8-почта-50.png" alt="" @click="() => {this.$emit('showNotificationWindowFunction', true)}">
                         <div class="cycle-box"></div>
                     </i>
                 </div>
@@ -107,14 +108,19 @@ $color-text-izumrud: #00ff80;
                     font-size: 18px;
 
                     i {
-
-                        &:hover {
-                            cursor: pointer;
-                            opacity: .8;
+                        font-size: 0px;
+                        img {
+                            position: relative;
+                            width: 16px;
+                            height: 16px;
+                            &:hover {
+                                cursor: pointer;
+                                opacity: .8;
+                            }
                         }
                         .cycle-box {
                             position: absolute;
-                            transform: translateY(-24px) translateX(10px);
+                            transform: translateY(-16px) translateX(12px);
                             width: 8px;
                             height: 8px;
                             border-radius: 50%;
@@ -122,6 +128,7 @@ $color-text-izumrud: #00ff80;
     
                         }
                     }
+
 
 
                 }

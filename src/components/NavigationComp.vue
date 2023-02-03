@@ -3,25 +3,29 @@
         <div class="content">
 
             <div @click="openMenuAny(0)" class="item-im" :class="{'item-selected' : showMenuMail}">
-                <i class="fi fi-bs-mode-portrait"></i>
+                <!-- <i class="fi fi-bs-mode-portrait"></i> -->
+                <img src="@/assets/svgassets/icons8-user-67.png" alt="">
             </div>
             <div @click="openMenuAny(1)" class="item-im" :class="{'item-selected' : showMenuChats}">
-                <i class="fi fi-bs-comment"></i>
+                <!-- <i class="fi fi-bs-comment"></i> -->
+                <img src="@/assets/svgassets/icons8-тема-48.png" alt="">
+                <!-- <img src="@/assets/svgassets/icons8-тема-black.gif"> -->
                 <!-- <img src="@/assets/chat-right-fill.svg" alt="chats" srcset=""> -->
             </div>
             <div @mouseenter="showDetailMenuFunction" @mouseleave="closeDetailMenuFunction" class="item-im" :class="{'item-selected' : showMenuMusics}">
-                <div class="three-points"><i class="fi fi-bs-menu-dots-vertical"></i></div>
+                <div class="three-points"><img src="@/assets/svgassets/icons8-меню-2-48.png" alt=""></div>
                 <div class="detailmenu" v-if="showDetailMenu">
-                    <div class="myaudio" @click="showMyMusic"><i class="fi fi-ss-list-check"></i></div>
-                    <div class="allaudio" @click="GlobalListMusicss"><i class="fi fi-ss-music-alt"></i></div>
+                    <div class="myaudio" @click="showMyMusic"><img src="@/assets/svgassets/icons8-папка-с-музыкой-100.png" alt=""></div>
+                    <div class="allaudio" @click="GlobalListMusicss"><img src="@/assets/svgassets/icons8-playerme-120.png" alt=""></div>
                 </div>
-                <i v-if="myMusicIcon" class="fi fi-bs-list-check"></i>
+                <img v-if="!myMusicIcon" src="@/assets/svgassets/icons8-playerme-120.png" alt="">
+                <!-- <i v-if="myMusicIcon" class="fi fi-bs-list-check"></i> -->
                 <i v-else class="fi fi-bs-music-alt">
                 </i>
             </div>
             <div @click="openMenuAny(2)" class="item-im" :class="{'item-selected' : showMenuSettings}">
-                <i class="fi fi-bs-settings-sliders"></i>
-                <!-- <img src="@/assets/setting.png" alt="chats" srcset=""> -->
+                <!-- <i class="fi fi-bs-settings-sliders"></i> -->
+                <img src="@/assets/svgassets/icons8-сервисы-64.png" alt="chats" srcset="">
             </div>
 
         </div>
@@ -145,6 +149,11 @@ $color-text-izumrud: #00ff80;
     .content {
         width: 100%;
 
+        img{
+            width: 25px;
+            height: 25px;
+            color: white;
+        }
             .item-im:hover {
                 background-color: #00cec780;
                 border-left: 2px solid wheat;
@@ -158,8 +167,12 @@ $color-text-izumrud: #00ff80;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                
                 margin-top: 15px;
+
+                video{
+                    width: 25px;
+                    height: 25px;
+                }
 
                 img {
                     width: 25px;
