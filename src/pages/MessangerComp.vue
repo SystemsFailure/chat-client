@@ -1,4 +1,5 @@
 <template>
+    <ToastNotifyListComp></ToastNotifyListComp>
     <dialogWindow
         v-if="this.$store.state.showDialogDeleteWindow"
         @ShowOrCloseDialogWindowChatDeletedFunction="DialogMessageBoutDeletedChatFunc">
@@ -99,6 +100,7 @@
 </template>
 
 <script>
+import ToastNotifyListComp from '@/components/ToastNotifyListComp.vue'
 import NavigationComp from '@/components/NavigationComp.vue'
 import ChatWindowComp from '@/components/ChatWindowCompFolder/ChatWindowComp.vue'
 import AudioListComp from '@/components/AudioListComp.vue'
@@ -302,7 +304,7 @@ export default {
         NotificationsComp, dialogChatDeleted,
         CreateMusicWindow, CreatePlaylistWindow,
         DetailWindowComp, PersonalAudioListComp,
-        ViewPlaylistComp,
+        ViewPlaylistComp, ToastNotifyListComp
     }
 
 }

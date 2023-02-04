@@ -1,12 +1,14 @@
 import {createStore} from "vuex";
 import playerModule from "@/store/modules/playerModule";
 import playlistModule from '@/store/modules/playlistController'
+import toastModule from "./modules/toastModule";
 
 const store = createStore({
 
     modules: {
         player: playerModule,
         playlist: playlistModule,
+        toast: toastModule,
     },
 
     state: () => ({

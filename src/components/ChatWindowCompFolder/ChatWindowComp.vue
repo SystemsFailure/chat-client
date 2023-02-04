@@ -171,10 +171,12 @@ export default {
                 await ChatApi.getChat({toID: this.user_to_id, fromID: this.user_id}).then( async chat => {
                     if (chat.length != 0)
                     {
+                        console.log(chat, 'outside')
                         if (chat.length === 1)
                         {
+                            console.log(chat, 'chat inner function')
                             await ChatApi.updataField(chat[0].id)
-                            countMess = chat[0].countMessages
+                            countMess = chat[0].countOfMessages
                         }
                         else
                         {
@@ -302,6 +304,7 @@ export default {
                         content: null,
                         fromId: localStorage.getItem('user-id'),
                         toId: this.user_to_id != null && this.user_to_id != 0 ? this.user_to_id : false,
+                        togetherId: this.user_id + '-' + this.user_to_id,
                         size: null,
                         result: true,
                         atCreated: new Date().toLocaleString(),
