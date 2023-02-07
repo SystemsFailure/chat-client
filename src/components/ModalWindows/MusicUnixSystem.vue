@@ -33,17 +33,41 @@
 
         </div>
         <div class="hide-side-unix" v-show="visiblehideSideUnix">
-            <span id="name-songs-id">Keep for you</span>
-            <span id="name-artist-id">Comele Francline</span>
-            <!-- <div class="tools">
-                <div class="add"><i class="fi fi-bs-plus"></i></div>
-                <div class="mix"><i class="fi fi-bs-shuffle"></i></div>
-                <div class="repeat"><i class="fi fi-bs-arrows-repeat-1"></i></div>
-                <div class="share"><i class="fi fi-bs-redo"></i></div>
-            </div> -->
-            <span id="current-time-id-uid"></span>
-            <span id="total-time"></span>
+            <div class="inner-wrap">
+                <span id="name-songs-id">Keep for you</span>
+                <span id="name-artist-id">Comele Francline</span>
+                <span id="current-time-id-uid">00:00</span>
+                <span id="total-time">00:00</span>
+                <div class="tools">
+                    <div class="add it-tools"><i class="fi fi-bs-plus"></i></div>
+                    <div class="mix it-tools"><i class="fi fi-bs-shuffle"></i></div>
+                    <div class="repeat it-tools"><i class="fi fi-bs-arrows-repeat-1"></i></div>
+                    <div class="share it-tools"><i class="fi fi-bs-redo"></i></div>
+                </div>
+            </div>
+
+            <div class="inner-music-box">
+                <div
+                    class="it-audio"
+                    v-for="it in listcurrentaudioplaylist"
+                    :key="it.id"
+                    @click="playmusic"
+                    >
+                    <div class="btn-play-and-stop-box">
+                        <img v-if="visiblebtnplay" src="@/assets/svgassets/icons8-воспроизведение-50.png" alt="" :id="`play-audio-btn-uid--${it.id}`">
+                        <img v-else src="@/assets/svgassets/icons8-пауза-60.png" alt="">
+                    </div>
+                    <div class="name-song-and-art-box">
+                        <span id="name-song-box-uid">{{ it.nameSong }}</span>
+                        <span id="name-art-box-uid">{{ it.nameArtist }}</span>
+                    </div>
+                    <div class="time-box">
+                        <span>{{ '03:52' }}</span>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
 </template>
 <script>
@@ -58,8 +82,17 @@ export default {
     data() {
         return {
             listAudios: [],
+            listcurrentaudioplaylist: [
+                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+            ],
             visibleBtnExpand: true,
             visiblehideSideUnix: false,
+            visiblebtnplay: true,
         }
     },
     mounted() {
@@ -106,6 +139,11 @@ export default {
         })
     },
     methods: {
+        // local methods // code start...
+        playmusic() {
+            console.log('play music...')
+        },
+        // local methods ... // code end...
         PlayerplaySong() {
             this.playMusicUnix('last')
         },
@@ -147,44 +185,155 @@ export default {
     .hide-side-unix {
         position: absolute;
         width: 100%;
-        height: 40px;
+        height: auto;
         background-color: #151515;
         padding: 5px;
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        // align-items: center;
 
+        .inner-wrap {
+            padding: 5px;
+            display: flex;
+            align-items: center;
 
-        #name-songs-id {
-            font-size: 13px;
-            margin-left: 10px;
-            width: 80px;
+            .tools {
+                display: flex;
+                align-items: center;
+                margin-left: auto;
+                .it-tools {
+                    margin-left: 10px;
+                    font-size: 15px;
+                }
+                .add {
+                    
+                }
+                .mix {
 
-            &:hover {
-                cursor: pointer;
-                color: turquoise;
-                transition: .3s;
+                }
+                .share {
+
+                }
+                .repeat {
+
+                }
+            }
+
+            #name-songs-id {
+                font-size: 13px;
+                margin-left: 10px;
+                width: 80px;
+
+                &:hover {
+                    cursor: pointer;
+                    color: turquoise;
+                    transition: .3s;
+                }
+            }
+
+            #name-artist-id {
+                font-size: 11px;
+                color:#555;
+                margin-left: 10px;
+                &:hover {
+                    cursor: pointer;
+                    color: turquoise;
+                    transition: .3s;
+                }
+            }
+
+            #current-time-id-uid {
+                margin-left: 10px;
+                // margin-right: 2px;
+            }
+
+            #total-time {
+                margin-left: 5px;
+                margin-right: 20px;
             }
         }
 
-        #name-artist-id {
-            font-size: 11px;
-            color:#555;
-            // margin-left: 10px;
-            &:hover {
-                cursor: pointer;
-                color: turquoise;
-                transition: .3s;
+        .inner-music-box {
+            margin-top: 10px;
+            height: 300px;
+            width: 100%;
+            // background: rgba($color: #000000, $alpha: 1.0);
+            background-color: #151515;
+            overflow: auto;
+
+
+            .it-audio {
+                width: 100%;
+                padding: 5px;
+                display: flex;
+                align-items: center;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: #111;
+                }
+
+                .time-box {
+                    margin-left: auto;
+                    display: flex;
+                    align-items: center;
+                    margin-right: 10px;
+                    font-size: 12.5px;
+                    color: #888;
+                    font-weight: bold;
+                    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                }
+
+                .name-song-and-art-box {
+                    padding: 5px;
+                    display: flex;
+                    flex-direction: column;
+                    // align-items: center;
+                    justify-content: center;
+
+                    #name-song-box-uid {
+                        font-family: Verdana, Geneva, Tahoma, sans-serif;
+                        font-size: 13px;
+                        &:hover {
+                            cursor: pointer;
+                            opacity: .7;
+                            transition: .3s;
+                        }
+                    }
+
+                    #name-art-box-uid {
+                        font-size: 10px;
+                        color: #777;
+                        line-height: 20px;
+                        font-weight: 700;
+                        font-family: Georgia, 'Times New Roman', Times, serif;
+                        &:hover {
+                            cursor: pointer;
+                            opacity: .7;
+                            transition: .3s;
+                        }
+                    }
+                }
+
+                .btn-play-and-stop-box {
+                    padding: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    img {
+                        width: 15px;
+                        height: 15px;
+                        margin-bottom: 8px;
+
+                        &:hover {
+                            cursor: pointer;
+                            opacity: .7;
+                            transition: .3s;
+                        }
+                    }
+                }
             }
-        }
-
-        #current-time-id {
-            margin-left: 20px;
-            margin-right: 2px;
-        }
-
-        #total-time {
-            margin-left: 2px;
-            margin-right: 20px;
         }
     }
 
