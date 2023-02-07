@@ -2,9 +2,9 @@
     <div class="main-class-detail-window-comp">
         <div class="inner-container">
             <div class="inline-line">
-                <span>Detail info</span>
+                <!-- <span>Detail info</span>
                 <span class="uuid-span" style="margin-left: 20px;">ID : UC39PXZKT8HABLOT7SLC</span>
-                <span class="online-offline" style="margin-left: 20px;"><div class="cycle"></div> online</span>
+                <span class="online-offline" style="margin-left: 20px;"><div class="cycle"></div> online</span> -->
                 <div class="close-btn" @click="() => {this.$emit('closeDetailWindowFunction', false)}"><img src="@/assets/svgassets/icons8-удалить.svg" alt=""></div>
             </div>
 
@@ -62,9 +62,8 @@
                         <span style="color: rgb(0, 251, 255);">53</span>
                         <span class="following-id">posts</span>
                     </div>
-                    
-
                 </div>
+                
             </div>
         </div>
     </div>

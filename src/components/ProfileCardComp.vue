@@ -28,6 +28,39 @@
                             <div class="item-btn">Message</div>
                         </div>
                     </div>
+
+                    <div class="bio-info-box">
+                        <div class="name-box"><span>Anna Leonhard</span></div>
+                        <div class="proffession-box"><span>ML Developer</span></div>
+
+                        <div class="r0-w1-class-bio">
+                            <span class="bio">Logic can take you from point A to point B, and imagination can take you anywhere.</span>
+                        </div>
+                    </div>
+
+
+                    <div class="useful-info">
+                        <div class="followers-box-id">
+                            <span style="color: rgb(0, 251, 255);">0</span>
+                            <span class="followers-id">followers</span>
+                        </div>
+                        <div class="following-box-id">
+                            <span style="color: rgb(0, 251, 255);">12</span>
+                            <span class="following-id">following</span>
+                        </div>
+                        <div class="following-box-id">
+                            <span style="color: rgb(0, 251, 255);">25</span>
+                            <span class="following-id">contacts</span>
+                        </div>
+                        <div class="following-box-id">
+                            <span style="color: rgb(0, 251, 255);">405</span>
+                            <span class="following-id">musics</span>
+                        </div>
+                        <div class="following-box-id">
+                            <span style="color: rgb(0, 251, 255);">53</span>
+                            <span class="following-id">posts</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -181,12 +214,81 @@ $color-text-izumrud: #00ff80;
             margin-top: 10px;
             width: 100%;
             height: 150px;
-
-            // border: 1px solid #00cec7;
-
             display: flex;
             align-items: center;
             flex-direction: column;
+
+            .useful-info {
+                color: #999;
+                width: 100%;
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                justify-content: center;
+                padding: 15px;
+
+                .followers-box-id {
+                    font-size: 12px;
+                    text-transform: lowercase;
+                    margin-right: 5px;
+                    .followers-id {
+                        margin-left: 5px;
+
+                    }
+
+                    &:hover {
+                        cursor: pointer;
+                        opacity: .6;
+                        transition: .3s;
+                    }
+                }
+                
+                .following-box-id {
+                    margin-left: 10px;
+                    font-size: 12px;
+                    text-transform: lowercase;
+                    margin-right: 5px;
+                    .following-id {
+                        margin-left: 5px;
+
+                    }
+
+                    &:hover {
+                        cursor: pointer;
+                        opacity: .6;
+                        transition: .3s;
+                    }
+                }
+            }
+
+            .bio-info-box {
+                color: #888;
+                text-transform: none;
+                width: 100%;
+                padding: 30px;
+                display: flex;
+                flex-direction: column;
+                // align-items: center;
+                justify-content: center;  
+
+                .proffession-box {
+                    font-size: 12px;
+                }
+                .r0-w1-class-bio {
+                    word-wrap: break-word;
+                    width: 100%;
+                    margin-top: 10px;
+                    // margin-left: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;            
+
+                }
+
+                .r0-w1-class-r {
+
+                }
+            }
 
             .items-info-boxes {
                 width: 60%;
@@ -216,11 +318,9 @@ $color-text-izumrud: #00ff80;
             .useful-box-bottom {
                 width: 100%;
                 height: 50%;
-                // border: 1px solid #00ff80;
-
                 display: flex;
                 justify-content: center;
-
+                margin-top: 10px;
                 .btns-box {
                     width: 80%;
 

@@ -1,6 +1,12 @@
 <template>
     <div class="main-viewProfile-comp">
 
+        <div class="inline-line">
+                <span>Detail info</span>
+                <span class="uuid-span" style="margin-left: 20px;">ID : UC39PXZKT8HABLOT7SLC</span>
+                <span class="online-offline" style="margin-left: 20px;"><div class="cycle"></div> online</span>
+        </div>
+
         <div class="inner-content">
 
             <div class="profile-title">
@@ -12,9 +18,9 @@
                     <span id="username-id"></span>
                 </div>
 
-                <div class="info-block">
+                <!-- <div class="info-block">
                     <span>id: <span id="user-id-id">{{ titleId }}</span></span>
-                </div>
+                </div> -->
 
                 <div class="info-block">
                     <span id="bio-id"
@@ -185,7 +191,7 @@ $color-back: rgba(0, 0, 0, 0.8);
     height: 100vh;
     padding-right: 10px;
     padding-left: 10px;
-    padding-top: 45px;
+    // padding-top: 45px;
     background: $color-back;
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
@@ -198,14 +204,59 @@ $color-back: rgba(0, 0, 0, 0.8);
     text-transform: uppercase;
     letter-spacing: .02em;
     color: white;
-    // border-right: 1px solid #333;
-    // border-top: 1px solid #333;
+
+    .inline-line {
+        width: 100%;
+        height: 52px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        border-bottom: 1px solid #333;
+        // padding: 15px;
+        font-family: Lato,sans-serif;
+        font-weight: 500;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: .02em;
+
+        .online-offline {
+            display: flex;
+            align-items: center;
+            .cycle {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background-color: rgb(0, 234, 234);
+                margin-right: 5px;
+            }
+        }
+        .close-btn {
+            margin-left: auto;
+            margin-right: 10px;
+            margin-top: 4px;
+            font-size: 11px;
+
+            img {
+                width: 14px;
+                height: 14px;
+            }
+
+            &:hover {
+                cursor: pointer;
+                opacity: 0.8;
+                transition: .3s;
+            }
+        }
+    }
 
     .inner-content {
         width: 100%;
         height: 100%;
         overflow: auto;
         padding-bottom: 50px;
+        margin-top: 10px;
+        
 
 
         .bottom-n {
