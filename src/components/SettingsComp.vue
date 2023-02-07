@@ -20,58 +20,60 @@
 
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-bs-user"></i>
+                <!-- <i class="fi fi-bs-user"></i> -->
             </div>
             <input type="text" placeholder="Name" v-model="queryName">
-            <div class="btn-changed" @click="changeValueSetting($event)" data-value="name">Change</div>
+            <!-- <div class="btn-changed" @click="changeValueSetting($event)" data-value="name">Change</div> -->
         </div>
     
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-bs-info"></i>
+                <!-- <i class="fi fi-bs-info"></i> -->
             </div>
-            <textarea type="text" placeholder="Bio" v-model="queryBio" style="margin-left: 10px;"></textarea>
-            <div class="btn-changed" @click="changeValueSetting($event)" data-value="bio_info">Change</div>
+            <textarea type="text" placeholder="Bio" v-model="queryBio"></textarea>
+            <!-- <div class="btn-changed" @click="changeValueSetting($event)" data-value="bio_info">Change</div> -->
         </div>
 
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-bs-envelope"></i>
+                <!-- <i class="fi fi-bs-envelope"></i> -->
             </div>
             <input type="email" placeholder="Email" v-model="queryEmail">
-            <div class="btn-changed" @click="changeValueSetting($event)" data-value="email">Change</div>
+            <!-- <div class="btn-changed" @click="changeValueSetting($event)" data-value="email">Change</div> -->
         </div>
 
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-bs-link"></i>
+                <!-- <i class="fi fi-bs-link"></i> -->
             </div>
             <input type="text" placeholder="Website" v-model="queryStatus">
-            <div class="btn-changed" @click="changeValueSetting($event)" data-value="status">Change</div>
+            <!-- <div class="btn-changed" @click="changeValueSetting($event)" data-value="status">Change</div> -->
         </div>
 
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-bs-flag"></i>
+                <!-- <i class="fi fi-bs-flag"></i> -->
             </div>
             <input type="text" placeholder="Country" v-model="queryCountry">
-            <div class="btn-changed" @click="changeValueSetting($event)" data-value="country">Change</div>
+            <!-- <div class="btn-changed" @click="changeValueSetting($event)" data-value="country">Change</div> -->
         </div>
 
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-bs-building"></i>
+                <!-- <i class="fi fi-bs-building"></i> -->
             </div>
             <input type="text" placeholder="Company" v-model="queryCity">
-            <div class="btn-changed" @click="changeValueSetting($event)" data-value="city">Change</div>
+            <!-- <div class="btn-changed" @click="changeValueSetting($event)" data-value="city">Change</div> -->
         </div>
 
         <div class="sett-box">
             <div class="i-item-class">
-                <i class="fi fi-brands-twitter"></i>
+                <!-- <i class="fi fi-brands-twitter"></i> -->
+                <!-- <i class="fi fi-bs-building"></i> -->
+
             </div>
             <input type="text" placeholder="Twitter account link" v-model="queryCity">
-            <div class="btn-changed" @click="changeValueSetting($event)" data-value="city">Change</div>
+            <!-- <div class="btn-changed" @click="changeValueSetting($event)" data-value="city">Change</div> -->
         </div>
 
         <div class="bottom-box">
@@ -303,7 +305,7 @@ $color-text-izumrud: #00ff80;
 
 .main-comp {
     position: absolute;
-    width: 400px;
+    width: 800px;
     height: 560px;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(4.2px);
@@ -370,10 +372,10 @@ $color-text-izumrud: #00ff80;
         display: flex;
         align-items: center;
 
-        .i-item-class {
-            font-size: 16px;
-            padding-top: 4px;
-        }
+        // .i-item-class {
+        //     font-size: 16px;
+        //     padding-top: 4px;
+        // }
 
         input {
             // background-color: #333;
@@ -384,7 +386,7 @@ $color-text-izumrud: #00ff80;
             border: 1px solid #777;
             border-radius: 5px;
             padding: 8px;
-            margin-left: 10px;
+            // margin-left: 10px;
             font-size: 12px;
         }
 

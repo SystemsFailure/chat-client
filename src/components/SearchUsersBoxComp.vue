@@ -2,7 +2,7 @@
 
     <div class="search-users">
         <input type="text" placeholder="searching..." class="inp-search" id="search_e" v-bind:value="modelValue" @input="(event) => {this.$emit('update:modelValue', event.target.value)}">
-        <div class="clearInp" @click="() => {this.$emit('clearTextFunction')}"><i class="fi fi-bs-cross"></i></div>
+        <div class="clearInp" @click="() => {this.$emit('clearTextFunction')}"><img src="@/assets/svgassets/icons8-удалить.svg" alt=""></div>
     </div>
 
 </template>
@@ -27,7 +27,7 @@ $color-back-blue: rgba(12, 22, 44, 0.7);
 $color-text: #4e5f7d;
 .search-users {
     width: 25%;
-    height: 40px;
+    height: 50px;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -53,6 +53,11 @@ $color-text: #4e5f7d;
         text-align: center;
         align-items: center;
         justify-content: center;
+
+        img {
+            width: 14px;
+            height: 14px;
+        }
 
         &:hover {
             cursor: pointer;

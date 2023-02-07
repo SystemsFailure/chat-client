@@ -1,5 +1,5 @@
 <template>
-    <div class="main-class-nitification-comp">
+    <div class="main-class-nitification-comp" id="window-notify">
         <div class="inner-container">
 
             <div class="left-block-content">
@@ -16,7 +16,7 @@
             
             <div class="right-block-content-global-mess" v-if="showGlobalMessWindow">
                 <div class="line-up-content">
-                    <div class="close-btn" @click="() => {this.$emit('closeNotificationsCompFunction', false)}"><i class="fi fi-bs-cross"></i></div>
+                    <div class="close-btn" @click="() => {this.$emit('closeNotificationsCompFunction', false)}"><img src="@/assets/svgassets/icons8-удалить.svg" alt=""></div>
                     <div class="expend-window"><i class="fi fi-bs-expand"></i></div>
                 </div>
                 <div class="no-message" v-if="noMessage && systemMessagesList.length === 0"><span>You don't have system notifications</span></div>
@@ -26,8 +26,9 @@
                 <div class="line-up-content">
                     <div class="title-box"><span>list messages</span></div>
                     <div class="wrapper-boc">
-                        <div class="expend-window"><i class="fi fi-bs-expand"></i></div>
-                        <div class="close-btn" @click="() => {this.$emit('closeNotificationsCompFunction', false)}"><i class="fi fi-bs-cross"></i></div>
+                        <div v-if="visibilityExpand" class="expend-window" @click="setLocalProperty"><img src="@/assets/svgassets/icons8-expand-64.png" alt=""></div>
+                        <div v-else class="compress" @click="setLocalPropertyEpress"><img src="@/assets/svgassets/icons8-minimize-keep-down-reduce-button-decrease-screen-size-shrink-96.png" alt=""></div>
+                        <div class="close-btn" @click="() => {this.$emit('closeNotificationsCompFunction', false)}"><img src="@/assets/svgassets/icons8-удалить.svg" alt=""></div>
                     </div>
                 </div>
                 <div class="list-messages-of-request">
@@ -86,6 +87,7 @@ export default {
             SelectedMessagesList: [],
             showGlobalMessWindow: false,
             showRequestMessWindow: true,
+            visibilityExpand: true,
         }
     },
 
@@ -111,9 +113,37 @@ export default {
         }).catch(err => {
             console.log(err)
         })
+        let modeWindow = localStorage.getItem('modeWinowNotify')
+        let wind = document.getElementById('window-notify')
+        if (modeWindow === 'expand')
+        {
+            wind.style.width = '100%'
+            wind.style.height = '100%'
+            console.log('window been expanded')
+            this.visibilityExpand = false
+        } else {
+            wind.style.width = '1200px'
+            wind.style.height = '600px'
+            this.visibilityExpand = true
+        }
     },
 
     methods: {
+        setLocalProperty() {
+            localStorage.setItem('modeWinowNotify', 'expand')
+            let wind = document.getElementById('window-notify')
+            wind.style.width = '100%'
+            wind.style.height = '100%'
+            this.visibilityExpand = false
+        },
+
+        setLocalPropertyEpress() {
+            localStorage.setItem('modeWinowNotify', 'copmress')
+            let wind = document.getElementById('window-notify')
+            wind.style.width = '1200px'
+            wind.style.height = '600px'
+            this.visibilityExpand = true
+        },
 
  // Локальные методы, local mutations
         updateList() {
@@ -213,7 +243,7 @@ export default {
 .main-class-nitification-comp {
     width: 1200px;
     height: 600px;
-    background-color: rgba($color: #000000, $alpha: .8);
+    background-color: rgba($color: #030303, $alpha: 1);
     position: absolute;
     margin: 0;
     top: 50%;
@@ -221,8 +251,8 @@ export default {
     margin-right: -50%;
     transform: translate(-50%, -50%);
     padding: 10px;
-    z-index: 12;
-    border: 1px solid #333;
+    z-index: 101;
+    // border: 1px solid #333;
 
     font-family: Lato,sans-serif;
     font-weight: 700;
@@ -319,6 +349,11 @@ export default {
                 .close-btn {
                     float: right;
                     margin-right: 10px;
+
+                    img {
+                        width: 14px;
+                        height: 14px;
+                    }
     
                     &:hover {
                         cursor: pointer;
@@ -518,6 +553,20 @@ export default {
                 .wrapper-boc {
                     margin-left: auto;
                     display: flex;
+
+                    img {
+                        width: 14px;
+                        height: 14px;
+                    }
+                    .compress {
+                        margin-right: 10px;
+                        
+                        &:hover {
+                            cursor: pointer;
+                            opacity: 0.8;
+                            transition: .3s;
+                        }
+                    }
                     .expend-window {
                         margin-right: 10px;
         
@@ -530,6 +579,11 @@ export default {
         
                     .close-btn {
                         margin-right: 10px;
+
+                        img {
+                            width: 14px;
+                            height: 14px;
+                        }
         
                         &:hover {
                             cursor: pointer;

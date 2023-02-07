@@ -68,8 +68,9 @@ $color-text-izumrud: #00ff80;
 .main-banner-up {
     width: 71%;
     position: fixed;
-    height: 40px;
-    background: rgba(5, 5, 5, 0.85);
+    height: 50px;
+    // background: rgba(5, 5, 5, 0.85);
+    background: rgb(7, 7, 7);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
@@ -77,7 +78,7 @@ $color-text-izumrud: #00ff80;
 
     .content {
         width: 100%;
-        height: 40px;
+        height: 50px;
         display:flex;
         align-items: center;
         justify-content: space-between;

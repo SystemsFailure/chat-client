@@ -4,7 +4,7 @@
     </Transition>
     <div class="main-list-users-comp">
         <div class="inside-container-content">
-            <div class="slose-btn-box"><i @click="() => {this.$emit('closeListUsersCompFunction', false)}" class="fi fi-bs-cross"></i></div>
+            <div class="slose-btn-box"><img src="@/assets/svgassets/icons8-удалить.svg" alt="" @click="() => {this.$emit('closeListUsersCompFunction', false)}"></div>
             <div class="title-comp"><span>Search users</span></div>
 
             <div class="inside-box">
@@ -84,7 +84,7 @@
 
                             <div class="three-block-functionality">
                                 <div class="inp-block-three">
-                                    <div name="" id="selec-id-btn">
+                                    <div name="" id="selec-id-btn" @click="searchingUsersByCurrentParams">
                                         Confirm
                                     </div>
                                 </div>
@@ -127,6 +127,9 @@ export default {
     },
 
     methods: {
+        searchingUsersByCurrentParams() {
+            console.log('searching...')
+        },
         async filterAllUsers() {
             await UserApi.getAllUsers().then(async array => {
                 await UserApi.getUserById(this.IUserId).then(user => {
@@ -173,7 +176,7 @@ export default {
     position: absolute;
     width: 900px;
     height: 600px;
-    background-color: rgba($color: #080707, $alpha: .8);
+    background-color: rgba($color: #0f0e0e, $alpha: 1);
     z-index: 11;
     margin: 0;
     top: 50%;
@@ -185,7 +188,6 @@ export default {
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
 
     padding: 0 15px 15px 15px;
     .inside-container-content {
@@ -500,6 +502,11 @@ export default {
             padding-right: 8px;
             font-size: 12px;
             color: white;
+
+            img {
+                width: 14px;
+                height: 14px;
+            }
 
             &:hover {
                 cursor: pointer;

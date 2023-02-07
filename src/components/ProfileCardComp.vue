@@ -1,7 +1,7 @@
 <template>
     <!-- <div class="main-comp-profile-card"> -->
         <div class="content-card" id="divDrag" v-for="n in itemByProfile" :key="n.id">
-            <div class="btn0-close-profile"><i @click="() => {this.$emit('closeProfileFunction', false)}" class="fi fi-bs-cross"></i></div>
+            <div class="btn0-close-profile"><img src="@/assets/svgassets/icons8-удалить.svg" alt="" @click="() => {this.$emit('closeProfileFunction', false)}"></div>
             <div class="header-drag-simple" id="divDragheader-simple"></div>
 
             <div class="inside-content">
@@ -99,8 +99,8 @@ $color-text-izumrud: #00ff80;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(0, 0, 0, 0.65);
+    // border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(7, 7, 7, 0.85);
     position: absolute;
     z-index: 1000;
     font-family: Lato,sans-serif;
@@ -122,6 +122,11 @@ $color-text-izumrud: #00ff80;
         color: white;
         z-index: 11;
         right: 0;
+
+        img {
+            width: 14px;
+            height: 14px;
+        }
 
         &:hover {
             cursor: pointer;

@@ -3,7 +3,7 @@
         <div class="inner-cotainer">
             <div class="inline-">
                 <span>create new playlist</span>
-                <div class="close-btn" @click="() => {this.$emit('closeCreateWindowPlaylistFunction', false)}"><i class="fi fi-bs-cross"></i></div>
+                <div class="close-btn" @click="() => {this.$emit('closeCreateWindowPlaylistFunction', false)}"><img src="@/assets/svgassets/icons8-удалить.svg" alt=""></div>
             </div>
             <div class="wrap-container">
                 <div class="field-data-playlist">
@@ -172,7 +172,7 @@ export default {
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    border: 1px solid #333;
+    // border: 1px solid #333;
     margin: 0;
     top: 50%;
     left: 50%;
@@ -486,6 +486,11 @@ export default {
                 // margin-top: 10px;
                 margin-right: 10px;
                 font-size: 11px;
+
+                img {
+                    width: 14px;
+                    height: 14px;
+                }
     
                 &:hover {
                     cursor: pointer;

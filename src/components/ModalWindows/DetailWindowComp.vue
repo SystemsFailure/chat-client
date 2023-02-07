@@ -5,7 +5,7 @@
                 <span>Detail info</span>
                 <span class="uuid-span" style="margin-left: 20px;">ID : UC39PXZKT8HABLOT7SLC</span>
                 <span class="online-offline" style="margin-left: 20px;"><div class="cycle"></div> online</span>
-                <div class="close-btn" @click="() => {this.$emit('closeDetailWindowFunction', false)}"><i class="fi fi-bs-cross"></i></div>
+                <div class="close-btn" @click="() => {this.$emit('closeDetailWindowFunction', false)}"><img src="@/assets/svgassets/icons8-удалить.svg" alt=""></div>
             </div>
 
             <div class="two-container">
@@ -87,7 +87,7 @@ export default {
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    border: 1px solid #333;
+    // border: 1px solid #333;
     margin: 0;
     top: 50%;
     left: 50%;
@@ -236,6 +236,11 @@ export default {
                 margin-right: 10px;
                 margin-top: 4px;
                 font-size: 11px;
+
+                img {
+                    width: 14px;
+                    height: 14px;
+                }
     
                 &:hover {
                     cursor: pointer;

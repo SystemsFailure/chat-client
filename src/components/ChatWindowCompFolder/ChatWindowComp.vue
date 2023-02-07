@@ -40,7 +40,7 @@
                                             @contextmenu="() => {this.deleteMessage(n.id); return false}"
                                             @mouseover="showDetailDataMessage($event, n.id)"
                                             @mouseout="hideDetailDataMessage($event)"
-                                            v-bind:style="n.fromId===user_id?{'float':'right', 'background-color' : '#666;', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
+                                            v-bind:style="n.fromId===user_id?{'float':'right', 'background-color' : '#555;', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
                                             >{{n.content}}
                                         </h6>
                                     </div>
@@ -439,7 +439,7 @@ export default {
 }
 
 $color-back: rgba(19, 19, 19, 0.4);
-$color-back-message-bubble: rgba(34, 34, 34, 0.8);
+$color-back-message-bubble: rgba(22, 22, 22, 0.8);
 $color-back-trans: none;
 $color-back-gray: rgba(41, 41, 41, 0.7);
 $color-back-blue: rgba(12, 22, 44, 0.7);
@@ -463,7 +463,7 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
         .chat-window {
             width: 100%;
             height: 100vh;
-            background: rgba(5, 5, 5, 0.85);
+            background: rgba(5, 5, 5, 1);
             padding-top: 40px;
             padding-bottom: 40px;
 
@@ -572,28 +572,21 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                 .im-message-content {
                     border-radius: 10px;
                     float: right;
-                    color: rgb(232, 230, 230);
-                    font-size: 14px;
                     background-color:$color-back-message-bubble;
-                    // background-color: #00ff80;
-                    // background: #38bdf8;
                     background-size: 300% 300%;
                     word-wrap: break-word;
                     width: auto;
                     max-width: 47%;
                     height: auto;
-                    padding: 7px 7px 7px 7px;
+                    padding: 8px 12px 8px 12px;
                     display: flex;
                     flex-direction: column;
-                    transition: .6s;
-                    .bomb-s-loader {
-                        margin-left: auto;
-                        margin-right: 10px;
-                        font-size: 10px;
-                        padding-left: 10px;
-                        width: 10px;
-                        height: 10px;
-                    }
+                    transition: .4s;
+                    font-weight: 600;
+                    color: rgb(168, 168, 168);
+                    font-size: 13px;
+                    font-family: system-ui;
+                    line-height: 20px;
                     }
             }
         }

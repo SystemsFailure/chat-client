@@ -14,7 +14,13 @@
 
                 <div class="wrapper-container-for-input">
                     <div class="abs-progress" id="audioPlayerContainer_unix"></div>
-                    <input type="range" id="progress-id" @input="setCurrTime" @change="setCurrTimeToUnixPlayer" value="0">
+                    <input
+                        type="range"
+                        id="progress-id"
+                        @input="setCurrTime"
+                        @change="setCurrTimeToUnixPlayer"
+                        value="0"
+                    >
                 </div>
 
                 <div class="btn-expand">
@@ -26,17 +32,16 @@
             </div>
 
         </div>
-        <div class="hide-side-unix" v-if="visiblehideSideUnix">
-                <span id="name-songs-id">Keep for you</span>
-                <span id="name-artist-id">Comele Francline</span>
-
+        <div class="hide-side-unix" v-show="visiblehideSideUnix">
+            <span id="name-songs-id">Keep for you</span>
+            <span id="name-artist-id">Comele Francline</span>
             <!-- <div class="tools">
                 <div class="add"><i class="fi fi-bs-plus"></i></div>
                 <div class="mix"><i class="fi fi-bs-shuffle"></i></div>
                 <div class="repeat"><i class="fi fi-bs-arrows-repeat-1"></i></div>
                 <div class="share"><i class="fi fi-bs-redo"></i></div>
             </div> -->
-            <span id="current-time-id"></span>
+            <span id="current-time-id-uid"></span>
             <span id="total-time"></span>
         </div>
     </div>
@@ -59,7 +64,8 @@ export default {
     },
     mounted() {
         console.log(name, artist, progress, currentTime, totalTime, document.getElementById('current-time-id'))
-        this.setTimeContainer(document.getElementById('current-time-id'))
+        this.setTimeContainer(document.getElementById('current-time-id-uid'))
+        console.log(document.getElementById('current-time-id-uid'), 'what is is isi ')
         this.setInput(document.getElementById('progress-id'))
         this.setCurrentTimeElement(document.getElementById('total-time'))
         this.setProgressInline(document.getElementById('audioPlayerContainer_unix'))
@@ -130,7 +136,8 @@ export default {
 .main-unix-music-sys {
     width: 100%;
     height: 97%;
-    background-color: rgba($color: #000000, $alpha: 1.0);
+    // background-color: rgba($color: #000000, $alpha: 1.0);
+    background: rgb(7, 7, 7);
     // padding:5px;
     color: white;
     font-size: 12px;

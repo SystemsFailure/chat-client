@@ -4,11 +4,11 @@
 
             <div class="items-content-settings">
                 <div></div>
-                <div class="view-profile item-setting"><i class="fi fi-bs-user"></i><h4>View profile</h4></div>
-                <div class="unmute item-setting" @click="this.MuteActive = !this.MuteActive"><i :class="{'mute-active' : MuteActive}" class="fi fi-bs-volume"></i><h4 :class="{'mute-active' : MuteActive}">Mute</h4></div>
-                <div class="copy-link item-setting"><i class="fi fi-bs-duplicate"></i><h4>Copy link</h4></div>
-                <div class="clear-chat item-setting" @click="() => {this.$store.commit('changeDialogValue')}"><i class="fi fi-bs-broom"></i><h4>Clear chat</h4></div>
-                <div class="clear-chat leave-app item-setting" @click="leaveApp"><i class="fi fi-bs-power"></i><h4>Leave</h4></div>
+                <div class="view-profile item-setting"><img src="@/assets/svgassets/icons8-user-67.png" alt=""><h4>View profile</h4></div>
+                <div class="unmute item-setting" @click="this.MuteActive = !this.MuteActive"><img src="@/assets/svgassets/icons8-средняя-громкость-100.png" :class="{'mute-active' : MuteActive}" alt=""><h4 :class="{'mute-active' : MuteActive}">Mute</h4></div>
+                <div class="copy-link item-setting"><img src="@/assets/svgassets/icons8-скопировать-фигуру-96.png" alt=""><h4>Copy link</h4></div>
+                <div class="clear-chat item-setting" @click="() => {this.$store.commit('changeDialogValue')}"><img src="@/assets/svgassets/icons8-очистить-корзину-64.png" alt=""><h4>Clear chat</h4></div>
+                <div class="clear-chat leave-app item-setting" @click="leaveApp"><img src="@/assets/svgassets/icons8-экспорт-100.png" alt=""><h4>Leave</h4></div>
             </div>
 
         </div>
@@ -47,12 +47,12 @@ export default {
     z-index: 100;
     transform: translateX(-15px);
 
-    background-color: rgba(10, 10, 10, 0.65);
-
+    background-color: rgba(10, 10, 10, 1);
+    padding: 5px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(8.2px);
     -webkit-backdrop-filter: blur(8.2px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    // border: 1px solid rgba(255, 255, 255, 0.3);
 
     .sett-chat-id-content {
         font-family: Lato,sans-serif;
@@ -76,6 +76,13 @@ export default {
                 font-weight: bold;
                 display: flex;
                 align-items: center;
+                // justify-content: center;
+
+                img {
+                    width: 14px;
+                    height: 14px;
+                    margin-bottom: 3px;
+                }
 
                 // background-color: rgba(10, 10, 10, 0.65);
 
@@ -101,7 +108,7 @@ export default {
             }
             .item-setting:hover {
                 cursor: pointer;
-                opacity: 0.9;
+                opacity: 0.6;
                 // background:#00cec7;
                 background-color: rgba(0, 0, 0, 0.1);
             }

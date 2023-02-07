@@ -29,9 +29,12 @@
                         </div>
 
                         <div class="video-capture">
-                            <i class="fi fi-bs-clip" style="color: white"></i>
+                            <img src="@/assets/svgassets/icons8-вложение-90.png" alt="">
                             <label for="myfile" class="label"></label>
-                            <input type="file" class="my" id="myfile" name="myfile" multiple @change="send_photo($event)">
+                            <input list="charachter" type="file" class="my" id="myfile" name="myfile" multiple @change="send_photo($event)">
+                            <datalist id="charachter">
+                                <option value="Процессор ARM изначально был разработан в компании Acorn Computers (Великобритания), который, по мысли разработчиков, должен был сменить процессор BBC Microcomputer, который использовался в образовательных целях. Для разработки инженеры Acorn решили использовать технологию RISC (reduced instruction set computer). А само название архитектуры ARM является сокращением от Advanced RISC Machine."></option>
+                            </datalist>
                         </div>
 
                         <div @click="send_message" id="btn-send-data">
@@ -136,7 +139,8 @@ $color-text-izumrud: #00ff80;
     height: 40px;
     position: fixed;
 
-    background: rgba(5, 5, 5, 0.85);
+    // background: rgba(5, 5, 5, 0.85);
+    background: rgb(7, 7, 7);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
@@ -172,7 +176,6 @@ $color-text-izumrud: #00ff80;
                         height: 32px;
                         border-radius: 50%;
                         padding-top: 2px;
-                        border: 1px solid #333;
                         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
                         backdrop-filter: blur(4.2px);
                         -webkit-backdrop-filter: blur(4.2px);
@@ -213,10 +216,10 @@ $color-text-izumrud: #00ff80;
 
                             position:absolute;
 
-                            background: rgba(0, 188, 157, 0.65);
+                            background: rgba(0, 0, 0, 1);
                             backdrop-filter: blur(4.2px);
                             -webkit-backdrop-filter: blur(4.2px);
-                            border: 1px solid rgba(255, 255, 255, 0.3);
+                            // border: 1px solid rgba(255, 255, 255, 0.3);
 
                             display: flex;
                             align-items: center;
@@ -290,6 +293,12 @@ $color-text-izumrud: #00ff80;
                         display: flex;
                         align-items: center;
                         justify-content: center;
+
+                        img {
+                            width: 20px;
+                            height: 20px;
+                            margin-bottom: 4px;
+                        }
 
                         .my {
                             width: 0.1px;

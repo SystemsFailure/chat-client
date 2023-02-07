@@ -384,10 +384,8 @@ $color-text-izumrud: #00ff80;
         }
 
         .left-block{
-            // position: relative;
             width: 25%;
             height: 100vh;
-            // background: $color-back;
             background: rgba(5, 5, 5, 0.85);
             float: left;
             margin-left: 4%;
@@ -428,14 +426,13 @@ $color-text-izumrud: #00ff80;
             .list-users{
                 width: 100%;
                 height: 100%;
-                padding-top: 35px;
+                padding-top: 45px;
                 overflow:auto;
                 overflow-x: hidden;
                 font-family: Lato,sans-serif;
-                background: rgba(5, 5, 5, 0.85);
+                background: rgba(5, 5, 5, 1);
                 backdrop-filter: blur(4.2px);
                 -webkit-backdrop-filter: blur(4.2px);
-                // box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
                 padding-bottom: 40px;
                 border-right: 1px solid rgba(30, 30, 30, 0.6);
 

@@ -3,14 +3,10 @@
         <div class="content">
 
             <div @click="openMenuAny(0)" class="item-im" :class="{'item-selected' : showMenuMail}">
-                <!-- <i class="fi fi-bs-mode-portrait"></i> -->
                 <img src="@/assets/svgassets/icons8-user-67.png" alt="">
             </div>
             <div @click="openMenuAny(1)" class="item-im" :class="{'item-selected' : showMenuChats}">
-                <!-- <i class="fi fi-bs-comment"></i> -->
                 <img src="@/assets/svgassets/icons8-тема-48.png" alt="">
-                <!-- <img src="@/assets/svgassets/icons8-тема-black.gif"> -->
-                <!-- <img src="@/assets/chat-right-fill.svg" alt="chats" srcset=""> -->
             </div>
             <div @mouseenter="showDetailMenuFunction" @mouseleave="closeDetailMenuFunction" class="item-im" :class="{'item-selected' : showMenuMusics}">
                 <div class="three-points"><img src="@/assets/svgassets/icons8-меню-2-48.png" alt=""></div>
@@ -19,12 +15,10 @@
                     <div class="allaudio" @click="GlobalListMusicss"><img src="@/assets/svgassets/icons8-playerme-120.png" alt=""></div>
                 </div>
                 <img v-if="!myMusicIcon" src="@/assets/svgassets/icons8-playerme-120.png" alt="">
-                <!-- <i v-if="myMusicIcon" class="fi fi-bs-list-check"></i> -->
                 <i v-else class="fi fi-bs-music-alt">
                 </i>
             </div>
             <div @click="openMenuAny(2)" class="item-im" :class="{'item-selected' : showMenuSettings}">
-                <!-- <i class="fi fi-bs-settings-sliders"></i> -->
                 <img src="@/assets/svgassets/icons8-сервисы-64.png" alt="chats" srcset="">
             </div>
 
@@ -115,7 +109,7 @@ export default {
 
 
 .item-selected {
-    background-color: #00cec7 !important;
+    background-color: #007e7a !important;
     border-left: 2px solid wheat;
 }
 
@@ -139,12 +133,9 @@ $color-text-izumrud: #00ff80;
     flex-direction: column;
     align-items: center;
     z-index: 100;
-
-    background: rgba(5, 5, 5, 0.85);
-    // box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    background: rgb(7, 7, 7);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    border-right: 1px solid rgba(30, 30, 30, 0.3);
 
     .content {
         width: 100%;
@@ -160,7 +151,7 @@ $color-text-izumrud: #00ff80;
             }
             .item-im {
                 width: auto;
-                height: 40px;
+                height: 50px;
                 position: relative;
                 // background-color: rgba(0, 0, 0, 0.2);
 

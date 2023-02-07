@@ -36,7 +36,8 @@
 
                 <div class="line-main-informations">
                     <div class="btn-detail" @click="() => {this.$emit('showDetailWindowCompFunction', true)}">
-                        <i class="fi fi-bs-interrogation"></i>
+                        <!-- <i class="fi fi-bs-interrogation"></i> -->
+                        <img src="@/assets/svgassets/icons8-содержимое-96.png" alt="">
                         <span>detail</span>
                     </div>
                 </div>
@@ -65,9 +66,9 @@
                     </div>
                 </div>
 
-                <div class="line-bottom">
+                <!-- <div class="line-bottom">
                     <div class="upload-music" @click="() => {this.$emit('showCreateMusicWindowFunction', true)}"><span>upload new music</span></div>
-                </div>
+                </div> -->
 
             </div>
 
@@ -197,8 +198,8 @@ $color-back: rgba(0, 0, 0, 0.8);
     text-transform: uppercase;
     letter-spacing: .02em;
     color: white;
-    border-right: 1px solid #333;
-    border-top: 1px solid #333;
+    // border-right: 1px solid #333;
+    // border-top: 1px solid #333;
 
     .inner-content {
         width: 100%;
@@ -442,6 +443,9 @@ $color-back: rgba(0, 0, 0, 0.8);
 
                 .btn-detail {
                     padding: 8px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
 
                     &:hover {
                         cursor: pointer;
@@ -454,8 +458,10 @@ $color-back: rgba(0, 0, 0, 0.8);
                         font-size: 12px;
                     }
 
-                    i {
-                        margin-top: 4px;
+                    img {
+                        // margin-top: 10px;
+                        width: 16px;
+                        height: 16px;
                     }
                 }
             }

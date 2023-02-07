@@ -4,7 +4,9 @@
         <div class="title-mini-chat">
             <img :src="USERTO.img_url" alt="">
             <span style="color:white;">{{ USERTO.name || 'undefined'}}</span>
-            <div class="bittle-juice"><i @click="() => {this.$emit('closeMiniChatCompFunction', false)}" class="fi fi-bs-cross" style="color:wheat;"></i></div>
+            <div class="bittle-juice">
+                <img @click="() => {this.$emit('closeMiniChatCompFunction', false)}" src="@/assets/svgassets/icons8-удалить.svg" alt="">
+            </div>
         </div>
 
         <div class="inner-container-mini-chate-window">
@@ -12,7 +14,6 @@
                 <div class="message-bubble">
                     <div class="wrapper-class-bubble-message" v-bind:style="element.fromId === USERID ? {'float':'right', 'background-color' : 'rgba(0, 248, 248, 0.581)'} : {'float':'left'}">
                         <h6>{{ element.content }}</h6>
-                        <!-- <div class="data_time-class"><h6>19:33</h6></div> -->
                     </div>
                 </div>
             </div>
@@ -99,20 +100,16 @@ export default {
 <style lang="scss" scoped>
 .main-con-mini-chat-window {
     position: absolute;
-    width: 300px;
-    height: 400px;
-
+    width: 450px;
+    height: 650px;
     margin: 0;
-    top: 65%;
-    left: 85%;
+    top: 55%;
+    left: 82%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
-
-    background-color: rgba($color: #000000, $alpha: .8);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    background-color: rgba($color: #030303, $alpha: .9);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
     z-index: 102;
     padding-bottom: 30px;
 
@@ -122,52 +119,46 @@ export default {
         height: 30px;
         bottom: 0;
         background-color: #000000;
-
+        padding: 5px;
         display: flex;
         align-items: center;
         flex-direction: row;
 
         #inp-message-write-mini-chat {
             width: 80%;
-            height: 30px;
-            // max-width: 60%;
-            // max-height: 30px;
-            // min-width: 60%;
-            // min-height: 30px;
+            height: 40px;
             resize: none;
             padding: 8px;
             color: wheat;
             outline: none;
             border: none;
             background: none;
-
             font-family: Lato,sans-serif;
             font-weight: 500;
             font-size: 11px;
-            // text-transform: uppercase;
             letter-spacing: .02em;
             color: white;
         }
 
         .btn-send-message-0 {
-            // padding: 5px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-left: auto;
             margin-right: 10px;
             background-color: rgba($color: #000000, $alpha: .8);
             color: wheat;
-
             font-family: Lato,sans-serif;
             font-weight: 500;
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: .02em;
             color: white;
-
             border-radius: 50%;
-
             float: right;
+
             img {
-                // float: right;
                 width: 15px;
                 height: 15px;
                 border-radius: 50%;
@@ -182,7 +173,6 @@ export default {
         position: fixed;
         width: 100%;
         height: 40px;
-        // background-color: red;
         background-color: rgba($color: #000000, $alpha: 1);
         display: flex;
         align-items: center;
@@ -192,6 +182,15 @@ export default {
             margin-right: 10px;
             text-align: end;
             font-size: 12px;
+            display: flex;
+            align-items: center;
+
+            img {
+                width: 14px;
+                height: 14px;
+                margin-left: auto;
+                margin-right: 5px;
+            }
 
             &:hover {
                 cursor: pointer;
@@ -221,12 +220,10 @@ export default {
             width: 100%;
             height: auto;
             display: grid;
-            // background-color: aquamarine;
 
             .message-bubble {
                 width: 100%;
                 height: auto;
-                // background-color:blueviolet;
                 padding: 0 5px 0 5px;
                 .wrapper-class-bubble-message {
                     margin-top: 10px;
