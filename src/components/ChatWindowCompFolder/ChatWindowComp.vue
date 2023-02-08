@@ -66,7 +66,7 @@ import { MessagesApi } from '@/firebase-config/MessagesController'
 import { UserApi } from '@/firebase-config/UserController'
 import { ChatApi } from '@/firebase-config/ChatController'
 import { db } from '@/main'
-import { doc, onSnapshot, Timestamp} from "firebase/firestore"
+import { onSnapshot, Timestamp, where, query, collection} from "firebase/firestore"
 
 
 export default {
@@ -93,22 +93,28 @@ export default {
 
     async mounted() {
         // Здесь устанавливается onSnapshoot для слежения за index - это колл-во сообщений в чате, которое меняется каждый раз когда оправляется сообщение
-        await UserApi.getAllChats(this.user_id).then(chats => {
-            chats.forEach(async elem => {
-                await ChatApi.getChat({toID: elem.id, fromID: this.user_id}).then( async chat => {
-                    //Здесь получаем array в then()
-                    onSnapshot(doc(db, "ChatId", chat[0].id), async () => {
-                        const data_ = {
-                            message_lst: this.message_lst,
-                            toId: this.user_to_id,
-                            fromId: this.user_id,
+        await UserApi.getAllChats(this.user_id).then((el) => {
+            el.forEach(ele => {
+                const requestQuery = query(
+                    collection(db, "ChatId"),
+                    where("togetherId", 'in', [`${this.user_id}-${ele.id}`, `${ele.id}-${this.user_id}`]),
+                )
+                onSnapshot(requestQuery, (snapshot) => {
+                    snapshot.docChanges().forEach(async (change) => {
+                        if (change.type === "added") {
+                            await MessagesApi.getAllMessage({ message_lst: this.message_lst, toId: this.user_to_id, fromId: this.user_id, }).then(() => {
+                                console.log("Added: ", change.doc.data());
+                            }).catch(err => {
+                                console.log(err)
+                            })
                         }
-                        //Здесь получаем array в then()
-                        await MessagesApi.getAllMessage(data_).catch(err => {
-                            console.log(err)
-                        })
-
-                    })
+                        if (change.type === "modified") {
+                            console.log("Modified: ", change.doc.data());
+                        }
+                        if (change.type === "removed") {
+                            console.log("Removed: ", change.doc.data());
+                        }
+                    });
                 })
             })
         }).catch(err => {
