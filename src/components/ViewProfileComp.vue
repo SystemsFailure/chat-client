@@ -43,7 +43,7 @@
                 <div class="line-main-informations">
                     <div class="btn-detail" @click="() => {this.$emit('showDetailWindowCompFunction', true)}">
                         <!-- <i class="fi fi-bs-interrogation"></i> -->
-                        <img src="@/assets/svgassets/icons8-содержимое-96.png" alt="">
+                        <!-- <img src="@/assets/svgassets/icons8-содержимое-96.png" alt=""> -->
                         <span>detail</span>
                     </div>
                 </div>

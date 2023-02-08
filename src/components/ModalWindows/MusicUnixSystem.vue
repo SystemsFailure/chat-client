@@ -24,8 +24,15 @@
                 </div>
 
                 <div class="btn-expand">
-                    <img v-if="visibleBtnExpand" src="@/assets/svgassets/icons8-down-arrow-64.png" alt="" srcset="" @click="() => {this.visibleBtnExpand = false; this.visiblehideSideUnix = true}">
-                    <img v-else src="@/assets/svgassets/icons8-up-chevron-50.png" alt="" srcset="" @click="() => {this.visibleBtnExpand = true; this.visiblehideSideUnix = false}">
+                    <img 
+                    v-if="visibleBtnExpand"
+                    src="@/assets/svgassets/icons8-down-arrow-64.png" 
+                    @click="() => {this.visibleBtnExpand = false; this.visiblehideSideUnix = true; this.localConfigurationListAudiosElements();}"
+                    >
+                    <img 
+                    v-else src="@/assets/svgassets/icons8-up-chevron-50.png" alt="" srcset="" 
+                    @click="() => {this.visibleBtnExpand = true; this.visiblehideSideUnix = false}"
+                    >
                 </div>
 
 
@@ -51,11 +58,21 @@
                     class="it-audio"
                     v-for="it in listcurrentaudioplaylist"
                     :key="it.id"
-                    @click="playmusic"
+                    @click="playmusic(it.id)"
+                    :id="`hideList-${it.id}`"
                     >
                     <div class="btn-play-and-stop-box">
-                        <img v-if="visiblebtnplay" src="@/assets/svgassets/icons8-воспроизведение-50.png" alt="" :id="`play-audio-btn-uid--${it.id}`">
-                        <img v-else src="@/assets/svgassets/icons8-пауза-60.png" alt="">
+                        <img 
+                        src="@/assets/svgassets/icons8-воспроизведение-50.png" alt="" 
+                        :id="`play-audio-btn-uid--${it.id}`"
+                        @click="playMusicUnixHideList(it.id)"
+                        >
+                        <img 
+                        src="@/assets/svgassets/icons8-пауза-60.png" alt="" 
+                        :id="`stop-audio-btn-uid--${it.id}`" 
+                        class="list-all-pause-elements-btns"
+                        @click="pauseMusicUnixHideList(it.id)"
+                        >
                     </div>
                     <div class="name-song-and-art-box">
                         <span id="name-song-box-uid">{{ it.name }}</span>
@@ -82,17 +99,9 @@ export default {
     data() {
         return {
             listAudios: [],
-            listcurrentaudioplaylist: [
-                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
-                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
-                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
-                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
-                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
-                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
-            ],
+            listcurrentaudioplaylist: [],
             visibleBtnExpand: true,
             visiblehideSideUnix: false,
-            visiblebtnplay: true,
         }
     },
     mounted() {
@@ -102,11 +111,14 @@ export default {
         this.setInput(document.getElementById('progress-id'))
         this.setCurrentTimeElement(document.getElementById('total-time'))
         this.setProgressInline(document.getElementById('audioPlayerContainer_unix'))
+        this.listcurrentaudioplaylist = this.isArray
+        this.localConfigurationListAudiosElements()
     },
     watch: {
         isArray: {
             handler(newArray) {
                 this.listcurrentaudioplaylist = this.isArray
+                this.localConfigurationListAudiosElements()
                 console.log(newArray, 'newValue')
                 if(!this.returnAudioElementId) {console.log('audio id is null'); return;}
                 new Promise((resolve) => {
@@ -140,9 +152,75 @@ export default {
         })
     },
     methods: {
+        playMusicUnixHideList(id)
+        {
+            const audio = document.getElementById(id+'-unix')
+            if(audio)
+            {
+                this.changeBtnPlayOrPause(id, 'usual')
+                this.stopAudio()
+                this.playMusicUnix(audio)
+                const allaudiohidelist = document.getElementsByClassName('it-audio')
+                for (let index = 0; index < allaudiohidelist.length; index++) {
+                    const element = allaudiohidelist[index];
+                    if(element.id != 'hideList-'+id)
+                    {
+                        const playbtnElement = document.getElementById('play-audio-btn-uid--' + id)
+                        const stopbtnElement = document.getElementById('stop-audio-btn-uid--' + id)
+                        playbtnElement.style.width = '14px'
+                        playbtnElement.style.height = '14px'
+                        stopbtnElement.style.width = '0px'
+                        stopbtnElement.style.height = '0px'
+                    }
+                }
+            } else {
+                console.log('audio element is null')
+                return
+            }
+        },
+        pauseMusicUnixHideList(id) {
+            this.stopAudio()
+            this.changeBtnPlayOrPause(id, 'reverse')
+        },
         // local methods // code start...
+        localConfigurationListAudiosElements()
+        {
+            const lst = document.getElementsByClassName('list-all-pause-elements-btns')
+            console.log(lst, 'lst')
+            for (let index = 0; index < lst.length; index++) {
+                const iterator = lst[index];
+                iterator.style.width = '0px'
+                iterator.style.height = '0px'
+            }
+        },
+        changeBtnPlayOrPause(id, mode)
+        {
+            if(mode === 'usual')
+            {
+                const playbtnElement = document.getElementById('play-audio-btn-uid--' + id)
+                const stopbtnElement = document.getElementById('stop-audio-btn-uid--' + id)
+                playbtnElement.style.width = '0px'
+                playbtnElement.style.height = '0px'
+                stopbtnElement.style.width = '14px'
+                stopbtnElement.style.height = '14px'
+            }
+            if(mode === 'reverse')
+            {
+                const playbtnElement = document.getElementById('play-audio-btn-uid--' + id)
+                const stopbtnElement = document.getElementById('stop-audio-btn-uid--' + id)
+                console.log('pause', playbtnElement, stopbtnElement)
+                playbtnElement.style.width = '14px'
+                playbtnElement.style.height = '14px'
+                stopbtnElement.style.width = '0px'
+                stopbtnElement.style.height = '0px'
+            }
+        },
         playmusic() {
             console.log('play music...')
+            // const playbtnElement = document.getElementById('play-audio-btn-uid--' + id)
+            // const stopbtnElement = document.getElementById('stop-audio-btn-uid--' + id)
+            // playbtnElement.style.display = 'none'
+            // stopbtnElement.style.display = 'auto'
         },
         // local methods ... // code end...
         PlayerplaySong() {
