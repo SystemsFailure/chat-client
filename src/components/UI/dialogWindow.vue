@@ -13,6 +13,7 @@
         </div>
     </div>
 </template>
+
 <script>
 import { MessagesApi } from '@/firebase-config/MessagesController';
 export default {
@@ -33,6 +34,7 @@ export default {
     },
 }
 </script>
+
 <style lang="scss" scoped>
 .main-window-dialog {
     margin: 0;

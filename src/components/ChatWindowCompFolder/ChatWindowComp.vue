@@ -25,7 +25,7 @@
                             <h5  class="mess-content-example" style="color: white;" id="q5"></h5>
                         </div>
 
-                    <transition-group name="bounce-bubble-message" tag="h6">
+                    <!-- <transition-group name="bounce-bubble-message" tag="h6"> -->
                         <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
                                 <div class="message-bubble">
                                         <div class="image-content" v-if="n.img_url">
@@ -40,12 +40,12 @@
                                             @contextmenu="() => {this.deleteMessage(n.id); return false}"
                                             @mouseover="showDetailDataMessage($event, n.id)"
                                             @mouseout="hideDetailDataMessage($event)"
-                                            v-bind:style="n.fromId===user_id?{'float':'right', 'background-color' : '#555;', 'color' : 'white'}:{'float':'left', 'padding-bottom': '10px'}"
+                                            v-bind:style="n.fromId===user_id?{'float':'right', 'background-color' : '#555;', 'color' : '#999'}:{'float':'left', 'background-color' : '#555;', 'padding-bottom': '10px'}"
                                             >{{n.content}}
                                         </h6>
                                     </div>
                                 </div>
-                        </transition-group>
+                        <!-- </transition-group> -->
                     </div>
                 </div>
             </div>
@@ -102,14 +102,19 @@ export default {
                 onSnapshot(requestQuery, (snapshot) => {
                     snapshot.docChanges().forEach(async (change) => {
                         if (change.type === "added") {
-                            await MessagesApi.getAllMessage({ message_lst: this.message_lst, toId: this.user_to_id, fromId: this.user_id, }).then(() => {
-                                console.log("Added: ", change.doc.data());
-                            }).catch(err => {
-                                console.log(err)
-                            })
+                            console.log("Added: ", change.doc.data());
                         }
                         if (change.type === "modified") {
-                            console.log("Modified: ", change.doc.data());
+                            const data_ = { toId: this.user_to_id, fromId: this.user_id, }
+                            const {lastElement, array} = await MessagesApi.getLimitedPage(data_)
+                            new Promise((resolve, failure) => {
+                                this.message_lst = array.reverse()
+                                this.lastMessage = lastElement
+                                resolve('success')
+                                failure('failure')
+                            }).then(() => {
+                                this.scrollDownChat()
+                            })
                         }
                         if (change.type === "removed") {
                             console.log("Removed: ", change.doc.data());
@@ -128,6 +133,7 @@ export default {
                 const {lastElement, array} = await MessagesApi.getLimitedPage(data_)
                 new Promise((resolve, failure) => {
                     this.message_lst = array.reverse()
+                    // this.message_lst = array
                     this.lastMessage = lastElement
                     resolve('success')
                     failure('failure')
@@ -159,6 +165,7 @@ export default {
                 let {lastElement_, array} = await MessagesApi.getNextPage(this.lastMessage, data_)
                 array.forEach(elem => {
                     this.message_lst.unshift(elem)
+                    // this.message_lst.push(elem)
                 })
                 let block = document.getElementById("block-chat-window-id")
                 console.log((block.scrollHeight / 100), block.scrollHeight)
@@ -332,11 +339,12 @@ export default {
 
         async add_message(text) {
             let countMess = 0
+            let chatID = null
             const data_ = { message_lst: this.message_lst, toId: this.user_to_id, fromId: this.user_id }
             new Promise((resolve, failure) => {
                 this.message_lst.push(
                     {
-                        fromId: this.user_id, content: text, 
+                        fromId: this.user_id, content: text,
                         toId: this.user_to_id, size: new Blob([text]).size, 
                         result: true,
                         atCreated: new Date().toLocaleString(),
@@ -348,15 +356,13 @@ export default {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('anime-bubble-message')
                 this.scrollDownChat()
             })
-
-
             if(this.user_to_id && this.user_id) {
                 await ChatApi.getChat({toID: this.user_to_id, fromID: this.user_id}).then( async chat => {
                     if (chat.length != 0)
                     {
                         if (chat.length === 1)
                         {
-                            await ChatApi.updataField(chat[0].id)
+                            chatID = chat[0].id
                             countMess = chat[0].countOfMessages
                         }
                         else
@@ -384,6 +390,8 @@ export default {
             }
             await MessagesApi.createMessage(messageContent, data_).then( async () => {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.remove('anime-bubble-message')
+                if(chatID === null) {console.log('chatID is null'); return}
+                await ChatApi.updataField(chatID)
             }).catch(err => {
                 console.log(err)
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('failure-bubble-message')

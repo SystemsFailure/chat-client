@@ -58,8 +58,8 @@
                         <img v-else src="@/assets/svgassets/icons8-пауза-60.png" alt="">
                     </div>
                     <div class="name-song-and-art-box">
-                        <span id="name-song-box-uid">{{ it.nameSong }}</span>
-                        <span id="name-art-box-uid">{{ it.nameArtist }}</span>
+                        <span id="name-song-box-uid">{{ it.name }}</span>
+                        <span id="name-art-box-uid">{{ it.artist }}</span>
                     </div>
                     <div class="time-box">
                         <span>{{ '03:52' }}</span>
@@ -83,12 +83,12 @@ export default {
         return {
             listAudios: [],
             listcurrentaudioplaylist: [
-                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
-                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
-                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
-                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
-                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
-                {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
+                // {id: 0, nameSong: 'Browse him dead', nameArtist: 'Helper good dog', url: ''},
             ],
             visibleBtnExpand: true,
             visiblehideSideUnix: false,
@@ -106,6 +106,7 @@ export default {
     watch: {
         isArray: {
             handler(newArray) {
+                this.listcurrentaudioplaylist = this.isArray
                 console.log(newArray, 'newValue')
                 if(!this.returnAudioElementId) {console.log('audio id is null'); return;}
                 new Promise((resolve) => {
@@ -256,7 +257,7 @@ export default {
 
         .inner-music-box {
             margin-top: 10px;
-            height: 300px;
+            // height: 300px;
             width: 100%;
             // background: rgba($color: #000000, $alpha: 1.0);
             background-color: #151515;

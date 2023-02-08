@@ -28,8 +28,18 @@ const store = createStore({
         showDialogDeleteWindow: false,
         // showCycyleNotifyItem: false
 
+
+        currentChatUserId: null,
+
     }),
     mutations: {
+        setcurrentChatUserId(state, value) {
+            state.currentChatUserId = value
+        },
+        clearcurrentChatUserId(state) {
+            state.currentChatUserId = null
+        },
+
         changeDialogValue (state) {
             state.showDialogDeleteWindow = true
         },

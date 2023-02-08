@@ -39,7 +39,6 @@ const playerModule = {
             state.showBtnPlay = true
         },
 
-
         setProgressInline(state, val) {
             state.ProgressInline = val
         },
