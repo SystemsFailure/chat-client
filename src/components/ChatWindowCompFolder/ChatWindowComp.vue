@@ -1,5 +1,6 @@
 <template>
-    <div class="main-window-chat">
+    <div class="main-window-chat" id="globalID-chat">
+        <ContextMenuMessage v-show="visibileContextMenuMess" id="context-menu-vclass-mess"></ContextMenuMessage>
         <BannerUpComp @showOrHideSettingChatId="showHideSettingChatId" @showNotificationWindowFunction="(value) => {this.$emit('showNotificationWindowFunctionArrow', value)}"></BannerUpComp>
         <BannerBottomComp @sendMessage="add_message" @add_file_messageFunction="add_file_message"></BannerBottomComp>
         <MiniListLastChatsComp v-if="showMiniListComp" @MiniChatBindMiniUsersListFunction="functionBindingMiniListUsersByMiniChat"></MiniListLastChatsComp>
@@ -37,7 +38,7 @@
                                         <h6 v-else
                                             :id="n.id"
                                             class="im-message-content"
-                                            @contextmenu="() => {this.deleteMessage(n.id); return false}"
+                                            @contextmenu="test($event, n.id, n)"
                                             @mouseover="showDetailDataMessage($event, n.id)"
                                             @mouseout="hideDetailDataMessage($event)"
                                             v-bind:style="n.fromId===user_id?{'float':'right', 'background-color' : '#555;', 'color' : '#999'}:{'float':'left', 'background-color' : '#555;', 'padding-bottom': '10px'}"
@@ -54,7 +55,7 @@
 
     </div>
 </template>
-
+<!-- () => {this.deleteMessage(n.id); return false} -->
 <script>
 import BannerUpComp from '@/components/BannerUpComp.vue'
 import BannerBottomComp from '@/components/BannerBottomComp.vue'
@@ -62,12 +63,12 @@ import SettingsMenuChatIdComp from '@/components/SettingsMenuChatIdComp.vue'
 import MiniListLastChatsComp from '@/components/ModalWindows/MiniListLastChatsComp.vue'
 import MiniChatComp from '@/components/ModalWindows/MiniChatComp.vue'
 import viewPhotoWindow from '@/components/ModalWindows/viewPhotoWindow.vue'
+import ContextMenuMessage from '@/components/ModalWindows/ContextMenuMessage.vue'
 import { MessagesApi } from '@/firebase-config/MessagesController'
 import { UserApi } from '@/firebase-config/UserController'
 import { ChatApi } from '@/firebase-config/ChatController'
 import { db } from '@/main'
 import { onSnapshot, Timestamp, where, query, collection} from "firebase/firestore"
-
 
 export default {
     data() {
@@ -76,6 +77,7 @@ export default {
             showWindowImage: false,
             user_id: localStorage.getItem('user-id') ? localStorage.getItem('user-id') : null,
             showDialogWindow: false,
+            visibileContextMenuMess: false,
             message_lst: [],
             USERTO: null,
             showMiniChatValue: false,
@@ -152,6 +154,46 @@ export default {
         },
     },
     methods: {
+        positionCursor(e){
+            let x = 0
+            let y = 0
+            if (!e) {
+                e = window.event;
+            }
+            if (e.pageX || e.pageY){
+                x = e.pageX;
+                y = e.pageY;
+            } else if (e.clientX || e.clientY){
+                x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+                y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+            }
+            console.log(x, y)
+            return {x: x, y: y}
+        },
+
+        test (event, id, mess) {
+            let contextMenuMessElem = document.getElementById('context-menu-vclass-mess')
+            let height = window.getComputedStyle(contextMenuMessElem, null).height;
+            let width = window.getComputedStyle(contextMenuMessElem, null).width;
+            let left_ = window.getComputedStyle(contextMenuMessElem, null).left;
+            let right_ = window.getComputedStyle(contextMenuMessElem, null).right;
+            let coo = event.target.getBoundingClientRect()
+            if(event.target.style.float != 'left')
+            {
+                this.visibileContextMenuMess = true
+                contextMenuMessElem.style.top = `calc(${coo.top}px - ${height})`
+                contextMenuMessElem.style.left = `calc(${coo.left}px - ${width})`
+                console.log('context', contextMenuMessElem, id, mess, height, width);
+                event.preventDefault()
+            } else {
+                this.visibileContextMenuMess = true
+                contextMenuMessElem.style.top = `calc(${coo.top}px - ${height})`
+                contextMenuMessElem.style.right = coo.width + 'px'
+                console.log(coo.width, left_, right_);
+                event.preventDefault()
+            }
+        },
+
         scrollDownChat() {
             let block = document.getElementById("block-chat-window-id")
             block.scrollTop = block.scrollHeight
@@ -407,7 +449,8 @@ export default {
         SettingsMenuChatIdComp,
         MiniListLastChatsComp,
         MiniChatComp,
-        viewPhotoWindow
+        viewPhotoWindow,
+        ContextMenuMessage,
     }
 }
 </script>
@@ -520,13 +563,10 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                     padding: 10px;
                     width: auto;
                     height: auto;
-                    // background: linear-gradient(45deg, #ff216d, #2196f3);
-
                     background: rgba(10, 10, 10, 0.65);
                     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
                     backdrop-filter: blur(4.2px);
                     -webkit-backdrop-filter: blur(4.2px);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
                 }
 
                 .inner-container {

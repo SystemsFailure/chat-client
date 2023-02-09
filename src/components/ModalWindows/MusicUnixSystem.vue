@@ -31,7 +31,7 @@
                     >
                     <img 
                     v-else src="@/assets/svgassets/icons8-up-chevron-50.png" alt="" srcset="" 
-                    @click="() => {this.visibleBtnExpand = true; this.visiblehideSideUnix = false}"
+                    @click="pauseUnix()"
                     >
                 </div>
 
@@ -65,6 +65,7 @@
                         <img 
                         src="@/assets/svgassets/icons8-воспроизведение-50.png" alt="" 
                         :id="`play-audio-btn-uid--${it.id}`"
+                        class="list-all-play-elements-btns"
                         @click="playMusicUnixHideList(it.id)"
                         >
                         <img 
@@ -157,36 +158,55 @@ export default {
             const audio = document.getElementById(id+'-unix')
             if(audio)
             {
-                this.changeBtnPlayOrPause(id, 'usual')
                 this.stopAudio()
+                this.localConfigurationListAudiosElements
                 this.playMusicUnix(audio)
-                const allaudiohidelist = document.getElementsByClassName('it-audio')
+                const allaudiohidelist = document.getElementsByClassName('audioListUnix')
                 for (let index = 0; index < allaudiohidelist.length; index++) {
                     const element = allaudiohidelist[index];
-                    if(element.id != 'hideList-'+id)
+                    if(element.id != id+'-unix')
                     {
-                        const playbtnElement = document.getElementById('play-audio-btn-uid--' + id)
-                        const stopbtnElement = document.getElementById('stop-audio-btn-uid--' + id)
+                        const audioID = element.id.split('-')[0]
+                        element.pause()
+                        const playbtnElement = document.getElementById('play-audio-btn-uid--' + audioID)
+                        const stopbtnElement = document.getElementById('stop-audio-btn-uid--' + audioID)
+                        console.log('what? ', element.id, playbtnElement)
                         playbtnElement.style.width = '14px'
                         playbtnElement.style.height = '14px'
                         stopbtnElement.style.width = '0px'
                         stopbtnElement.style.height = '0px'
                     }
                 }
+                this.changeBtnPlayOrPause(id, 'usual')
             } else {
                 console.log('audio element is null')
                 return
             }
         },
+        pauseUnix() {
+            this.visibleBtnExpand = true;
+            this.visiblehideSideUnix = false;
+            this.localConfigurationListAudiosElements()
+        },
         pauseMusicUnixHideList(id) {
+            if(id)
+            {
+                console.log('pause')
+                this.changeBtnPlayOrPause(id, 'reverse')
+            }
             this.stopAudio()
-            this.changeBtnPlayOrPause(id, 'reverse')
+            
         },
         // local methods // code start...
         localConfigurationListAudiosElements()
         {
             const lst = document.getElementsByClassName('list-all-pause-elements-btns')
-            console.log(lst, 'lst')
+            const lst2 = document.getElementsByClassName('list-all-play-elements-btns')
+            for (let index = 0; index < lst2.length; index++) {
+                const element = lst2[index];
+                element.style.width = '14px'
+                element.style.height = '14px'
+            }
             for (let index = 0; index < lst.length; index++) {
                 const iterator = lst[index];
                 iterator.style.width = '0px'
@@ -203,12 +223,13 @@ export default {
                 playbtnElement.style.height = '0px'
                 stopbtnElement.style.width = '14px'
                 stopbtnElement.style.height = '14px'
+                console.log('usual')
             }
             if(mode === 'reverse')
             {
                 const playbtnElement = document.getElementById('play-audio-btn-uid--' + id)
                 const stopbtnElement = document.getElementById('stop-audio-btn-uid--' + id)
-                console.log('pause', playbtnElement, stopbtnElement)
+                console.log('reverse')
                 playbtnElement.style.width = '14px'
                 playbtnElement.style.height = '14px'
                 stopbtnElement.style.width = '0px'

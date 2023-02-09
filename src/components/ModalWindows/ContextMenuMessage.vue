@@ -15,9 +15,10 @@ export default {
 <style lang="scss" scoped>
 
 .lclass-context-menu {
-    width: 300px;
-    height: 400px;
+    width: 150px;
+    height: 200px;
     background: rgba($color: #090909, $alpha: 1.0);
+    position: absolute;
 }
 
 </style>
