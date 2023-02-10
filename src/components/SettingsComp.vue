@@ -82,6 +82,36 @@
             </div>
         </div>
     </div>
+
+    <div class="globalconfiguration">
+        <div class="inner-container-globalconfiguration">
+            <div class="line-title">global configuration</div>
+            <div class="items0global0conf">
+                <div class="item-conf" @click="() => {this.showAppereanceSection = true}">Appereance</div>
+                <div class="item-conf">Other</div>
+                <div class="item-conf">Security</div>
+            </div>
+        </div>
+    
+    </div>
+
+    <div class="global-section-of-appereance" v-if="showAppereanceSection">
+        <div class="inner-section-box">
+            <div class="line-title-section-of-appereance">Appereance</div>
+            <div class="selectThemeBox">
+                <span>select accent color</span>
+                <div class="inner-content-accent-colors">
+                    <div class="item-theme-color green-cl"></div>
+                    <div class="item-theme-color teal-cl"></div>
+                    <div class="item-theme-color orange-cl"></div>
+                    <div class="item-theme-color fiolet-cl"></div>
+                    <div class="item-theme-color gray-cl"></div>
+                    <div class="item-theme-color red-cl"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 </template>
@@ -94,6 +124,11 @@ import { db } from '@/main';
 import IError from '@/IError';
 import { TransitionApi } from '@/firebase-config/UserController';
 import { UserApi } from '@/firebase-config/UserController';
+
+
+// color - localStorage.setItem('accent-color', vl);
+// backImage - localStorage.setItem('bk-img', vl);
+// typeBoxMessage - localStorage.setItem('tp-bx-mess', vl);
 
 
 export default {
@@ -118,6 +153,8 @@ export default {
             userPersonalData: [],
 
             URLIMAGE: null,
+
+            showAppereanceSection: true,
         }
     },
 
@@ -305,22 +342,176 @@ $color-text-izumrud: #00ff80;
 
 .main-comp {
     position: absolute;
-    width: 800px;
+    width: 1000px;
     height: 560px;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    border: 1px solid #333;
     margin: 0;
     top: 50%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
     overflow: auto;
+    display: flex;
+    // align-items: center;
+    // justify-content: center;
+    flex-direction: row;
+
+    .global-section-of-appereance {
+        width: 45%;
+        height: 100%;
+        // background-color:#001011;
+
+        .inner-section-box {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+
+            .line-title-section-of-appereance {
+                width: 100%;
+                display: flex;
+                padding: 10px;
+                align-items: center;
+                justify-content: center;
+                font-size: 11px;
+                font-weight: 700;
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                text-transform: uppercase;
+                color: #999;
+            }
+
+            .selectThemeBox {
+                width: 100%;
+                padding: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                border: 1px solid #111;
+                margin-top: 10px;
+
+                span {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 10px;
+                    text-transform: uppercase;
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                }
+
+                .inner-content-accent-colors {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 15px;
+
+                    .item-theme-color {
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        margin-left: 20px;
+
+                        &:hover {
+                            cursor: pointer;
+                            opacity: .5;
+                            transition: .3s;
+                        }
+                    }
+                    .green-cl {
+                        background-color: #00ff33;
+                    }
+
+                    .teal-cl {
+                        background-color: #00cec7;
+                    }
+
+                    .orange-cl {
+                        background-color: #ff6600;
+                    }
+
+                    .fiolet-cl {
+                        background-color: rgb(218, 0, 234);
+                    }
+
+                    .gray-cl {
+                        background-color: rgb(30, 29, 29);
+                    }
+
+                    .red-cl {
+                        background-color: red;
+                    }
+                }
+            }
+        }
+    }
+
+    .globalconfiguration {
+        width: 25%;
+        height: 100%;
+        background-color:#000101;
+        border-right: 1px solid #111;
+
+
+        .inner-container-globalconfiguration {
+            width: 100%;
+            height: 100%;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+
+            .line-title {
+                padding: 5px;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 11px;
+                font-weight: 700;
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                text-transform: uppercase;
+                color: #4e5f7d;
+            }
+
+            .items0global0conf {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+
+                .item-conf {
+                    width: 100%;
+                    height: 30px;
+                    padding: 5px;
+                    margin-top: 5px;
+                    color: #999;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 12px;
+                    font-weight: 700;
+                    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                    text-transform: uppercase;
+                    
+
+                    &:hover {
+                        cursor: pointer;
+                        opacity: .5;
+                        transition: .3s;
+                    }
+                }
+            }
+        }
+    }
 }
 
 .main-settings-comp{
-    width: 100%;
+    width: 30%;
     height: auto;
     padding: 20px;
     display: flex;
@@ -332,6 +523,7 @@ $color-text-izumrud: #00ff80;
     text-transform: uppercase;
     letter-spacing: .02em;
     color: white;
+    border-right: 1px solid #111;
 
     .bottom-box {
         width: 100%;
@@ -340,10 +532,9 @@ $color-text-izumrud: #00ff80;
 
         .wrapper-box {
             width: 100%;
-            padding: 10px;
+            padding-top: 10px;
             .btn-save {
                 float: left;
-                margin-left: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;

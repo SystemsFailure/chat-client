@@ -49,7 +49,7 @@ body {
 ::-webkit-scrollbar-track {
   -webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.2) inset;
   background-color: #111;
-
+  position: absolute;
 
 }
 
@@ -59,6 +59,7 @@ body {
   /* color-stop(.5, rgba(255, 255, 255, .25)), */
   color-stop(.5, transparent), to(transparent));
   border-radius: 15%;
+  position: absolute;
 
 }
 ::-webkit-scrollbar-thumb:hover {
