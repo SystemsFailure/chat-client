@@ -2,6 +2,7 @@ import {createStore} from "vuex";
 import playerModule from "@/store/modules/playerModule";
 import playlistModule from '@/store/modules/playlistController'
 import toastModule from "./modules/toastModule";
+import contextmenu from "./modules/contextmenu";
 
 const store = createStore({
 
@@ -9,6 +10,7 @@ const store = createStore({
         player: playerModule,
         playlist: playlistModule,
         toast: toastModule,
+        contextmenu: contextmenu,
     },
 
     state: () => ({

@@ -101,12 +101,13 @@
             <div class="selectThemeBox">
                 <span>select accent color</span>
                 <div class="inner-content-accent-colors">
-                    <div class="item-theme-color green-cl"></div>
-                    <div class="item-theme-color teal-cl"></div>
-                    <div class="item-theme-color orange-cl"></div>
-                    <div class="item-theme-color fiolet-cl"></div>
-                    <div class="item-theme-color gray-cl"></div>
-                    <div class="item-theme-color red-cl"></div>
+                    <div 
+                    v-for="it in listItemsAccentColor" 
+                    class="item-theme-color" 
+                    :class="it.acc" 
+                    :key="it.id"
+                    @click="setAccentColor(it.vl)"
+                    ></div>
                 </div>
             </div>
         </div>
@@ -144,6 +145,14 @@ export default {
                 {id: 4, title: 'country', value: 'country'},
                 {id: 5, title: 'city', value: 'city'},
             ],
+            listItemsAccentColor: [
+                {id: 0, acc: 'green-cl', vl: 'green'},
+                {id: 1, acc: 'teal-cl', vl: 'teal'},
+                {id: 2, acc: 'orange-cl', vl: 'orange'},
+                {id: 3, acc: 'fiolet-cl', vl: 'fiolet'},
+                {id: 4, acc: 'gray-cl', vl: 'gray'},
+                {id: 5, acc: 'red-cl', vl: 'red'},
+            ],
             queryName: '',
             queryEmail: '',
             queryBio: '',
@@ -173,6 +182,17 @@ export default {
     },
 
     methods: {
+        setAccentColor(vl) {
+            if(vl === 'green') {
+                console.log('green')
+            }
+            if(vl === 'orange') {
+                console.log('orange')
+            }
+            if(vl === 'teal') {
+                console.log('teal')
+            }
+        },
 
         changeValueSetting(event) {
             const value = event.target.dataset.value
