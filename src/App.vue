@@ -48,17 +48,21 @@ body {
 
 ::-webkit-scrollbar-track {
   -webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.2) inset;
-  background-color: #1b1b1b;
+  background-color: #111;
 
 
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: hsl(0, 0%, 20%);
+  background-color: hsl(0, 0%, 21%);
   background-image: -webkit-gradient(linear, 0 0, 0 100%,
   /* color-stop(.5, rgba(255, 255, 255, .25)), */
   color-stop(.5, transparent), to(transparent));
   border-radius: 15%;
 
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(0, 0%, 20%);
+  transition: .3s;
 }
 </style>

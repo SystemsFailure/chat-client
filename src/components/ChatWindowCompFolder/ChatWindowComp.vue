@@ -85,6 +85,7 @@ export default {
             imageURL: null,
 
             lastMessage: '',
+            visibleScroll: false,
         }
     },
 
@@ -94,6 +95,14 @@ export default {
     },
 
     async mounted() {
+        setInterval(() => {
+            this.hideScrollEffect()
+        }, 2500)
+        // Здесь скрываем скролл и контекстное меню по нажатию на любую область
+        document.addEventListener('click', e => {
+            this.hideContextMenu(e)
+            this.hideScrollEffect()
+        })
         // Здесь устанавливается onSnapshoot для слежения за index - это колл-во сообщений в чате, которое меняется каждый раз когда оправляется сообщение
         await UserApi.getAllChats(this.user_id).then((el) => {
             el.forEach(ele => {
@@ -135,7 +144,6 @@ export default {
                 const {lastElement, array} = await MessagesApi.getLimitedPage(data_)
                 new Promise((resolve, failure) => {
                     this.message_lst = array.reverse()
-                    // this.message_lst = array
                     this.lastMessage = lastElement
                     resolve('success')
                     failure('failure')
@@ -152,8 +160,49 @@ export default {
             },
             deep: true
         },
+        visibileContextMenuMess: {
+            handler(newValue) {
+                let generalListMessages = document.getElementById('block-chat-window-id')
+                if(newValue === true)
+                {
+                    generalListMessages.style.overflow = 'hidden'
+                    
+                } else {
+                    generalListMessages.style.overflow = 'scroll'
+                }
+                console.log(newValue)
+            },
+            deep: true,
+        }
     },
     methods: {
+        hideScrollEffect() {
+            if(this.visibleScroll)
+            {
+                console.log('visibleScroll == true')
+                this.visibleScroll = false
+                var styleElement = document.createElement("style");
+                styleElement.appendChild(document.createTextNode(
+                    "::-webkit-scrollbar {-webkit-appearance: none;} ::-webkit-scrollbar-thumb {border-radius: 4px;background-color: rgba(0,0,0,.0);transition: .8s;}"
+                    ));
+                document.getElementsByTagName("body")[0].appendChild(styleElement);
+            }
+        },
+        hideContextMenu(e) {
+            if(this.visibileContextMenuMess === true)
+            {
+                console.log('visibileContextMenuMess == ', 'true')
+                let contextMenuMessElem = document.getElementById('context-menu-vclass-mess')
+                const withinBoundaries = e.composedPath().includes(contextMenuMessElem)
+                if(!withinBoundaries)
+                {
+                    contextMenuMessElem.style.display = 'none'
+                    const generalListMessages_ = document.getElementById('block-chat-window-id')
+                    generalListMessages_.style.overflow = 'scroll'
+                    generalListMessages_.style.overflowX = 'hidden'
+                }
+            }
+        },
         positionCursor(e){
             let x = 0
             let y = 0
@@ -173,25 +222,16 @@ export default {
 
         test (event, id, mess) {
             let contextMenuMessElem = document.getElementById('context-menu-vclass-mess')
-            let height = window.getComputedStyle(contextMenuMessElem, null).height;
-            let width = window.getComputedStyle(contextMenuMessElem, null).width;
-            let left_ = window.getComputedStyle(contextMenuMessElem, null).left;
-            let right_ = window.getComputedStyle(contextMenuMessElem, null).right;
-            let coo = event.target.getBoundingClientRect()
-            if(event.target.style.float != 'left')
-            {
-                this.visibileContextMenuMess = true
-                contextMenuMessElem.style.top = `calc(${coo.top}px - ${height})`
-                contextMenuMessElem.style.left = `calc(${coo.left}px - ${width})`
-                console.log('context', contextMenuMessElem, id, mess, height, width);
-                event.preventDefault()
-            } else {
-                this.visibileContextMenuMess = true
-                contextMenuMessElem.style.top = `calc(${coo.top}px - ${height})`
-                contextMenuMessElem.style.right = coo.width + 'px'
-                console.log(coo.width, left_, right_);
-                event.preventDefault()
-            }
+            let generalListMessages = document.getElementById('block-chat-window-id')
+            contextMenuMessElem.style.display = 'flex'
+            this.visibileContextMenuMess = true
+            generalListMessages.style.overflow = 'hidden'
+            let {x, y} = this.positionCursor()
+            contextMenuMessElem.style.top = y + 'px'
+            contextMenuMessElem.style.left = x + 'px'
+            console.log(x,y, 'x and y')
+            console.log(event, id, mess)
+            event.preventDefault()
         },
 
         scrollDownChat() {
@@ -214,10 +254,23 @@ export default {
                 block.scrollTop = (block.scrollHeight / 100)
                 this.lastMessage = lastElement_
             }
+            if(this.visibleScroll === false) {
+                if(posTop > 0)
+                {
+                    this.visibleScroll = true
+                    var styleElement = document.createElement("style");
+                    console.log('scroll', posTop)
+                    styleElement.appendChild(document.createTextNode(
+                        "::-webkit-scrollbar {-webkit-appearance: none;} ::-webkit-scrollbar-thumb {border-radius: 4px;background-color: rgba(255,0,0,.5);}"
+                        ));
+                    document.getElementsByTagName("body")[0].appendChild(styleElement);	
+                }
+
+            }
         },
 
-        async cl() {
-
+        cl() {
+            console.log('hel')
         },
 
         async createIndex() {
