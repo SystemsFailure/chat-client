@@ -87,9 +87,9 @@
         <div class="inner-container-globalconfiguration">
             <div class="line-title">global configuration</div>
             <div class="items0global0conf">
-                <div class="item-conf" @click="() => {this.showAppereanceSection = true}">Appereance</div>
-                <div class="item-conf">Other</div>
-                <div class="item-conf">Security</div>
+                <div class="item-conf" @click="() => {this.showAppereanceSection = true}"><img src="@/assets/svgassets/icons8-палитра-90.png" alt="">Appereance</div>
+                <div class="item-conf"><img src="@/assets/svgassets/icons8-накладка-дверного-замка-100.png" alt=""> <span>Security</span></div>
+                <div class="item-conf"><img src="@/assets/svgassets/icons8-кали-линукс-wh.svg" alt=""><span>Other</span></div>
             </div>
         </div>
     
@@ -511,13 +511,21 @@ $color-text-izumrud: #00ff80;
                     margin-top: 5px;
                     color: #999;
                     display: flex;
-                    justify-content: center;
+                    // justify-content: center;
+                    padding-left: 20px;
                     align-items: center;
                     font-size: 12px;
                     font-weight: 700;
                     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
                     text-transform: uppercase;
-                    
+                    span {
+                        margin-top: 4px;
+                    }
+                    img {
+                        width: 18px;
+                        height: 18px;
+                        margin-right: 7px;
+                    }
 
                     &:hover {
                         cursor: pointer;

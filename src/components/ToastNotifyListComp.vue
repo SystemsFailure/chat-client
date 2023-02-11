@@ -46,9 +46,9 @@ export default {
     data() {
         return {
             ToastsList: [
-                {id: 0, icon: 'delete document', textContent: 'Document been deleted', type: 'red', typeOf: 'delete'},
+                // {id: 0, icon: 'delete document', textContent: 'Document been deleted', type: 'red', typeOf: 'delete'},
                 {id: 0, icon: 'delete document', textContent: 'New message', type: 'blue', typeOf: 'message'},
-                {id: 0, icon: 'delete document', textContent: 'Request been sended by successful', type: 'green', typeOf: 'send'},
+                // {id: 0, icon: 'delete document', textContent: 'Request been sended by successful', type: 'green', typeOf: 'send'},
             ],
         }
     },
@@ -57,7 +57,7 @@ export default {
         isList: {
             handler(newArray) {
                 this.ToastsList = newArray
-                console.log('array is been to updated')
+                console.log('array is been to updated', newArray)
             },
             deep: true,
         }
@@ -70,16 +70,12 @@ export default {
 
     mounted() {
         this.ToastsList = this.isList
+        console.log(this.isList, this.ToastsList, 'bomba')
     },
     methods: {
         ...mapMutations('toast', {
             addToast: 'addToast',
         }),
-        add() {
-            this.addToast(
-                {id: 0, icon: 'delete document', textContent: 'Request been sended by successful', type: 'green', typeOf: 'send'},
-            )
-        },
     }
 }
 </script>
@@ -103,7 +99,7 @@ export default {
     width: 400px;
     // padding: 5px;
     // height: 600px;
-    background-color: rgba($color: #fff, $alpha: .5);
+    // background-color: rgba($color: rgb(0, 0, 0), $alpha: .5);
     // background: linear-gradient(90deg, rgba(252,34,34,1) 0%, rgba(255,0,0,1) 0%, rgba(28,28,33,1) 40%);4
     // background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(255,0,0,0.3925945378151261) 18%, rgba(28,28,33,0.6446953781512605) 40%);
     // background: linear-gradient(90deg, rgba(255,0,0,0.9556197478991597) 0%, rgba(255,0,0,0.48783263305322133) 18%, rgba(28,28,33,0.6138830532212884) 40%);

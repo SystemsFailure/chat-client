@@ -224,7 +224,7 @@ const MessagesApi = {
         limit(20)
       )
       const nextDocumentSnapshots = await getDocs(next)
-      const lastElement_ = nextDocumentSnapshots.docs[nextDocumentSnapshots.docs.length - 1];
+      let lastElement_ = nextDocumentSnapshots.docs[nextDocumentSnapshots.docs.length - 1];
       nextDocumentSnapshots.forEach(doc => {
         let data_message = {
           id: doc.id,
@@ -244,6 +244,7 @@ const MessagesApi = {
         }
         array.push(data_message)
       })
+      console.log(lastElement_, 'lastElement_, alllllo blyat')
       return {lastElement_: lastElement_, array: array}
     },
 

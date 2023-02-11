@@ -47,7 +47,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  -webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.2) inset;
+  -webkit-box-shadow: 5px 5px 5px -5px rgba(0, 0, 0, 0) inset;
   background-color: #111;
   position: absolute;
 

@@ -1,5 +1,5 @@
 <template>
-    <ToastNotifyListComp></ToastNotifyListComp>
+    <ToastNotifyListComp v-if="visibilityToastWindow"></ToastNotifyListComp>
     <dialogWindow
         v-if="this.$store.state.showDialogDeleteWindow"
         @ShowOrCloseDialogWindowChatDeletedFunction="DialogMessageBoutDeletedChatFunc">
@@ -147,6 +147,7 @@ export default {
             showDetailWindow: false,
             shiwMyMusic: false,
             showViewPlaylistComp: false,
+            visibilityToastWindow: true,
         }
     },
 

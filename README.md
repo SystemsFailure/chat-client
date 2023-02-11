@@ -22,3 +22,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+<!-- Нужно реализовать unincrement function, что бы при вычитании их поля -1 отслеживолост его состояние и если true - то обновить список сообщений  -->

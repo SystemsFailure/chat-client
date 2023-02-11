@@ -1,8 +1,9 @@
-
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "@/main";
 const contextmenu = {
     state: () => ({
         idSelectedMessage: undefined,
-
+        editedText: undefined,
     }),
 
     mutations: {
@@ -12,7 +13,9 @@ const contextmenu = {
     },
 
     actions: {
-
+        async deleteMessageById({state}) {
+            await deleteDoc(doc(db, "messages", state.idSelectedMessage));
+        },
     },
 
     getters: {

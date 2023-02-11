@@ -7,7 +7,7 @@
                 <div class="view-profile item-setting"><img src="@/assets/svgassets/icons8-user-67.png" alt=""><h4>View profile</h4></div>
                 <div class="unmute item-setting" @click="this.MuteActive = !this.MuteActive"><img src="@/assets/svgassets/icons8-средняя-громкость-100.png" :class="{'mute-active' : MuteActive}" alt=""><h4 :class="{'mute-active' : MuteActive}">Mute</h4></div>
                 <div class="copy-link item-setting"><img src="@/assets/svgassets/icons8-скопировать-фигуру-96.png" alt=""><h4>Copy link</h4></div>
-                <div class="clear-chat item-setting" @click="() => {this.$store.commit('changeDialogValue')}"><img src="@/assets/svgassets/icons8-очистить-корзину-64.png" alt=""><h4>Clear chat</h4></div>
+                <div class="clear-chat item-setting" @click="() => {this.$store.commit('changeDialogValue')}"><img src="@/assets/svgassets/icons8-удалить-навсегда-90-rd.png" alt=""><h4>Clear chat</h4></div>
                 <div class="clear-chat leave-app item-setting" @click="leaveApp"><img src="@/assets/svgassets/icons8-экспорт-100.png" alt=""><h4>Leave</h4></div>
             </div>
 

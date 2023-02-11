@@ -32,9 +32,13 @@ const store = createStore({
 
 
         currentChatUserId: null,
+        user_to_id: null,
 
     }),
     mutations: {
+        setuser_to_id(st, vl) {
+            st.user_to_id = vl
+        },
         setcurrentChatUserId(state, value) {
             state.currentChatUserId = value
         },

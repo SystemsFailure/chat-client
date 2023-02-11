@@ -40,7 +40,17 @@ const ChatApi = {
             }
             chat_lst.push(data_chat)
         });
-        return chat_lst
+        if (chat_lst.length != 0)
+        {
+            if (chat_lst.length === 1)
+            {
+                return chat_lst
+            }
+            else
+            {
+                console.log('length is not 1')
+            }
+        }
     },
 
     getChatById: async () => {
@@ -55,6 +65,15 @@ const ChatApi = {
         })
         return count
     },
+
+    decrimentField: async (chatId) => {
+        const docRef = doc(db, 'ChatId', chatId);
+
+        const count = await updateDoc(docRef, {
+            countOfMessages: increment(-1)
+        })
+        return count
+    }
 }
 
 export { ChatApi }

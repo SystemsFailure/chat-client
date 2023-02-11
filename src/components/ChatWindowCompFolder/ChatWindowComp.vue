@@ -1,6 +1,11 @@
 <template>
+    <img src="@/assets/svgassets/icons8-кали-линукс-wh.svg" alt="" id="kali-logo-chat">
     <div class="main-window-chat" id="globalID-chat">
-        <ContextMenuMessage v-show="visibileContextMenuMess" id="context-menu-vclass-mess"></ContextMenuMessage>
+        <ContextMenuMessage 
+        v-show="visibileContextMenuMess" 
+        id="context-menu-vclass-mess"
+        @closeContextmenuFunction="(val) => {this.visibileContextMenuMess = val}"
+        ></ContextMenuMessage>
         <BannerUpComp @showOrHideSettingChatId="showHideSettingChatId" @showNotificationWindowFunction="(value) => {this.$emit('showNotificationWindowFunctionArrow', value)}"></BannerUpComp>
         <BannerBottomComp @sendMessage="add_message" @add_file_messageFunction="add_file_message"></BannerBottomComp>
         <MiniListLastChatsComp v-if="showMiniListComp" @MiniChatBindMiniUsersListFunction="functionBindingMiniListUsersByMiniChat"></MiniListLastChatsComp>
@@ -55,7 +60,6 @@
 
     </div>
 </template>
-<!-- () => {this.deleteMessage(n.id); return false} -->
 <script>
 import BannerUpComp from '@/components/BannerUpComp.vue'
 import BannerBottomComp from '@/components/BannerBottomComp.vue'
@@ -69,6 +73,7 @@ import { UserApi } from '@/firebase-config/UserController'
 import { ChatApi } from '@/firebase-config/ChatController'
 import { db } from '@/main'
 import { onSnapshot, Timestamp, where, query, collection} from "firebase/firestore"
+import { mapMutations } from 'vuex'
 
 export default {
     data() {
@@ -140,6 +145,7 @@ export default {
     watch: {
         user_to_id: {
             async handler() {
+                this.setuser_to_id(this.user_to_id)
                 const data_ = { toId: this.user_to_id, fromId: this.user_id, }
                 const {lastElement, array} = await MessagesApi.getLimitedPage(data_)
                 new Promise((resolve, failure) => {
@@ -191,6 +197,7 @@ export default {
         hideContextMenu(e) {
             if(this.visibileContextMenuMess === true)
             {
+                // Здесь обрабатывается прверка находится ли элемент под курсором во время нажатия
                 console.log('visibileContextMenuMess == ', 'true')
                 let contextMenuMessElem = document.getElementById('context-menu-vclass-mess')
                 const withinBoundaries = e.composedPath().includes(contextMenuMessElem)
@@ -200,6 +207,8 @@ export default {
                     const generalListMessages_ = document.getElementById('block-chat-window-id')
                     generalListMessages_.style.overflow = 'scroll'
                     generalListMessages_.style.overflowX = 'hidden'
+                    // Это для болле плавного изчизновения скролл бара
+                    generalListMessages_.style.paddingRight = '0px'
                 }
             }
         },
@@ -220,17 +229,40 @@ export default {
             return {x: x, y: y}
         },
 
-        test (event, id, mess) {
+        test (event, id) {
+            this.setidSelectedMessage(id)
             let contextMenuMessElem = document.getElementById('context-menu-vclass-mess')
             let generalListMessages = document.getElementById('block-chat-window-id')
             contextMenuMessElem.style.display = 'flex'
             this.visibileContextMenuMess = true
             generalListMessages.style.overflow = 'hidden'
+            generalListMessages.style.paddingRight = '6px'
             let {x, y} = this.positionCursor()
-            contextMenuMessElem.style.top = y + 'px'
-            contextMenuMessElem.style.left = x + 'px'
-            console.log(x,y, 'x and y')
-            console.log(event, id, mess)
+            //Данная переменная должна инициализиоваться после присвоение элементу display = flex, иначе первое значение width будет 0
+            let coordsTarget = contextMenuMessElem.getBoundingClientRect()
+            let PerfomanceWidthScreen = window.innerWidth / 2
+            //Справа или слева будет распологаться контекстное меню
+            console.log(y, 'its coord - Y')
+            if(x > PerfomanceWidthScreen)
+            {
+                if(y > 700)
+                {
+                    contextMenuMessElem.style.top = (y - coordsTarget.height) + 'px'
+                    contextMenuMessElem.style.left = (x - coordsTarget.width) + 'px'
+                } else {
+                    contextMenuMessElem.style.top = y + 'px'
+                    contextMenuMessElem.style.left = (x - coordsTarget.width) + 'px'
+                }
+            } else {
+                if(y > 700)
+                {
+                    contextMenuMessElem.style.top = (y - coordsTarget.height) + 'px'
+                    contextMenuMessElem.style.left = x + 'px'
+                }else {
+                    contextMenuMessElem.style.top = y + 'px'
+                    contextMenuMessElem.style.left = x + 'px'
+                }
+            }
             event.preventDefault()
         },
 
@@ -244,10 +276,15 @@ export default {
             let posTop = el.scrollTop
             if(Math.ceil(posTop) === 0) {
                 const data_ = { toId: this.user_to_id, fromId: this.user_id}
-                let {lastElement_, array} = await MessagesApi.getNextPage(this.lastMessage, data_)
+                let {lastElement_, array} = await MessagesApi.getNextPage(this.lastMessage, data_).catch(err => console.log(err)) || {}
+                if(array === undefined && lastElement_ === undefined)
+                {
+                    console.log('error with next page')
+                    return
+                }
+                console.log(lastElement_, 'lastElement_      --')
                 array.forEach(elem => {
                     this.message_lst.unshift(elem)
-                    // this.message_lst.push(elem)
                 })
                 let block = document.getElementById("block-chat-window-id")
                 console.log((block.scrollHeight / 100), block.scrollHeight)
@@ -265,7 +302,6 @@ export default {
                         ));
                     document.getElementsByTagName("body")[0].appendChild(styleElement);	
                 }
-
             }
         },
 
@@ -493,6 +529,13 @@ export default {
                 localStorage.setItem('fail-message', messageContent)
             })
         },
+
+        ...mapMutations('contextmenu', {
+            setidSelectedMessage: 'setidSelectedMessage',
+        }),
+        ...mapMutations({
+            setuser_to_id: 'setuser_to_id',
+        }),
     },
 
 
@@ -564,16 +607,28 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
 :root {
     --th-color: blue;
 }
+
+#kali-logo-chat {
+    opacity: .8;
+    z-index: -1;
+    position: absolute;
+    margin: 0;
+    top: 50%;
+    left: 60%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
 .main-window-chat{
     width: 100%;
     height: 100%;
-    background: rgba(5, 5, 5, 0.85);
+    background: rgba(5, 5, 5, .8);
 
     .content-win-chat {
         .chat-window {
             width: 100%;
             height: 100vh;
-            background: rgba(5, 5, 5, 1);
+            background: rgba(5, 5, 5, .5);
             padding-top: 40px;
             padding-bottom: 40px;
 
