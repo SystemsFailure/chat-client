@@ -23,14 +23,14 @@
             <NavigationComp @openMenu="openMenu" @showMyMusicCompFunction="() => {this.openMenu(5)}"></NavigationComp>
 
             <div class="right-block">
-                <Transition name="up-profile-card-slide">
+                <!-- <Transition name="up-profile-card-slide"> -->
                     <ChatWindowComp
                         v-if="showChatWindowComp"
                         v-bind:user_to_id="i_user_to_id"
                         @showNotificationWindowFunctionArrow="(value) => {this.showNotificationComp = value}"
                         v-bind:cleaningChat="cleaningChatModel"
                         ></ChatWindowComp>
-                </Transition>
+                <!-- </Transition> -->
                 <Transition name="up-profile-card-slide">
                     <AudioListComp v-if="showMenuMusics"></AudioListComp>
                 </Transition>

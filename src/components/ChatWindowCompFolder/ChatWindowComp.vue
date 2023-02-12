@@ -1,23 +1,45 @@
 <template>
     <img src="@/assets/svgassets/icons8-кали-линукс-wh.svg" alt="" id="kali-logo-chat">
     <div class="main-window-chat" id="globalID-chat">
+
         <ContextMenuMessage 
         v-show="visibileContextMenuMess" 
         id="context-menu-vclass-mess"
         @closeContextmenuFunction="(val) => {this.visibileContextMenuMess = val}"
         @visSelSysFunction="selectionMessagesFunction"
         ></ContextMenuMessage>
-        <BannerUpComp @showOrHideSettingChatId="showHideSettingChatId" @showNotificationWindowFunction="(value) => {this.$emit('showNotificationWindowFunctionArrow', value)}"></BannerUpComp>
-        <BannerBottomComp @sendMessage="add_message" @add_file_messageFunction="add_file_message"></BannerBottomComp>
-        <MiniListLastChatsComp v-if="showMiniListComp" @MiniChatBindMiniUsersListFunction="functionBindingMiniListUsersByMiniChat"></MiniListLastChatsComp>
-        <MiniChatComp v-if="showMiniChatValue" v-bind:USERTO="USERTO" @closeMiniChatCompFunction="value => this.showMiniChatValue=value"></MiniChatComp>
-        <viewPhotoWindow v-if="showWindowImage" v-model:imageURL="imageURL" @closeWindowFunction="() => {this.showWindowImage = false}" v-bind:toID="user_to_id"></viewPhotoWindow>
+
+        <BannerUpComp 
+        @showOrHideSettingChatId="showHideSettingChatId" 
+        @showNotificationWindowFunction="(value) => {this.$emit('showNotificationWindowFunctionArrow', value)}"
+        ></BannerUpComp>
+
+        <BannerBottomComp 
+        @sendMessage="add_message" 
+        @add_file_messageFunction="add_file_message"
+        ></BannerBottomComp>
+
+        <MiniListLastChatsComp 
+        v-if="showMiniListComp" 
+        @MiniChatBindMiniUsersListFunction="functionBindingMiniListUsersByMiniChat"
+        ></MiniListLastChatsComp>
+
+        <MiniChatComp 
+        v-if="showMiniChatValue" 
+        v-bind:USERTO="USERTO" 
+        @closeMiniChatCompFunction="value => this.showMiniChatValue=value"
+        ></MiniChatComp>
+
+        <viewPhotoWindow 
+        v-if="showWindowImage" 
+        v-model:imageURL="imageURL" 
+        @closeWindowFunction="() => {this.showWindowImage = false}" 
+        v-bind:toID="user_to_id"
+        ></viewPhotoWindow>
 
         <div class="content-win-chat">
-            
             <div class="chat-window">
                 <div class="empty-title-won" v-if="Object.keys(message_lst).length == 0"><span>No chat selected</span></div>
-
                 <Transition name="fade-comp-settChatId-v">
                     <SettingsMenuChatIdComp v-if="showSettingsChatId"></SettingsMenuChatIdComp>
                 </Transition>
@@ -25,7 +47,6 @@
                 <div class="generl-list-messages" id="block-chat-window-id"  @click="cl" @scroll="lv">
                     <div class="selected-mess-sys" v-if="visibileSelSys">
                         <span class="count-sel-mess">Выбрано:  {{ sel_mess.length }}</span>
-                        
                         <img src="@/assets/svgassets/icons8-удалить.svg" alt="" @click="() => {this.visibileSelSys = false}">
                     </div>
                     <div class="outer-container">
@@ -37,27 +58,34 @@
                             <h5  class="mess-content-example" style="color: white;" id="q5"></h5>
                         </div>
 
-                    <!-- <transition-group name="bounce-bubble-message" tag="h6"> -->
                         <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
-                                <div class="message-bubble">
-                                        <div class="image-content" v-if="n.img_url">
-                                        <!-- <img :src="n.img_url" :style="n.fromId === user_id ? {'float' : 'right'} : {'float' : 'left'}" @click="openImageToWindow(n.img_url)"> -->
-                                            <img :src="n.img_url" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" @click="openImageToWindow(n.img_url)">
-                                            <div class="data-created-img" :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}"><span>{{ n.atCreated }}</span></div>
-                                        </div>
-                                        
-                                        <h6 v-else
-                                            :id="n.id"
-                                            class="im-message-content"
-                                            @contextmenu="test($event, n.id, n)"
-                                            @mouseover="showDetailDataMessage($event, n.id)"
-                                            @mouseout="hideDetailDataMessage($event)"
-                                            v-bind:style="n.fromId===user_id?{'float':'right', 'background-color' : '#555;', 'color' : '#999'}:{'float':'left', 'background-color' : '#555;', 'padding-bottom': '10px'}"
-                                            >{{n.content}}
-                                        </h6>
+                            <div class="message-bubble">
+
+                                <div class="image-content" v-if="n.img_url">
+                                    <img 
+                                    :src="n.img_url" 
+                                    :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" 
+                                    @click="openImageToWindow(n.img_url)"
+                                    >
+                                    <div 
+                                    class="data-created-img" 
+                                    :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}"
+                                    ><span>{{ n.atCreated }}</span>
                                     </div>
                                 </div>
-                        <!-- </transition-group> -->
+                                
+                                <h6 v-else
+                                    :id="n.id"
+                                    @click="sl(n)"
+                                    class="im-message-content"
+                                    @contextmenu="test($event, n.id, n)"
+                                    @mouseover="showDetailDataMessage($event, n.id)"
+                                    @mouseout="hideDetailDataMessage($event)"
+                                    v-bind:style="n.fromId===user_id?{'float':'right', 'background-color' : '#555;', 'color' : '#999'}:{'float':'left', 'background-color' : '#555;', 'padding-bottom': '10px'}"
+                                    >{{n.content}}
+                                </h6>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -104,6 +132,12 @@ export default {
             visibleScroll: false,
         }
     },
+
+    emits: ['showNotificationWindowFunctionArrow'],
+
+    // setup(_, {emit}) {
+
+    // },
 
     props: {
         user_to_id: {},
@@ -193,6 +227,11 @@ export default {
         }
     },
     methods: {
+// Click on message-bubble function
+        sl(it) {
+            console.log('it - ', it)
+        },
+
         selectionMessagesFunction(vl) {
             this.visibileContextMenuMess = false
             this.visibileSelSys = true
