@@ -5,6 +5,7 @@
         v-show="visibileContextMenuMess" 
         id="context-menu-vclass-mess"
         @closeContextmenuFunction="(val) => {this.visibileContextMenuMess = val}"
+        @visSelSysFunction="selectionMessagesFunction"
         ></ContextMenuMessage>
         <BannerUpComp @showOrHideSettingChatId="showHideSettingChatId" @showNotificationWindowFunction="(value) => {this.$emit('showNotificationWindowFunctionArrow', value)}"></BannerUpComp>
         <BannerBottomComp @sendMessage="add_message" @add_file_messageFunction="add_file_message"></BannerBottomComp>
@@ -22,6 +23,11 @@
                 </Transition>
 
                 <div class="generl-list-messages" id="block-chat-window-id"  @click="cl" @scroll="lv">
+                    <div class="selected-mess-sys" v-if="visibileSelSys">
+                        <span class="count-sel-mess">Выбрано:  {{ sel_mess.length }}</span>
+                        
+                        <img src="@/assets/svgassets/icons8-удалить.svg" alt="" @click="() => {this.visibileSelSys = false}">
+                    </div>
                     <div class="outer-container">
                         <div v-show="showDialogWindow" class="container-hide-box" id="query1">
                             <h5  class="mess-content-example" style="color: white;" id="q1"></h5>
@@ -83,7 +89,12 @@ export default {
             user_id: localStorage.getItem('user-id') ? localStorage.getItem('user-id') : null,
             showDialogWindow: false,
             visibileContextMenuMess: false,
+            // Система выбранных сообщений tyre/false - vis
+            visibileSelSys: false,
+
             message_lst: [],
+            sel_mess: [],
+            
             USERTO: null,
             showMiniChatValue: false,
             showMiniListComp: true,
@@ -182,6 +193,18 @@ export default {
         }
     },
     methods: {
+        selectionMessagesFunction(vl) {
+            this.visibileContextMenuMess = false
+            this.visibileSelSys = true
+            console.log(vl)
+            this.sel_mess.push(vl)
+            let message = document.getElementById(vl)
+            if(message)
+            {
+                message.style.backgroundColor = 'teal'
+            }
+        },
+
         hideScrollEffect() {
             if(this.visibleScroll)
             {
@@ -658,10 +681,38 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
 
         .generl-list-messages {
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            // position: relative;
             width: 100%;
             height: 100%;
             overflow:scroll;
             overflow-x: hidden;
+
+            .selected-mess-sys {
+                top: 0;
+                position: absolute;
+                width: 71%;
+                height: 50px;
+                background-color: #111;
+                display: flex;
+                align-items: center;
+                padding: 15px;
+                // justify-content: center;
+                .count-sel-mess {
+                    color: wheat;
+                }
+
+                img {
+                    width: 15px;
+                    height: 15px;
+                    margin-left: auto;
+
+                    &:hover {
+                        cursor: pointer;
+                        opacity: .5;
+                        transition: .3s;
+                    }
+                }
+            }
 
             .outer-container{
                 padding: 10px;

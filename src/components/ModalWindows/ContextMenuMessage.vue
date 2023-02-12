@@ -5,7 +5,7 @@
                 class="item" 
                 v-for="it in listItemsContextMenu" 
                 :key="it.id"
-                @click="onItem(it.vl)"
+                @click="onItem(it.vl, it)"
                 >
                 <img :src="require(`@/assets/svgassets/${it.iurl}`)" alt="">
                 <span :style="it.vl === 'delete' ? {'color' : 'red'} : {'color' : '#999'}">
@@ -66,6 +66,8 @@ export default {
             if(vl === 'select')
             {
                 console.log('select', this.idSelectedMessage)
+                this.$emit('visSelSysFunction', this.idSelectedMessage)
+
             }
             if(vl === 'delete')
             {
