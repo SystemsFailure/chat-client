@@ -78,9 +78,9 @@ export default {
                         {id: this.idSelectedMessage, icon: 'delete document', textContent: 'Request been sended by successful', type: 'red', typeOf: 'delete'},
                     )
                     this.$emit('closeContextmenuFunction', false)
-                    let {chatid} = await this.getChatId()
-                    console.log('chatid', chatid)
-                    ChatApi.decrimentField(chatid)
+                    // let {chatid} = await this.getChatId()
+                    // console.log('chatid', chatid)
+                    // ChatApi.decrimentField(chatid)
                     console.log('deleted mess with id == ', this.idSelectedMessage)
                 }
             }

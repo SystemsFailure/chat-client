@@ -1,13 +1,15 @@
 <template>
-    <img src="@/assets/svgassets/icons8-кали-линукс-wh.svg" alt="" id="kali-logo-chat">
     <div class="main-window-chat" id="globalID-chat">
-
-        <ContextMenuMessage 
-        v-show="visibileContextMenuMess" 
-        id="context-menu-vclass-mess"
-        @closeContextmenuFunction="(val) => {this.visibileContextMenuMess = val}"
-        @visSelSysFunction="selectionMessagesFunction"
-        ></ContextMenuMessage>
+        <img src="@/assets/svgassets/icons8-кали-линукс-wh.svg" alt="" id="kali-logo-chat">
+        <Transition name="fade-comp-settChatId-v">
+            <ContextMenuMessage
+            v-show="visibileContextMenuMess" 
+            id="context-menu-vclass-mess"
+            @closeContextmenuFunction="(val) => {this.visibileContextMenuMess = val}"
+            @visSelSysFunction="selectionMessagesFunction"
+            ></ContextMenuMessage>
+        </Transition>
+    
 
         <BannerUpComp 
         @showOrHideSettingChatId="showHideSettingChatId" 
@@ -670,21 +672,23 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
     --th-color: blue;
 }
 
-#kali-logo-chat {
-    opacity: .8;
-    z-index: -1;
-    position: absolute;
-    margin: 0;
-    top: 50%;
-    left: 60%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-}
-
 .main-window-chat{
     width: 100%;
     height: 100%;
-    background: rgba(5, 5, 5, .8);
+    // background: rgba(5, 5, 5, .8);
+    background: rgb(7, 7, 7);
+
+    #kali-logo-chat {
+        pointer-events: none;
+        opacity: .3;
+        z-index: 0;
+        position: absolute;
+        margin: 0;
+        top: 50%;
+        left: 60%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+    }
 
     .content-win-chat {
         .chat-window {
@@ -731,11 +735,10 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                 position: absolute;
                 width: 71%;
                 height: 50px;
-                background-color: #111;
+                background: rgb(7, 7, 7);
                 display: flex;
                 align-items: center;
                 padding: 15px;
-                // justify-content: center;
                 .count-sel-mess {
                     color: wheat;
                 }
@@ -777,6 +780,7 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                     
                     .message-bubble {
                         height: auto;
+                        z-index: 1;
                         // background-color:$color-back-message-bubble;
                         
 

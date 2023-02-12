@@ -76,6 +76,7 @@ $color-text-izumrud: #00ff80;
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
     border-bottom: 1px solid rgba(30, 30, 30, 0.6);
+    z-index: 2;
 
     .content {
         width: 100%;

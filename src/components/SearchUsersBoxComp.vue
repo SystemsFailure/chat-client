@@ -31,9 +31,7 @@ $color-text: #4e5f7d;
     align-items: center;
     justify-content: center;
     display: flex;
-    // background:blueviolet;
-
-    background: rgba(5, 5, 5, 0.85);
+    background: rgba(6, 6, 6, 1);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
@@ -46,7 +44,7 @@ $color-text: #4e5f7d;
         height: 40px;
         padding: 10px;
         border: none;
-        background: rgba(10, 10, 10, 0);
+        background: rgba(7, 7, 7, 1);
         color: $color-text;
         font-size: 12px;
         display: flex;
@@ -70,7 +68,7 @@ $color-text: #4e5f7d;
         height: 40px;
         padding: 10px;
         border: none;
-        background: rgba(10, 10, 10, 0);
+        background: rgba(7, 7, 7, 1);
         color: $color-text;
         outline: none;
 

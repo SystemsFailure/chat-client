@@ -8,7 +8,10 @@
                     <img src="@/assets/svgassets/icons8-воспроизведение-50.png" v-if="showBtnPlay" class="fi fi-bs-play" @click="PlayerplaySong">
                     <img src="@/assets/svgassets/icons8-пауза-60.png" v-else  @click="stopAudio">
                 </div>
-                <div class="next"><i class="fi fi-bs-angle-double-right"></i></div>
+                <div
+                @click="goNext()"
+                class="next"
+                ><i class="fi fi-bs-angle-double-right"></i></div>
             </div>
             <div class="data-container">
 
@@ -58,7 +61,7 @@
                     class="it-audio"
                     v-for="it in listcurrentaudioplaylist"
                     :key="it.id"
-                    @click="playmusic(it.id)"
+                    @click="playmusic(it.id, it)"
                     :id="`hideList-${it.id}`"
                     >
                     <div class="btn-play-and-stop-box">
@@ -66,7 +69,7 @@
                         src="@/assets/svgassets/icons8-воспроизведение-50.png" alt="" 
                         :id="`play-audio-btn-uid--${it.id}`"
                         class="list-all-play-elements-btns"
-                        @click="playMusicUnixHideList(it.id)"
+                        @click="playMusicUnixHideList(it.id, it)"
                         >
                         <img 
                         src="@/assets/svgassets/icons8-пауза-60.png" alt="" 
@@ -103,6 +106,7 @@ export default {
             listcurrentaudioplaylist: [],
             visibleBtnExpand: true,
             visiblehideSideUnix: false,
+            indexSn: null,
         }
     },
     mounted() {
@@ -153,8 +157,50 @@ export default {
         })
     },
     methods: {
-        playMusicUnixHideList(id)
+        goNext() {
+            // Это функция воспроизведения следующей песни по списку
+            if(this.indexSn != null)
+            {
+                // инкремент мндекса
+                this.indexSn++
+                // Проверка, если текущий индекс больше индекса последнего элемента, то сбрасываем индекс на 0
+                if(this.indexSn > this.listAudios.indexOf(this.listAudios[this.listAudios.length - 1])) {
+                    this.indexSn = 0
+                }
+                // получение элемента по индексу
+                let it = this.listAudios[this.indexSn]
+                if(it)
+                {
+                    this.playMusicUnixHideList(it.id, it)
+                } else {
+                    console.log('it value is not found, please to correct this line code...')
+                }
+
+            } else {
+                // эта часть кода выполняется если индекс не определен
+                if(this.listAudios.length != 0)
+                {
+                    let it = this.listAudios[0]
+                    if(it)
+                    {
+                        this.playMusicUnixHideList(it.id, it)
+                    } else {
+                        console.log('it value is not found, you check value of it which searched by index === 0 as first element, check your code...')
+                    }
+                }
+            }
+        },
+
+        getIndex(it) {
+            if(this.listAudios.indexOf(it) != -1) {
+                return this.listAudios.indexOf(it)
+            }
+        },
+
+        playMusicUnixHideList(id, it)
         {
+            // Здесь устанавливаем индекс по нажатию на элемент из списка музыки
+            this.indexSn = this.getIndex(it)
             const audio = document.getElementById(id+'-unix')
             if(audio)
             {

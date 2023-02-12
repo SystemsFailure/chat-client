@@ -91,8 +91,15 @@
                     <MusicMenuComp v-show="false"></MusicMenuComp>
                 </Transition>
 
-                <CreatePlaylistWindow v-if="showDialogCreatePlaylist" @closeCreateWindowPlaylistFunction="(value) => {this.showDialogCreatePlaylist = value}"></CreatePlaylistWindow>
-                <DetailWindowComp v-if="showDetailWindow" @closeDetailWindowFunction="(value) => {this.showDetailWindow = value}"></DetailWindowComp>
+                <CreatePlaylistWindow 
+                v-if="showDialogCreatePlaylist" 
+                @closeCreateWindowPlaylistFunction="(value) => {this.showDialogCreatePlaylist = value}"
+                ></CreatePlaylistWindow>
+                
+                <DetailWindowComp 
+                v-if="showDetailWindow" 
+                @closeDetailWindowFunction="(value) => {this.showDetailWindow = value}"
+                ></DetailWindowComp>
 
             </div>
         </div>
@@ -396,8 +403,7 @@ $color-text-izumrud: #00ff80;
                     width: 25%;
                     bottom: 0;
                     height: 40px;
-                    background-color: rgba($color: #000000, $alpha: 1.0);
-                    border: 1px solid rgba(30, 30, 30, 0.6);
+                    background: rgba(7, 7, 7, 1);
                     display: flex;
                     padding: 10px;
                     align-items: center;
@@ -431,11 +437,11 @@ $color-text-izumrud: #00ff80;
                 overflow:auto;
                 overflow-x: hidden;
                 font-family: Lato,sans-serif;
-                background: rgba(5, 5, 5, 1);
+                background: rgba(6, 6, 6, 1);
                 backdrop-filter: blur(4.2px);
                 -webkit-backdrop-filter: blur(4.2px);
                 padding-bottom: 40px;
-                border-right: 1px solid rgba(30, 30, 30, 0.6);
+                border-right: 1px solid rgba(21, 21, 21, 0.6);
 
 
                 .item-list:hover {
