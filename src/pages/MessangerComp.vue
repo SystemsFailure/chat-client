@@ -128,6 +128,7 @@ import dialogChatDeleted from '@/components/UI/dialogChatDeleted.vue'
 import requestGetUsers from '@/hooks/hookRequestsToUser'
 import hookBackChange from '@/hooks/hookBackgroundChange'
 import { UserApi } from '@/firebase-config/UserController'
+import { mapState, mapMutations } from 'vuex'
 // import { ChatApi } from '@/firebase-config/ChatController'
 
 export default {
@@ -174,8 +175,11 @@ export default {
 
 
     mounted() {
+        // Если в локал сторадже нету данного поля, то устанавливается значение по умолчанию -> так же если нету данного поля, то мы берем из базы данных текущего пользователя
+        // и проверяем есть ли у него поле theme, если есть, то берем значение и устанавливаем его в lcStorage
+        if(!localStorage.getItem('theme-schema')) localStorage.setItem('theme-schema', 'default')
+        
         this.$store.state.USERID = localStorage.getItem('user-id')
-
         if(this.getCookieValueByName('imgId') != '' && document.cookie) {
             document.body.style.backgroundImage = `url(${require('@/assets/' + this.imgs_path_list[this.getCookieValueByName('imgId')].img_path)})`
         } else { console.log('cookie is empty!') }
@@ -197,17 +201,23 @@ export default {
                 })
             }
             return this.list_users
-        }
+        },
+        ...mapState('themescontroller', {
+            currTheme: 'currTheme',
+        }),
     },
 
     methods: {
+        ...mapMutations('themescontroller', {
+            changeTheme: 'changeTheme',
+        }),
+
         DialogMessageBoutDeletedChatFunc(value) {
             this.showDialogWindowChatDeleted = value
             this.cleaningChatModel++
             setTimeout(() => {
                 this.showDialogWindowChatDeleted = false
             }, 3000);
-
         },
 
         // async getLastMessageWithItChat(item) {
@@ -438,6 +448,7 @@ $color-text-izumrud: #00ff80;
                 overflow-x: hidden;
                 font-family: Lato,sans-serif;
                 background: rgba(6, 6, 6, 1);
+
                 backdrop-filter: blur(4.2px);
                 -webkit-backdrop-filter: blur(4.2px);
                 padding-bottom: 40px;

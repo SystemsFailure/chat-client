@@ -1,4 +1,8 @@
-import { FieldIsEmptyError, FieldLengthIsLong } from "@/CustomsError"
+import { 
+    FieldIsEmptyError,
+    FieldLengthIsLong,
+    // DOMElementNotFound 
+} from "@/CustomsError"
 
 const validName = (name, type=null) => {
     if(type === 'object') {
@@ -35,6 +39,23 @@ const validName = (name, type=null) => {
         }
     }
 }
+// кастомная валидация DOM элементов
+const validDOMElement = (DOMElement, type=null, functionName) => {
+    if(type === 'list')
+    {
+        if(DOMElement.length === 0)
+        {
+            console.log('DOM elements not found ⚠️⚠️⚠️', type, DOMElement, functionName)
+            return false
+            // throw new DOMElementNotFound(
+            //     'DOMElements not found',
+            //     validDOMElement.name
+            // )
+        } else {
+            return true
+        }
+    }
+}
 
 
 
@@ -42,4 +63,4 @@ const validName = (name, type=null) => {
 //     
 // }
 
-export {validName}
+export {validName, validDOMElement}

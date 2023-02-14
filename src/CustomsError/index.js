@@ -33,7 +33,15 @@ class FieldLengthIsLong extends IError {
     }
 }
 
+class DOMElementNotFound extends IError {
+    constructor(textError, nameFunction) {
+        super(textError, nameFunction)
+        this.nameError = 'DOMElementNotFound'
+    }
+}
+
 export {
     FieldIsEmptyError,
     FieldLengthIsLong,
+    DOMElementNotFound,
 }

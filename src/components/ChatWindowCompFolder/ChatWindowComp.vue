@@ -83,7 +83,10 @@
                                     @contextmenu="test($event, n.id, n)"
                                     @mouseover="showDetailDataMessage($event, n.id)"
                                     @mouseout="hideDetailDataMessage($event)"
-                                    v-bind:style="n.fromId===user_id?{'float':'right', 'background-color' : '#555;', 'color' : '#999'}:{'float':'left', 'background-color' : '#555;', 'padding-bottom': '10px'}"
+                                    :style="n.fromId === user_id ? 
+                                    {'float':'right', 'color' : 'white'}
+                                    :
+                                    {'float':'left', 'background-color' : '#222', 'padding-bottom': '10px'}"
                                     >{{n.content}}
                                 </h6>
                             </div>
@@ -109,7 +112,10 @@ import { UserApi } from '@/firebase-config/UserController'
 import { ChatApi } from '@/firebase-config/ChatController'
 import { db } from '@/main'
 import { onSnapshot, Timestamp, where, query, collection} from "firebase/firestore"
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
+import {validDOMElement} from '@/CustomValidation'
+// import {validDOMElement} from '@/CustomValidation/index'
+// import { nextTick } from 'vue'
 
 export default {
     data() {
@@ -134,7 +140,7 @@ export default {
             visibleScroll: false,
         }
     },
-
+    // Явно даю понять, что есть такой эмит компоненту .. - .. иначе будет предупреждение (Warning) ⚠️⚠️⚠️
     emits: ['showNotificationWindowFunctionArrow'],
 
     // setup(_, {emit}) {
@@ -146,7 +152,17 @@ export default {
         cleaningChat: {},
     },
 
+    computed: {
+        ...mapState('themescontroller', {
+            themeSchemaDefault: 'themeSchemaDefault',
+        }),
+    },
+
     async mounted() {
+        // Установка настроек
+        // this.settings()
+
+
         setInterval(() => {
             this.hideScrollEffect()
         }, 2500)
@@ -201,6 +217,8 @@ export default {
                     resolve('success')
                     failure('failure')
                 }).then(() => {
+                    //
+                    this.settings()
                     this.scrollDownChat()
                 })
             },
@@ -229,7 +247,36 @@ export default {
         }
     },
     methods: {
-// Click on message-bubble function
+        // Настройка темы
+        settings() {
+            let themenow = localStorage.getItem('theme-schema')
+            if(themenow === 'default')
+            {
+                this.setbackgroundAllMessagesVlDefault()
+            }
+        },
+
+        // методы настройки DOM элементов
+        setbackgroundAllMessagesVlDefault() {
+            if(this.themeSchemaDefault.backmessage)
+            {
+                let lstMessagesElementsDOM = document.getElementsByClassName('im-message-content')
+                if(validDOMElement(lstMessagesElementsDOM, 'list', this.setbackgroundAllMessagesVlDefault.name))
+                {
+                    for (let index = 0; index < lstMessagesElementsDOM.length; index++) {
+                        const element = lstMessagesElementsDOM[index];
+                        if(element.style.float === 'right')
+                        {
+                            element.style.backgroundColor = this.themeSchemaDefault.backmessage
+                        }
+                    }
+                }
+            } else {
+                console.log('not defined or found or not seted object')
+            }
+        },
+
+        // Click on message-bubble function
         sl(it) {
             console.log('it - ', it)
         },
@@ -350,6 +397,9 @@ export default {
                 array.forEach(elem => {
                     this.message_lst.unshift(elem)
                 })
+                // Это временно
+                this.setbackgroundAllMessagesVlDefault()
+
                 let block = document.getElementById("block-chat-window-id")
                 console.log((block.scrollHeight / 100), block.scrollHeight)
                 block.scrollTop = (block.scrollHeight / 100)
@@ -444,7 +494,7 @@ export default {
             this.showSettingsChatId = result
         },
 
-        showDetailDataMessage(event, id) {            
+        showDetailDataMessage(event, id) {
             let message = document.getElementById('query1');
             let q1 = document.getElementById('q1');
             let q2 = document.getElementById('q2');
@@ -491,6 +541,10 @@ export default {
                 message.style.right = coords.width + 25 + 'px'
                 message.style.top = coords.bottom + 'px'
             }
+            this.$nextTick(() => {
+                // this.setbackgroundAllMessagesVlDefault()
+                console.log('rendered list')
+            })
         },
 
         hideDetailDataMessage() {
@@ -662,7 +716,7 @@ $color-back-gray: rgba(41, 41, 41, 0.7);
 $color-back-blue: rgba(12, 22, 44, 0.7);
 
 $color-text: #4e5f7d;
-$color-text-yellow: #ff6600;
+$color-text-yellow: #ff5900;
 $color-text-teal: #00cec7;
 $color-text-izumrud: #00ff80;
 
@@ -824,11 +878,13 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                 
                 .im-message-content:hover {
                     cursor:default;
+                    // background-color: #1e1c1cc6;
                 }
                 .im-message-content {
                     border-radius: 10px;
                     float: right;
-                    background-color:$color-back-message-bubble;
+                    // background: $color-back-message-bubble;
+                    // background-color:$color-back-message-bubble;
                     background-size: 300% 300%;
                     word-wrap: break-word;
                     width: auto;

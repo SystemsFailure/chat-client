@@ -3,13 +3,16 @@
         <audio v-for="it in listAudios" :key="it.id" :src="it.url" class="audioListUnix" :id="it.id + '-unix'"></audio>
         <div class="inner">
             <div class="controller">
-                <div class="priview"><i class="fi fi-bs-angle-double-left"></i></div>
+                <div 
+                class="priview"
+                @click="goNextOrPreview('mode -')"
+                ><i class="fi fi-bs-angle-double-left"></i></div>
                 <div class="play-and-stop">
                     <img src="@/assets/svgassets/icons8-воспроизведение-50.png" v-if="showBtnPlay" class="fi fi-bs-play" @click="PlayerplaySong">
                     <img src="@/assets/svgassets/icons8-пауза-60.png" v-else  @click="stopAudio">
                 </div>
                 <div
-                @click="goNext()"
+                @click="goNextOrPreview()"
                 class="next"
                 ><i class="fi fi-bs-angle-double-right"></i></div>
             </div>
@@ -157,37 +160,55 @@ export default {
         })
     },
     methods: {
-        goNext() {
-            // Это функция воспроизведения следующей песни по списку
-            if(this.indexSn != null)
+        goNextOrPreview(mode) {
+            // Если мод === 'mode -' то идем в обратную сторону dicrement function...
+            if(mode === 'mode -')
             {
-                // инкремент мндекса
-                this.indexSn++
-                // Проверка, если текущий индекс больше индекса последнего элемента, то сбрасываем индекс на 0
-                if(this.indexSn > this.listAudios.indexOf(this.listAudios[this.listAudios.length - 1])) {
-                    this.indexSn = 0
+                // здесь будет обрабатываться условие, если (текущее значение duration текущего трека < 30% всего duration теущего трека) then мы устанавливаем duration значение 0
+                this.indexSn--
+                if(this.indexSn < 0)
+                {
+                    this.indexSn = this.listAudios.length - 1
                 }
-                // получение элемента по индексу
                 let it = this.listAudios[this.indexSn]
                 if(it)
                 {
                     this.playMusicUnixHideList(it.id, it)
                 } else {
-                    console.log('it value is not found, please to correct this line code...')
+                    console.log('it is not found in mode -, correct your code')
                 }
-
             } else {
-                // эта часть кода выполняется если индекс не определен
-                if(this.listAudios.length != 0)
+                // Это функция воспроизведения следующей песни по списку
+                if(this.indexSn != null)
                 {
-                    let it = this.listAudios[0]
+                    // инкремент мндекса
+                    this.indexSn++
+                    // Проверка, если текущий индекс больше индекса последнего элемента, то сбрасываем индекс на 0
+                    if(this.indexSn > this.listAudios.indexOf(this.listAudios[this.listAudios.length - 1])) {
+                        this.indexSn = 0
+                    }
+                    // получение элемента по индексу
+                    let it = this.listAudios[this.indexSn]
                     if(it)
                     {
                         this.playMusicUnixHideList(it.id, it)
                     } else {
-                        console.log('it value is not found, you check value of it which searched by index === 0 as first element, check your code...')
+                        console.log('it value is not found, please to correct this line code...')
                     }
-                }
+
+                } else {
+                    // эта часть кода выполняется если индекс не определен
+                    if(this.listAudios.length != 0)
+                    {
+                        let it = this.listAudios[0]
+                        if(it)
+                        {
+                            this.playMusicUnixHideList(it.id, it)
+                        } else {
+                            console.log('it value is not found, you check value of it which searched by index === 0 as first element, check your code...')
+                        }
+                    }
+                }   
             }
         },
 
