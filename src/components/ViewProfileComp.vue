@@ -10,17 +10,48 @@
         <div class="inner-content">
 
             <div class="profile-title">
-                <div class="img-box" style="color: white;">
-                    <img id="avatar-profile-id" src="@/assets/user_profile.png" alt="" srcset="">
+
+                <div class="photo-and-info">
+                    <div class="photo-block">
+                        <img id="avatar-profile-id" src="@/assets/user_profile.png" alt="">
+                    </div>
+                    <div class="info-container">
+                        <div class="r0-w1-class">
+                            <i class="fi fi-ss-mode-portrait"></i>
+                            <span id="username-id"></span>
+                        </div>
+                        <div class="r0-w1-class">
+                            <i class="fi fi-bs-link"></i>
+                            <span class="status">{{ slice_field('working') }}</span>
+                        </div>
+                        <div class="r0-w1-class">
+                            <i class="fi fi-bs-flag"></i>
+                            <span class="country">United States</span>
+                        </div>
+                        <div class="r0-w1-class">
+                            <i class="fi fi-bs-building"></i>
+                            <span class="city">Chicago</span>
+                        </div>
+                        <div class="r0-w1-class">
+                            <div class="wrap-box" id="contacts-box-id">
+                                <i class="fi fi-ss-users"></i>
+                                <h5>contacts</h5>
+                                <span id="contacts-id"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="info-block-person-name">
-                    <span id="username-id"></span>
-                </div>
+                <div class="about-me-block">
+                    <div class="bio-info-box">
+                        <!-- <div class="name-box"><span>Anna Leonhard</span></div> -->
+                        <div class="proffession-box"><span>ML Developer</span></div>
 
-                <!-- <div class="info-block">
-                    <span>id: <span id="user-id-id">{{ titleId }}</span></span>
-                </div> -->
+                        <div class="r0-w1-class-bio">
+                            <span class="bio">Logic can take you from point A to point B, and imagination can take you anywhere.</span>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="info-block">
                     <span id="bio-id"
@@ -37,14 +68,14 @@
                             <span id="following-id"></span>
                             <h5>following</h5>
                         </div>
-                    </div>
-                </div>
-
-                <div class="line-main-informations">
-                    <div class="btn-detail" @click="() => {this.$emit('showDetailWindowCompFunction', true)}">
-                        <!-- <i class="fi fi-bs-interrogation"></i> -->
-                        <!-- <img src="@/assets/svgassets/icons8-содержимое-96.png" alt=""> -->
-                        <span>detail</span>
+                        <div class="wrap-box" id="playlists-box-id">
+                            <span id="playlists-id"></span>
+                            <h5>playlists</h5>
+                        </div>
+                        <div class="wrap-box" id="posts-box-id">
+                            <span id="posts-id"></span>
+                            <h5>posts</h5>
+                        </div>
                     </div>
                 </div>
 
@@ -110,10 +141,13 @@ export default {
                 console.log('user not found')
                 return
             }
-            document.getElementById('username-id').innerHTML = user[0].name
+            document.getElementById('username-id').innerHTML = this.slice_field(user[0].name)
             document.getElementById('avatar-profile-id').src = user[0].img_url
             document.getElementById('follower-id').textContent = user[0].arrayFollowers.length
             document.getElementById('following-id').textContent = user[0].arrayFollowing.length
+            document.getElementById('playlists-id').textContent = user[0].arrayFollowing.length
+            document.getElementById('posts-id').textContent = user[0].arrayFollowing.length
+            document.getElementById('contacts-id').textContent = 3
         })
     },
 
@@ -142,6 +176,14 @@ export default {
         ...mapActions('playlist', {
             getAllPlayList: 'getAllPlayList',
         }),
+        slice_field(text) {
+            if (!text) text = 'user name'
+            var sliced = text.slice(0,10);
+            if (sliced.length < text.length) {
+                sliced += '...';
+            }
+            return sliced
+        },
         openPlaylist(playlistInstance) {
             this.setplaylistId(playlistInstance.id)
         },
@@ -163,38 +205,12 @@ export default {
 <style lang="scss" scoped>
 $color-back: rgba(0, 0, 0, 0.8);
 
-// .swiper {
-//     // margin-top: 20px;
-//     // display: flex;
-//     // align-items: center;
-//     // justify-content: center;
-// }
-
-// .slide {
-//     width: 100%;
-
-//     &:nth-child(2n) {
-//         width: 40%;
-//         margin-left: 10px;
-//     }
-//     &:nth-child(3n) {
-//         width: 20%;
-//         margin-left: 10px;
-//     }
-// }
-
-
-
 .main-viewProfile-comp {
-
     width: 100%;
     height: 100vh;
     padding-right: 10px;
     padding-left: 10px;
-    // padding-top: 45px;
-    background: $color-back;
-    backdrop-filter: blur(4.2px);
-    -webkit-backdrop-filter: blur(4.2px);
+    background: rgb(6, 6, 6);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -212,7 +228,7 @@ $color-back: rgba(0, 0, 0, 0.8);
         justify-content: center;
         align-items: center;
         flex-direction: row;
-        border-bottom: 1px solid #333;
+        // border-bottom: 1px solid #333;
         // padding: 15px;
         font-family: Lato,sans-serif;
         font-weight: 500;
@@ -229,23 +245,6 @@ $color-back: rgba(0, 0, 0, 0.8);
                 border-radius: 50%;
                 background-color: rgb(0, 234, 234);
                 margin-right: 5px;
-            }
-        }
-        .close-btn {
-            margin-left: auto;
-            margin-right: 10px;
-            margin-top: 4px;
-            font-size: 11px;
-
-            img {
-                width: 14px;
-                height: 14px;
-            }
-
-            &:hover {
-                cursor: pointer;
-                opacity: 0.8;
-                transition: .3s;
             }
         }
     }
@@ -269,33 +268,36 @@ $color-back: rgba(0, 0, 0, 0.8);
         .profile-title {
             width: 100%;
             height: auto;
-            padding: 5px;
 
-            .line-bottom {
+            .about-me-block {
                 width: 100%;
-                height: 50px;
-                padding: 5px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-top: 50px;
-                border: 1px solid rgba(30, 30, 30, 0.6); 
+                height: auto;
+                padding-left: 15px;
 
-                .upload-music {
+
+                .bio-info-box {
                     width: 100%;
-                    height: 100%;
+                    padding: 30px;
+                    padding-bottom: 0px;
                     display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    font-size: 11px;
+                    flex-direction: column;
+                    // align-items: center;
+                    justify-content: center;  
 
-                    &:hover {
-                        cursor: pointer;
-                        opacity: .6;
+                    .proffession-box {
+                        font-size: 12px;
                     }
+                    .r0-w1-class-bio {
+                        word-wrap: break-word;
+                        width: 100%;
+                        margin-top: 10px;
+                        // margin-left: 10px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;            
 
-                }             
+                    }
+                }
             }
 
             .content-conteiner {
@@ -304,12 +306,12 @@ $color-back: rgba(0, 0, 0, 0.8);
                 padding: 5px;
                 display: flex;
                 align-items: center;
-                margin-top: 50px;
-                border-top: 1px solid #333;
+                margin-top: 10px;
+                // border-top: 1px solid #333;
 
 
                 .custom-playlist {
-                    margin-top: 20px;
+                    margin-top: 10px;
                     width: 100%;
                     height: 100%;
                     display: flex;
@@ -320,13 +322,14 @@ $color-back: rgba(0, 0, 0, 0.8);
 
                     .line-title {
                         width: 100%;
-                        padding-left: 15px;
+                        padding-left: 40px;
                         margin-bottom: 10px;
                         
                         .text-more {
                             text-transform:lowercase;
                             font-size: 11px;
-                            float: right;
+                            margin-left: 10px;
+                            // float: right;
 
                             &:hover {
                                 cursor: pointer;
@@ -420,18 +423,63 @@ $color-back: rgba(0, 0, 0, 0.8);
 
             .info-block-section {
                 width: 100%;
-                height: 50px;
+                height: auto;
                 padding: 5px;
                 display: flex;
                 align-items: center;
-                justify-content: center;
+                // justify-content: center;
 
                 .wrapper-container {
                     display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 5px;
-                    width: 50%;
+                    flex-direction: column;
+                    justify-content: center;
+                    padding-left: 40px;
+                    // justify-content: space-between;
+                    // width: 50%;
+
+                    #posts-box-id {
+                        display: flex;
+                        align-items: center;
+                        #posts-id {
+                            font-size: 11px;
+                            text-transform: lowercase;
+                            margin-right: 5px;
+                            color: rgb(0, 251, 255);
+                        }
+                                                
+                        h5 {
+                            font-size: 12px;
+                            text-transform: lowercase;
+                            margin-right: 5px;
+                            &:hover {
+                                cursor: pointer;
+                                opacity: .6;
+                                transition: .5s;
+                            }
+                        }
+                    }
+
+                    #playlists-box-id {
+                        display: flex;
+                        align-items: center;
+                        #playlists-id {
+                            font-size: 11px;
+                            text-transform: lowercase;
+                            margin-right: 5px;
+                            color: rgb(0, 251, 255);
+                        }
+                                                
+                        h5 {
+                            font-size: 12px;
+                            text-transform: lowercase;
+                            margin-right: 5px;
+                            &:hover {
+                                cursor: pointer;
+                                opacity: .6;
+                                transition: .5s;
+                            }
+                        }
+                    }
 
                     #following-box-id{
                         display: flex;
@@ -517,88 +565,76 @@ $color-back: rgba(0, 0, 0, 0.8);
                 }
             }
 
-            .bio-block {
-                width: 100%;
-                height: 30vh;
-                // background-color: red;
-                margin-top: 30px;
-                display: flex;
 
-                .right-b {
-                    width: 50%;
-                    height: 30vh;
-                    // background-color: aquamarine;
-
-                    .bio-item {
-                        margin-top: 20px;
-                        width: 100%;
-                        // background-color: darkcyan;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: flex-end;
-
-                        span {
-                            padding: 5px;
-                            // border: 1px solid #333;
-                            border-bottom: none;
-                        }
-                    }
-                }
-
-                .left-b {
-                    width: 50%;
-                    height: 30vh;
-                    // background-color: blue;
-
-                    .bio-item {
-                        margin-top: 20px;
-                        width: 100%;
-                        // height: 5vh;
-                        // background-color: darkcyan;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: flex-end;
-
-                        span {
-                            padding: 5px;
-                            // border: 1px solid #333;
-                            border-bottom: none;
-                        }
-                    }
-
-                }
-            }
-
-            .info-block-person-name {
+            .photo-and-info {
                 width: 100%;
                 display: flex;
+                align-items: center;
                 justify-content: center;
-                margin-top: 10px;
-                // span {
-                //     color: var(--theme-color);
-                // }
-            }
-
-            .info-block {
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                margin-top: 10px;
-
-            }
-
-            .img-box {
-                width: 100%;
-                display: flex;
-                justify-content: center;
-
+                margin-top: 20px;
                 img {
-                    width: 100px;
-                    height: 100px;
-                    border-radius: 50%;
+                    width: 180px;
+                    height: 180px;
                 }
+
+                .info-container {
+                    margin-left: 20px;
+                    color: white;
+                    .r0-w1-class {
+                        width: 100%;
+                        margin-top: 5px;
+                        display: block;
+
+                        #contacts-box-id {
+                            display: flex;
+                            align-items: center;
+                            
+                            &:hover {
+                                cursor: pointer;
+                                opacity: .6;
+                                transition: .5s;
+                            }
+
+                            h5 {
+                                margin-left: 8px;
+                                font-family: Lato,sans-serif;
+                                font-weight: 500;
+                                font-size: 12px;
+                                color: rgb(0, 242, 255);
+                            }
+                            
+                            i {
+                                margin-right: 5px;
+                                color: rgb(0, 242, 255);
+
+                            }
+
+                            #contacts-id {
+                                text-transform: lowercase;
+                                margin-right: 5px;
+                                color: rgb(0, 251, 255);
+                                margin-left: 8px;
+                                font-family: Lato,sans-serif;
+                                font-weight: 500;
+                                font-size: 13px;
+                            }
+
+                        }
+
+        
+                        span {
+                            margin-left: 8px;
+                            font-family: Lato,sans-serif;
+                            font-weight: 500;
+                            font-size: 12px;
+                        }
+        
+                        i {
+                            margin-right: 5px;
+                        }
+                    }
+                }
+
             }
 
         }

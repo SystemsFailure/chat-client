@@ -84,9 +84,17 @@
                                     @mouseover="showDetailDataMessage($event, n.id)"
                                     @mouseout="hideDetailDataMessage($event)"
                                     :style="n.fromId === user_id ? 
-                                    {'float':'right', 'color' : 'white'}
+                                    {
+                                        'float':'right',
+                                        'background-color' : `${currentMesssageBackgroundByTheme}`,
+                                        'color' : 'white'
+                                    }
                                     :
-                                    {'float':'left', 'background-color' : '#222', 'padding-bottom': '10px'}"
+                                    {
+                                        'float':'left', 
+                                        'background-color' : '#222', 
+                                        'padding-bottom': '10px'
+                                    }"
                                     >{{n.content}}
                                 </h6>
                             </div>
@@ -138,6 +146,8 @@ export default {
 
             lastMessage: '',
             visibleScroll: false,
+
+            currentMesssageBackgroundByTheme: '',
         }
     },
     // Явно даю понять, что есть такой эмит компоненту .. - .. иначе будет предупреждение (Warning) ⚠️⚠️⚠️
@@ -155,13 +165,18 @@ export default {
     computed: {
         ...mapState('themescontroller', {
             themeSchemaDefault: 'themeSchemaDefault',
+            themeSchemaGreen: 'themeSchemaGreen',
+            themeSchemaTeal: 'themeSchemaTeal',
+            themeSchemaOrange: 'themeSchemaOrange',
+            themeSchemaFeolet: 'themeSchemaFeolet',
+            themeSchemaRed: 'themeSchemaRed',
+            currTheme: 'currTheme',
         }),
     },
 
     async mounted() {
         // Установка настроек
-        // this.settings()
-
+        this.settings()
 
         setInterval(() => {
             this.hideScrollEffect()
@@ -210,15 +225,15 @@ export default {
             async handler() {
                 this.setuser_to_id(this.user_to_id)
                 const data_ = { toId: this.user_to_id, fromId: this.user_id, }
-                const {lastElement, array} = await MessagesApi.getLimitedPage(data_)
+                const {lastElement, array} = await MessagesApi.getLimitedPage(data_) || {}
                 new Promise((resolve, failure) => {
+                    this.message_lst = []
                     this.message_lst = array.reverse()
+                    console.log('last ele', lastElement, this.lastMessage)
                     this.lastMessage = lastElement
                     resolve('success')
                     failure('failure')
                 }).then(() => {
-                    //
-                    this.settings()
                     this.scrollDownChat()
                 })
             },
@@ -249,14 +264,32 @@ export default {
     methods: {
         // Настройка темы
         settings() {
-            let themenow = localStorage.getItem('theme-schema')
-            if(themenow === 'default')
-            {
-                this.setbackgroundAllMessagesVlDefault()
+            switch (localStorage.getItem('theme-schema')) {
+                case 'default':
+                    this.currentMesssageBackgroundByTheme = this.themeSchemaDefault.backmessage
+                    break;
+                case 'green':
+                    this.currentMesssageBackgroundByTheme = this.themeSchemaGreen.backmessage
+                    break;
+                case 'teal':
+                    this.currentMesssageBackgroundByTheme = this.themeSchemaTeal.backmessage
+                    break;
+                case 'orange':
+                    this.currentMesssageBackgroundByTheme = this.themeSchemaOrange.backmessage
+                    break;
+                case 'feolet':
+                    this.currentMesssageBackgroundByTheme = this.themeSchemaFeolet.backmessage
+                    break;
+                case 'red':
+                    this.currentMesssageBackgroundByTheme = this.themeSchemaRed.backmessage
+                    break;
+                default:
+                    break;
             }
         },
 
         // методы настройки DOM элементов
+        //?????NOT USE NOT USE NOT USE NOT USE NOT USE
         setbackgroundAllMessagesVlDefault() {
             if(this.themeSchemaDefault.backmessage)
             {
@@ -275,6 +308,7 @@ export default {
                 console.log('not defined or found or not seted object')
             }
         },
+        //????? NOT USE NOT USE NOT USE
 
         // Click on message-bubble function
         sl(it) {
@@ -397,8 +431,8 @@ export default {
                 array.forEach(elem => {
                     this.message_lst.unshift(elem)
                 })
+                // this.settings()
                 // Это временно
-                this.setbackgroundAllMessagesVlDefault()
 
                 let block = document.getElementById("block-chat-window-id")
                 console.log((block.scrollHeight / 100), block.scrollHeight)

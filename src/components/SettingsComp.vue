@@ -125,6 +125,7 @@ import { db } from '@/main';
 import IError from '@/IError';
 import { TransitionApi } from '@/firebase-config/UserController';
 import { UserApi } from '@/firebase-config/UserController';
+import { mapMutations } from 'vuex';
 
 
 // color - localStorage.setItem('accent-color', vl);
@@ -181,16 +182,40 @@ export default {
         })
     },
 
+    computed: {
+
+    },
+
     methods: {
+        ...mapMutations('themescontroller', {
+            changeTheme: 'changeTheme',
+        }),
         setAccentColor(vl) {
+            // Установка темы
+            if(vl === 'gray') {
+                this.changeTheme('default')
+                localStorage.setItem('theme-schema', 'default')
+            }
             if(vl === 'green') {
-                console.log('green')
+                this.changeTheme('green')
+                localStorage.setItem('theme-schema', 'green')
             }
             if(vl === 'orange') {
-                console.log('orange')
+                this.changeTheme('orange')
+                localStorage.setItem('theme-schema', 'orange')
+                console.log('set orange theme', localStorage.getItem('theme-schema'))
             }
             if(vl === 'teal') {
-                console.log('teal')
+                this.changeTheme('teal')
+                localStorage.setItem('theme-schema', 'teal')
+            }
+            if(vl === 'red') {
+                this.changeTheme('red')
+                localStorage.setItem('theme-schema', 'red')
+            }
+            if(vl === 'fiolet') {
+                this.changeTheme('feolet')
+                localStorage.setItem('theme-schema', 'feolet')
             }
         },
 
@@ -377,6 +402,7 @@ $color-text-izumrud: #00ff80;
     // align-items: center;
     // justify-content: center;
     flex-direction: row;
+    z-index: 4;
 
     .global-section-of-appereance {
         width: 45%;

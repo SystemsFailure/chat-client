@@ -84,7 +84,6 @@
                     v-show="showMenuMail" 
                     @showCreateMusicWindowFunction="(v) => {this.showCreateMusicWindow = true}"
                     @showDialogWindowCreatePlalistFunction="(value) => {this.showDialogCreatePlaylist = value}"
-                    @showDetailWindowCompFunction="(value) => {this.showDetailWindow = value}"
                     @showViewPlaylistCompFunction="(val) => {this.showViewPlaylistComp = val}"
                     ></ViewProfileComp>
                 <Transition name="up-profile-card-slide">
@@ -95,11 +94,6 @@
                 v-if="showDialogCreatePlaylist" 
                 @closeCreateWindowPlaylistFunction="(value) => {this.showDialogCreatePlaylist = value}"
                 ></CreatePlaylistWindow>
-                
-                <DetailWindowComp 
-                v-if="showDetailWindow" 
-                @closeDetailWindowFunction="(value) => {this.showDetailWindow = value}"
-                ></DetailWindowComp>
 
             </div>
         </div>
@@ -123,7 +117,6 @@ import MusicMenuComp from '@/components/MusicMenuComp.vue'
 import dialogWindow from '@/components/UI/dialogWindow.vue'
 import CreateMusicWindow from '@/components/ModalWindows/CreateMusicWindow.vue'
 import CreatePlaylistWindow from '@/components/ModalWindows/CreatePlaylistWindow.vue'
-import DetailWindowComp from '@/components/ModalWindows/DetailWindowComp.vue'
 import dialogChatDeleted from '@/components/UI/dialogChatDeleted.vue'
 import requestGetUsers from '@/hooks/hookRequestsToUser'
 import hookBackChange from '@/hooks/hookBackgroundChange'
@@ -152,7 +145,6 @@ export default {
             showCreateMusicWindow: false,
             showDialogWindowChatDeleted: false,
             showDialogCreatePlaylist: false,
-            showDetailWindow: false,
             shiwMyMusic: false,
             showViewPlaylistComp: false,
             visibilityToastWindow: true,
@@ -178,7 +170,8 @@ export default {
         // Если в локал сторадже нету данного поля, то устанавливается значение по умолчанию -> так же если нету данного поля, то мы берем из базы данных текущего пользователя
         // и проверяем есть ли у него поле theme, если есть, то берем значение и устанавливаем его в lcStorage
         if(!localStorage.getItem('theme-schema')) localStorage.setItem('theme-schema', 'default')
-        
+        this.currTheme = localStorage.getItem('theme-schema')
+
         this.$store.state.USERID = localStorage.getItem('user-id')
         if(this.getCookieValueByName('imgId') != '' && document.cookie) {
             document.body.style.backgroundImage = `url(${require('@/assets/' + this.imgs_path_list[this.getCookieValueByName('imgId')].img_path)})`
@@ -321,7 +314,7 @@ export default {
         AudioListComp, MusicMenuComp,
         NotificationsComp, dialogChatDeleted,
         CreateMusicWindow, CreatePlaylistWindow,
-        DetailWindowComp, PersonalAudioListComp,
+        PersonalAudioListComp,
         ViewPlaylistComp, ToastNotifyListComp
     }
 
