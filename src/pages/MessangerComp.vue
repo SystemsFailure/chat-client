@@ -56,8 +56,11 @@
                                 v-bind:key="item.id"
                                 class="item-list"
                                 @click="open_item_of_list_users($event, item.id, item)"
-                                v-bind:class="{'selected-item-of-list-messages' : this.id_currect_user === item.id}"
-                                :style=" item.online?  {'border-left' : '1px solid #00cec7'} : {'border' : ''}"
+                                :class="
+                                    [
+                                        this.id_currect_user === item.id? backcolorUserItemLink : ''
+                                    ]
+                                "
                                 >
                                     <div class="name-and-img">
                                         <div class="box-img-and-toggle">
@@ -99,6 +102,8 @@
         </div>
     </div>
 </template>
+<!-- :style="this.id_currect_user === item.id? {'background-color':'red'} : {'background-color':'rgba(10, 10, 10, 0.65)'}" -->
+<!-- :class=" [ this.id_currect_user === item.id? testLink : ''] " -->
 
 <script>
 import ToastNotifyListComp from '@/components/ToastNotifyListComp.vue'
@@ -130,7 +135,10 @@ export default {
             userId: localStorage.getItem('user-id') || null,
             i_user_to_id: null,
             show_list_all_users_comp: false,
+            // Для установки бэкграунда по клику  на этот элмент
             id_currect_user: null,
+            backcolorUserItemLink: 'selected-item-of-list-messages-teal',
+
             searchQuery: '',
             up: true,
             list_users: [],
@@ -167,6 +175,7 @@ export default {
 
 
     mounted() {
+        this.setbackcolorUserItem()
         // Если в локал сторадже нету данного поля, то устанавливается значение по умолчанию -> так же если нету данного поля, то мы берем из базы данных текущего пользователя
         // и проверяем есть ли у него поле theme, если есть, то берем значение и устанавливаем его в lcStorage
         if(!localStorage.getItem('theme-schema')) localStorage.setItem('theme-schema', 'default')
@@ -200,10 +209,44 @@ export default {
         }),
     },
 
+    watch: {
+        currTheme: {
+            handler() {
+                this.setbackcolorUserItem()
+            },
+            deep: true,
+        }
+    },
+
     methods: {
         ...mapMutations('themescontroller', {
             changeTheme: 'changeTheme',
         }),
+
+        setbackcolorUserItem() {
+            switch (localStorage.getItem('theme-schema')) {
+                case 'default':
+                    this.backcolorUserItemLink = 'selected-item-of-list-messages-default'
+                    break;
+                case 'green':
+                    this.backcolorUserItemLink = 'selected-item-of-list-messages-green'
+                    break;
+                case 'teal':
+                    this.backcolorUserItemLink = 'selected-item-of-list-messages-teal'
+                    break;
+                case 'orange':
+                    this.backcolorUserItemLink = 'selected-item-of-list-messages-orange'
+                    break;
+                case 'feolet':
+                    this.backcolorUserItemLink = 'selected-item-of-list-messages-feolet'
+                    break;
+                case 'red':
+                    this.backcolorUserItemLink = 'selected-item-of-list-messages-red'
+                    break;
+                default:
+                    break;
+            }
+        },
 
         DialogMessageBoutDeletedChatFunc(value) {
             this.showDialogWindowChatDeleted = value
@@ -239,6 +282,7 @@ export default {
         },
 
         open_item_of_list_users(event, user_to_id, item) {
+            console.log('open')
             const user_ = this.list_users.filter(user => user.id === user_to_id)
             this.$store.state.user_data = user_
 
@@ -247,6 +291,9 @@ export default {
 
             // console.log(item)
             this.$store.commit('changeProfile', item)
+            this.$nextTick(() => {
+                
+            })
         },
 
 
@@ -324,10 +371,22 @@ export default {
 
 <style scoped lang="scss">
 
-.selected-item-of-list-messages {
-    background-color: rgba(0, 255, 242, 0.65) !important;
+///////////////////////////////////// FOR THEME
+.selected-item-of-list-messages-teal {
+    background-color: teal !important;
 }
-
+.selected-item-of-list-messages-default {
+    background-color: #1e1c1cc6 !important;
+}.selected-item-of-list-messages-orange {
+    background-color: #ff5900 !important;
+}.selected-item-of-list-messages-feolet {
+    background-color: #e100ff8e !important;
+}.selected-item-of-list-messages-green {
+    background-color: #00ff158e !important;
+}.selected-item-of-list-messages-red {
+    background-color: #ff0000c6 !important;
+}
+////////////////////////////////// FOR THEME
 
 .backgroundColorWhite {
     background-color: azure;
@@ -449,7 +508,8 @@ $color-text-izumrud: #00ff80;
 
 
                 .item-list:hover {
-                    background-color: rgba(0, 248, 248, 0.281);
+                    // background-color: rgba(0, 248, 248, 0.281);
+                    background-color: rgba(48, 54, 54, 0.281);
                     }
                 .item-list{
                     // background-color: $color-back;

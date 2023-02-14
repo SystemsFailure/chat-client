@@ -235,9 +235,16 @@ export default {
                     failure('failure')
                 }).then(() => {
                     this.scrollDownChat()
+                    this.settings()
                 })
             },
-            deep: true
+            deep: true,
+        },
+        currTheme: {
+            handler() {
+                this.settings
+            },
+            deep: true,
         },
         cleaningChat: {
             handler() {
