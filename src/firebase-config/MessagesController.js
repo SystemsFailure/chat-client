@@ -6,7 +6,6 @@ import { storage } from "@/main";
 import { ChatApi } from "./ChatController";
 
 const MessagesApi = {
-
     uploadImageMessage: async (file, user_id, data_) => {
         let file_path = null
         let file_url = null
