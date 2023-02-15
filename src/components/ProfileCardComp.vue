@@ -181,7 +181,7 @@ $color-text-izumrud: #00ff80;
             height: 200px;
             border-radius: 50%;
             transform: translateY(-50px);
-            
+            object-fit: contain;
             pointer-events: none;
         }
 

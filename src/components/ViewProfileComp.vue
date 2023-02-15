@@ -13,7 +13,7 @@
 
                 <div class="photo-and-info">
                     <div class="photo-block">
-                        <img id="avatar-profile-id" src="@/assets/user_profile.png" alt="">
+                        <img id="avatar-profile-id" src="@/assets/user_profile.png" alt="" async>
                     </div>
                     <div class="info-container">
                         <div class="r0-w1-class">
@@ -106,9 +106,8 @@
                 <!-- <div class="line-bottom">
                     <div class="upload-music" @click="() => {this.$emit('showCreateMusicWindowFunction', true)}"><span>upload new music</span></div>
                 </div> -->
-
             </div>
-
+            
         </div>
 
     </div>
@@ -141,8 +140,11 @@ export default {
                 console.log('user not found')
                 return
             }
-            document.getElementById('username-id').innerHTML = this.slice_field(user[0].name)
-            document.getElementById('avatar-profile-id').src = user[0].img_url
+            let namebox = document.getElementById('username-id')
+            namebox.innerHTML = this.slice_field(user[0].name)
+            namebox.setAttribute('title', user[0].name)
+            
+            document.getElementById('avatar-profile-id').src = user[0].img_url || '@/assets/user_profile.png'
             document.getElementById('follower-id').textContent = user[0].arrayFollowers.length
             document.getElementById('following-id').textContent = user[0].arrayFollowing.length
             document.getElementById('playlists-id').textContent = user[0].arrayFollowing.length
@@ -368,6 +370,7 @@ $color-back: rgba(0, 0, 0, 0.8);
                         img {
                             width: 100px;
                             height: 100px;
+                            object-fit: contain;
 
                         }
 
@@ -575,6 +578,7 @@ $color-back: rgba(0, 0, 0, 0.8);
                 img {
                     width: 180px;
                     height: 180px;
+                    object-fit: contain;
                 }
 
                 .info-container {

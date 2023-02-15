@@ -167,8 +167,8 @@ export default {
 
 .main-comp-class-create-playlist {
     position: absolute;
-    width: 500px;
-    height: 660px;
+    width: 600px;
+    height: 760px;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);

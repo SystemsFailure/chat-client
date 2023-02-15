@@ -96,11 +96,6 @@
 </template>
 <script>
 import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
-let name = document.getElementById('name-songs-id');
-let artist = document.getElementById('name-artist-id');
-let progress = document.getElementById('progress-id');
-let currentTime = document.getElementById('current-time-id');
-let totalTime = document.getElementById('total-time');
 
 export default {
     data() {
@@ -113,9 +108,7 @@ export default {
         }
     },
     mounted() {
-        console.log(name, artist, progress, currentTime, totalTime, document.getElementById('current-time-id'))
         this.setTimeContainer(document.getElementById('current-time-id-uid'))
-        console.log(document.getElementById('current-time-id-uid'), 'what is is isi ')
         this.setInput(document.getElementById('progress-id'))
         this.setCurrentTimeElement(document.getElementById('total-time'))
         this.setProgressInline(document.getElementById('audioPlayerContainer_unix'))
@@ -127,7 +120,6 @@ export default {
             handler(newArray) {
                 this.listcurrentaudioplaylist = this.isArray
                 this.localConfigurationListAudiosElements()
-                console.log(newArray, 'newValue')
                 if(!this.returnAudioElementId) {console.log('audio id is null'); return;}
                 new Promise((resolve) => {
                     this.listAudios = newArray
@@ -237,7 +229,6 @@ export default {
                         element.pause()
                         const playbtnElement = document.getElementById('play-audio-btn-uid--' + audioID)
                         const stopbtnElement = document.getElementById('stop-audio-btn-uid--' + audioID)
-                        console.log('what? ', element.id, playbtnElement)
                         playbtnElement.style.width = '14px'
                         playbtnElement.style.height = '14px'
                         stopbtnElement.style.width = '0px'
@@ -258,7 +249,6 @@ export default {
         pauseMusicUnixHideList(id) {
             if(id)
             {
-                console.log('pause')
                 this.changeBtnPlayOrPause(id, 'reverse')
             }
             this.stopAudio()
@@ -290,13 +280,11 @@ export default {
                 playbtnElement.style.height = '0px'
                 stopbtnElement.style.width = '14px'
                 stopbtnElement.style.height = '14px'
-                console.log('usual')
             }
             if(mode === 'reverse')
             {
                 const playbtnElement = document.getElementById('play-audio-btn-uid--' + id)
                 const stopbtnElement = document.getElementById('stop-audio-btn-uid--' + id)
-                console.log('reverse')
                 playbtnElement.style.width = '14px'
                 playbtnElement.style.height = '14px'
                 stopbtnElement.style.width = '0px'
@@ -305,10 +293,6 @@ export default {
         },
         playmusic() {
             console.log('play music...')
-            // const playbtnElement = document.getElementById('play-audio-btn-uid--' + id)
-            // const stopbtnElement = document.getElementById('stop-audio-btn-uid--' + id)
-            // playbtnElement.style.display = 'none'
-            // stopbtnElement.style.display = 'auto'
         },
         // local methods ... // code end...
         PlayerplaySong() {

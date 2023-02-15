@@ -56,7 +56,6 @@ body {
 ::-webkit-scrollbar-thumb {
   background-color: hsl(0, 0%, 21%);
   background-image: -webkit-gradient(linear, 0 0, 0 100%,
-  /* color-stop(.5, rgba(255, 255, 255, .25)), */
   color-stop(.5, transparent), to(transparent));
   border-radius: 15%;
   position: absolute;

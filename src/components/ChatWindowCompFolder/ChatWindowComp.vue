@@ -122,8 +122,6 @@ import { db } from '@/main'
 import { onSnapshot, Timestamp, where, query, collection} from "firebase/firestore"
 import { mapMutations, mapState } from 'vuex'
 import {validDOMElement} from '@/CustomValidation'
-// import {validDOMElement} from '@/CustomValidation/index'
-// import { nextTick } from 'vue'
 
 export default {
     data() {
@@ -152,10 +150,6 @@ export default {
     },
     // Явно даю понять, что есть такой эмит компоненту .. - .. иначе будет предупреждение (Warning) ⚠️⚠️⚠️
     emits: ['showNotificationWindowFunctionArrow'],
-
-    // setup(_, {emit}) {
-
-    // },
 
     props: {
         user_to_id: {},
@@ -229,7 +223,6 @@ export default {
                 new Promise((resolve, failure) => {
                     this.message_lst = []
                     this.message_lst = array.reverse()
-                    console.log('last ele', lastElement, this.lastMessage)
                     this.lastMessage = lastElement
                     resolve('success')
                     failure('failure')
@@ -242,7 +235,7 @@ export default {
         },
         currTheme: {
             handler() {
-                this.settings
+                this.settings()
             },
             deep: true,
         },
@@ -263,7 +256,6 @@ export default {
                 } else {
                     generalListMessages.style.overflow = 'scroll'
                 }
-                console.log(newValue)
             },
             deep: true,
         }
@@ -325,7 +317,6 @@ export default {
         selectionMessagesFunction(vl) {
             this.visibileContextMenuMess = false
             this.visibileSelSys = true
-            console.log(vl)
             this.sel_mess.push(vl)
             let message = document.getElementById(vl)
             if(message)
@@ -394,10 +385,9 @@ export default {
             let coordsTarget = contextMenuMessElem.getBoundingClientRect()
             let PerfomanceWidthScreen = window.innerWidth / 2
             //Справа или слева будет распологаться контекстное меню
-            console.log(y, 'its coord - Y')
             if(x > PerfomanceWidthScreen)
             {
-                if(y > 700)
+                if(y > 600)
                 {
                     contextMenuMessElem.style.top = (y - coordsTarget.height) + 'px'
                     contextMenuMessElem.style.left = (x - coordsTarget.width) + 'px'
@@ -434,7 +424,6 @@ export default {
                     console.log('error with next page')
                     return
                 }
-                console.log(lastElement_, 'lastElement_      --')
                 array.forEach(elem => {
                     this.message_lst.unshift(elem)
                 })
@@ -442,7 +431,6 @@ export default {
                 // Это временно
 
                 let block = document.getElementById("block-chat-window-id")
-                console.log((block.scrollHeight / 100), block.scrollHeight)
                 block.scrollTop = (block.scrollHeight / 100)
                 this.lastMessage = lastElement_
             }
@@ -451,10 +439,9 @@ export default {
                 {
                     this.visibleScroll = true
                     var styleElement = document.createElement("style");
-                    console.log('scroll', posTop)
                     styleElement.appendChild(document.createTextNode(
-                        "::-webkit-scrollbar {-webkit-appearance: none;} ::-webkit-scrollbar-thumb {border-radius: 4px;background-color: rgba(255,0,0,.5);}"
-                        ));
+                        "::-webkit-scrollbar {-webkit-appearance: none;} ::-webkit-scrollbar-thumb {border-radius: 4px;background-color: rgba(66, 64, 64, 0.25);}"
+                    ));
                     document.getElementsByTagName("body")[0].appendChild(styleElement);	
                 }
             }
@@ -470,10 +457,8 @@ export default {
                 await ChatApi.getChat({toID: this.user_to_id, fromID: this.user_id}).then( async chat => {
                     if (chat.length != 0)
                     {
-                        console.log(chat, 'outside')
                         if (chat.length === 1)
                         {
-                            console.log(chat, 'chat inner function')
                             await ChatApi.updataField(chat[0].id)
                             countMess = chat[0].countOfMessages
                         }
@@ -490,9 +475,7 @@ export default {
         },
 
         deleteMessage(messId) {
-            MessagesApi.deleteMessageById(messId).then(() => {
-                console.log('bubble message')
-            })
+            MessagesApi.deleteMessageById(messId)
             return false
         },
 
@@ -527,7 +510,6 @@ export default {
         },
 
         showHideProfile(result) {
-            console.log(result, 'res')
             this.showUserInfo_model = result
         },
 
@@ -602,7 +584,6 @@ export default {
                 }
                 const count = await this.createIndex()
                 await MessagesApi.uploadImageMessage(file, localStorage.getItem('user-id'), data_).then(({file_path, file_url}) => {
-                    console.log(file_path, file_url, '0002')
                     MessagesApi.createMessage( {
                         content: null,
                         fromId: localStorage.getItem('user-id'),
@@ -618,11 +599,9 @@ export default {
                         index: count,
                     }, data_).then(data => {
                         this.message_lst = data
-                        console.log(data, '0001')
                     }).catch(err => {
                         console.log(err)
                     })
-                    console.log(file, 'adddada121212', count)
                 })
             }
         },
@@ -770,7 +749,6 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
 .main-window-chat{
     width: 100%;
     height: 100%;
-    // background: rgba(5, 5, 5, .8);
     background: rgb(7, 7, 7);
 
     #kali-logo-chat {
@@ -863,6 +841,7 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
                     backdrop-filter: blur(4.2px);
                     -webkit-backdrop-filter: blur(4.2px);
+                    z-index: 4;
                 }
 
                 .inner-container {

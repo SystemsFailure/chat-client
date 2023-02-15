@@ -13,6 +13,10 @@ const themescontroller = {
             vlcheck: '#1e1c1cc6', // color for value check (mail, new message)
             backborder: '#1e1c1cc6', // back color for all border a application
             otherthings: '#1e1c1cc6', // back or border color for other things
+            classNavObject: {'item-selected' : {
+                'background-color': '#007e7a !important;',
+                'border-left': '10px solid wheat;'
+            }}
         },
         themeSchemaTeal: { // schema defined by view as object // it's will to use in after upgraded
             textcolor: 'white', // contrast white for it

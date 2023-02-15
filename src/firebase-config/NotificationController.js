@@ -27,7 +27,7 @@ const NotifyApi = {
                 if(doc.data().fromID === doc.data().toID) return
                 let data_message = {
                     id: doc.id,
-                    previewMessage: doc.data().previewMessage,
+                    priviewMessage: doc.data().priviewMessage,
                     toID: doc.data().toID,
                     fromID: doc.data().fromID,
                     atCreated: doc.data().atCreated,

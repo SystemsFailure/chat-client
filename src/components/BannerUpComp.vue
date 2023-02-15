@@ -67,16 +67,17 @@ $color-text-teal: #00cec7;
 $color-text-izumrud: #00ff80;
 
 .main-banner-up {
-    width: 71%;
     position: fixed;
-    height: 50px;
-    // background: rgba(5, 5, 5, 0.85);
+    width: 71%;
+    height: 60px;
+    display: flex;
+    align-items: center;
     background: rgb(7, 7, 7);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
     border-bottom: 1px solid rgba(30, 30, 30, 0.6);
-    z-index: 2;
+    z-index: 5;
 
     .content {
         width: 100%;

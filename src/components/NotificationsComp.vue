@@ -47,14 +47,19 @@
                     </Transition>
 
                     <transition-group name="bounce-item-notify">
-                        <div class="message-box" v-for="message in list_requests" :key="message.id" :style="message.status ? {'border-left' : '5px solid teal'} : {'border' : '1px solid #333'}">
+                        <div class="message-box" 
+                            v-for="message in list_requests" 
+                            :key="message.id" 
+                            :style="message.status ? 
+                            {'border-left' : '5px solid teal'} : {'border' : '1px solid #333'}"
+                        >
                             <div class="check-box-bpx">
                                 <input type="checkbox" name="" id="check-id" :value="message.id" v-model="SelectedMessagesList" class="checkbox-class">
                             </div>
     
                             <div class="wrapper-container-mess-box">
                                 <div class="fromWhoMessage-box"><span>{{ message.fromID }}</span></div>
-                                <div class="text-message-box"><span>{{ message.previewMessage }}</span></div>
+                                <div class="text-message-box"><span>{{ message.priviewMessage }}</span></div>
                             </div>
     
                             <div class="wrapper-container-btns">
@@ -209,13 +214,13 @@ export default {
         async addToChat_createChat_send_notify(message) {
             UserApi.addUserToChats(message.toID, message.fromID)
             UserApi.addUserToChats(message.fromID, message.toID)
-            await ChatApi.createChat({toID: message.toID, fromID: message.fromID}).then(() => {
+            await ChatApi.createChat({toID: message.toID, fromID: message.fromID}).then((result) => {
+                if(result === false) {console.log('chat is already exits'); return}
                 console.log('chat success created')
             }).catch(err => {
                 console.log(err)
             })
             this.$emit('updateUsersListFunction')
-
         },
         
         showWindowById(id) {

@@ -1,14 +1,26 @@
 <template>
     <div class="navigation">
         <div class="content">
-
-            <div @click="openMenuAny(0)" class="item-im" :class="{'item-selected' : showMenuMail}">
+            <div 
+                @click="openMenuAny(0)"
+                class="item-im"
+                :class="[showMenuMail? itemNavbarLink : '']"
+            >
                 <img src="@/assets/svgassets/icons8-user-67.png" alt="">
             </div>
-            <div @click="openMenuAny(1)" class="item-im" :class="{'item-selected' : showMenuChats}">
+            <div 
+                @click="openMenuAny(1)" 
+                class="item-im" 
+                :class="[showMenuChats? itemNavbarLink : '']"
+            >
                 <img src="@/assets/svgassets/icons8-тема-48.png" alt="">
             </div>
-            <div @mouseenter="showDetailMenuFunction" @mouseleave="closeDetailMenuFunction" class="item-im" :class="{'item-selected' : showMenuMusics}">
+            <div 
+                @mouseenter="showDetailMenuFunction" 
+                @mouseleave="closeDetailMenuFunction" 
+                class="item-im" 
+                :class="[showMenuMusics? itemNavbarLink : '']"
+            >
                 <div class="three-points"><img src="@/assets/svgassets/icons8-меню-2-48.png" alt=""></div>
                 <div class="detailmenu" v-if="showDetailMenu">
                     <div class="myaudio" @click="showMyMusic"><img src="@/assets/svgassets/icons8-папка-с-музыкой-100.png" alt=""></div>
@@ -18,7 +30,11 @@
                 <i v-else class="fi fi-bs-music-alt">
                 </i>
             </div>
-            <div @click="openMenuAny(2)" class="item-im" :class="{'item-selected' : showMenuSettings}">
+            <div 
+                @click="openMenuAny(2)" 
+                class="item-im" 
+                :class="[showMenuSettings? itemNavbarLink : '']"
+            >
                 <img src="@/assets/svgassets/icons8-сервисы-64.png" alt="chats" srcset="">
             </div>
 
@@ -28,18 +44,63 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 export default {
     data() {
         return {
-            myMusicIcon: false,
             showMenuChats: true,
             showMenuMail: false,
+            myMusicIcon: false,
             showMenuSettings: false,
             showMenuMusics: false,
             showDetailMenu: false,
+
+            itemNavbarLink: '',
+        }
+    },
+    mounted() {
+        this.setbackgroundNavBarItem()
+    },
+    computed: {
+        ...mapState('themescontroller', {
+            themeSchemaDefault: 'themeSchemaDefault',
+            currTheme: 'currTheme',
+        }),
+    },
+    watch: {
+        currTheme: {
+            handler() {
+                this.setbackgroundNavBarItem()
+            },
+            deep: true,
         }
     },
     methods: {
+        setbackgroundNavBarItem() {
+            switch (localStorage.getItem('theme-schema')) {
+                case 'default':
+                    this.itemNavbarLink = 'item-selected-default'
+                    break;
+                case 'green':
+                    this.itemNavbarLink = 'item-selected-green'
+                    break;
+                case 'teal':
+                    this.itemNavbarLink = 'item-selected-teal'
+                    break;
+                case 'orange':
+                    this.itemNavbarLink = 'item-selected-orange'
+                    break;
+                case 'feolet':
+                    this.itemNavbarLink = 'item-selected-feolet'
+                    break;
+                case 'red':
+                    this.itemNavbarLink = 'item-selected-red'
+                    break;
+                default:
+                    break;
+            }
+        },
         showDetailMenuFunction() {
             this.showDetailMenu = true
         },
@@ -47,7 +108,6 @@ export default {
             this.showDetailMenu = false
         },
         showMyMusic() {
-            console.log('click1')
             this.$emit('showMyMusicCompFunction', false)
             this.myMusicIcon = true
 
@@ -57,7 +117,6 @@ export default {
             this.showMenuChats = false
         },
         GlobalListMusicss() {
-            console.log('click2')
             this.$emit('openMenu', 3)
             this.myMusicIcon = false
 
@@ -108,8 +167,24 @@ export default {
 <style scoped lang="scss">
 
 
-.item-selected {
-    background-color: #007e7a !important;
+.item-selected-default {
+    background-color: #1e1c1cc6 !important;
+    border-left: 2px solid wheat;
+}
+.item-selected-teal {
+    background-color: teal !important;
+    border-left: 2px solid wheat;
+}.item-selected-green {
+    background-color: #00ff158e !important;
+    border-left: 2px solid wheat;
+}.item-selected-orange {
+    background-color: #ff5900 !important;
+    border-left: 2px solid wheat;
+}.item-selected-feolet {
+    background-color: #e100ff8e !important;
+    border-left: 2px solid wheat;
+}.item-selected-red {
+    background-color: #ff0000c6 !important;
     border-left: 2px solid wheat;
 }
 
@@ -146,19 +221,16 @@ $color-text-izumrud: #00ff80;
             color: white;
         }
             .item-im:hover {
-                background-color: #00cec780;
+                background-color: #1b1e1e80;
                 border-left: 2px solid wheat;
             }
             .item-im {
                 width: auto;
-                height: 50px;
+                height: 60px;
                 position: relative;
-                // background-color: rgba(0, 0, 0, 0.2);
-
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                margin-top: 15px;
 
                 video{
                     width: 25px;
@@ -190,12 +262,11 @@ $color-text-izumrud: #00ff80;
                         justify-content: center;
                         color: white;
                         backdrop-filter: blur(5px);
-                        border: 1px solid #333;
                         background-color: #111;
                         
                         &:hover {
                             cursor: pointer;
-                            background: rgba(0, 179, 176, 0.889);
+                            background-color: #1b1e1e80;
                             transition: .3s;
                         }
                     }
@@ -208,14 +279,13 @@ $color-text-izumrud: #00ff80;
                         justify-content: center;
                         color: white;
                         backdrop-filter: blur(5px);
-                        border: 1px solid #333;
                         background-color: #111;
 
 
 
                         &:hover {
                             cursor: pointer;
-                            background: rgba(0, 179, 176, 0.889);
+                            background-color: #1b1e1e80;
                             transition: .3s;
                         }
 

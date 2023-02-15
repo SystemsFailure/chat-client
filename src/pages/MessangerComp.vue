@@ -23,14 +23,14 @@
             <NavigationComp @openMenu="openMenu" @showMyMusicCompFunction="() => {this.openMenu(5)}"></NavigationComp>
 
             <div class="right-block">
-                <!-- <Transition name="up-profile-card-slide"> -->
+                <Transition name="up-profile-card-slide">
                     <ChatWindowComp
                         v-if="showChatWindowComp"
                         v-bind:user_to_id="i_user_to_id"
                         @showNotificationWindowFunctionArrow="(value) => {this.showNotificationComp = value}"
                         v-bind:cleaningChat="cleaningChatModel"
-                        ></ChatWindowComp>
-                <!-- </Transition> -->
+                    ></ChatWindowComp>
+                </Transition>
                 <Transition name="up-profile-card-slide">
                     <AudioListComp v-if="showMenuMusics"></AudioListComp>
                 </Transition>
@@ -70,7 +70,7 @@
                                         <span>{{item.name}}</span>
                                         <span id="dateLastMessage_id">{{item.dateLastMessage}}</span>
                                     </div>
-                                    <h6 id="lastmess-id">{{slice_last_message('offline')}}</h6>
+                                    <!-- <h6 id="lastmess-id">{{slice_last_message('offline')}}</h6> -->
                                     <div class="box-not-read-message">
                                         <span :class="{'count-not-read-message_': item.countNotReadMessages}">{{item.countNotReadMessages ? item.countNotReadMessages:undefined}}</span>
                                     </div>
@@ -81,11 +81,13 @@
                 </Transition>
 
                 <Transition name="up-profile-card-slide">
-                    <SettingsComp v-show="showMenuSettings" @setImageToBack="setImage"></SettingsComp>
+                    <SettingsComp 
+                        v-show="showMenuSettings" 
+                    ></SettingsComp>
                 </Transition>
                     <ViewProfileComp 
                     v-show="showMenuMail" 
-                    @showCreateMusicWindowFunction="(v) => {this.showCreateMusicWindow = true}"
+                    @showCreateMusicWindowFunction="() => {this.showCreateMusicWindow = true}"
                     @showDialogWindowCreatePlalistFunction="(value) => {this.showDialogCreatePlaylist = value}"
                     @showViewPlaylistCompFunction="(val) => {this.showViewPlaylistComp = val}"
                     ></ViewProfileComp>
@@ -175,11 +177,11 @@ export default {
 
 
     mounted() {
-        this.setbackcolorUserItem()
         // Если в локал сторадже нету данного поля, то устанавливается значение по умолчанию -> так же если нету данного поля, то мы берем из базы данных текущего пользователя
         // и проверяем есть ли у него поле theme, если есть, то берем значение и устанавливаем его в lcStorage
         if(!localStorage.getItem('theme-schema')) localStorage.setItem('theme-schema', 'default')
-        this.currTheme = localStorage.getItem('theme-schema')
+        this.changeTheme(localStorage.getItem('theme-schema'))
+        this.setbackcolorUserItem()
 
         this.$store.state.USERID = localStorage.getItem('user-id')
         if(this.getCookieValueByName('imgId') != '' && document.cookie) {
@@ -282,7 +284,6 @@ export default {
         },
 
         open_item_of_list_users(event, user_to_id, item) {
-            console.log('open')
             const user_ = this.list_users.filter(user => user.id === user_to_id)
             this.$store.state.user_data = user_
 
@@ -324,6 +325,7 @@ export default {
                     break;
                 case 2:
                     this.showMenuSettings = true
+                    this.showChatWindowComp = false
                     this.showMenuMail = false
                     this.showMenuChats = false
                     this.showMenuMusics = false
@@ -456,7 +458,6 @@ $color-text-izumrud: #00ff80;
         .left-block{
             width: 25%;
             height: 100vh;
-            background: rgba(5, 5, 5, 0.85);
             float: left;
             margin-left: 4%;
 
@@ -495,37 +496,29 @@ $color-text-izumrud: #00ff80;
             .list-users{
                 width: 100%;
                 height: 100%;
-                padding-top: 45px;
+                padding-top: 60px;
                 overflow:auto;
                 overflow-x: hidden;
                 font-family: Lato,sans-serif;
                 background: rgba(6, 6, 6, 1);
-
                 backdrop-filter: blur(4.2px);
                 -webkit-backdrop-filter: blur(4.2px);
                 padding-bottom: 40px;
-                border-right: 1px solid rgba(21, 21, 21, 0.6);
+                // border-right: 1px solid rgba(21, 21, 21, 0.6);
 
 
                 .item-list:hover {
-                    // background-color: rgba(0, 248, 248, 0.281);
                     background-color: rgba(48, 54, 54, 0.281);
                     }
                 .item-list{
-                    // background-color: $color-back;
+                    height: 60px;
                     color:white;
-                    padding: 10px;
-                    // margin-top: 5px;
+                    padding-left: 15px;
                     display: flex;
                     flex-direction: column;
-
-
+                    justify-content: center;
                     background-color: rgba(10, 10, 10, 0.65);
 
-                    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-                    backdrop-filter: blur(8.2px);
-                    -webkit-backdrop-filter: blur(8.2px);
-                    border: 1px solid rgba(30, 30, 30, 0.6);
 
                     span {
                         margin-right: 5px;
@@ -543,8 +536,8 @@ $color-text-izumrud: #00ff80;
 
 
                         .box-img-and-toggle {
-                            width: 30px;
-                            height: 30px;
+                            // width: 30px;
+                            // height: 30px;
                             border-radius: 50%;
 
                             .toggle-online {
@@ -556,10 +549,11 @@ $color-text-izumrud: #00ff80;
                             }
 
                             img {
-                                width: 30px;
-                                height: 30px;
+                                width: 40px;
+                                height: 40px;
                                 margin-right: 5px;
                                 border-radius: 50%;
+                                // object-fit: contain;
                             }
                         }
 

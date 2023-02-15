@@ -27,7 +27,7 @@ $color-back-blue: rgba(12, 22, 44, 0.7);
 $color-text: #4e5f7d;
 .search-users {
     width: 25%;
-    height: 50px;
+    height: 60px;
     align-items: center;
     justify-content: center;
     display: flex;

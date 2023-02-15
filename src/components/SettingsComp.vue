@@ -1,8 +1,36 @@
 <template>
-
 <div class="main-comp">
-    <div class="main-settings-comp">
+    <div class="globalconfiguration">
+        <div class="inner-container-globalconfiguration">
+            <div class="line-title">global configuration</div>
+            <div class="items0global0conf">
+                <div class="item-conf" @click="() => {this.showAppereanceSection = true}"><img src="@/assets/svgassets/icons8-палитра-90.png" alt="">Appereance</div>
+                <div class="item-conf"><img src="@/assets/svgassets/icons8-накладка-дверного-замка-100.png" alt=""> <span>Security</span></div>
+                <div class="item-conf"><img src="@/assets/svgassets/icons8-кали-линукс-wh.svg" alt=""><span>Other</span></div>
+            </div>
+        </div>
+    
+    </div>
 
+    <div class="global-section-of-appereance" v-if="showAppereanceSection">
+        <div class="inner-section-box">
+            <div class="line-title-section-of-appereance">Appereance</div>
+            <div class="selectThemeBox">
+                <span>select accent color</span>
+                <div class="inner-content-accent-colors">
+                    <div 
+                    v-for="it in listItemsAccentColor" 
+                    class="item-theme-color" 
+                    :class="it.acc" 
+                    :key="it.id"
+                    @click="setAccentColor(it.vl)"
+                    ></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-settings-comp">
         <div class="main-info-user">
             <div class="image0-user">
                 <img alt="" src="@/assets/user_profile.png" id="photoAvatarUser" style="width:50px;height:50px; border-radius: 50%; color:white">
@@ -25,7 +53,7 @@
             <input type="text" placeholder="Name" v-model="queryName">
             <!-- <div class="btn-changed" @click="changeValueSetting($event)" data-value="name">Change</div> -->
         </div>
-    
+
         <div class="sett-box">
             <div class="i-item-class">
                 <!-- <i class="fi fi-bs-info"></i> -->
@@ -79,36 +107,6 @@
         <div class="bottom-box">
             <div class="wrapper-box">
                 <div class="btn-save"><span>save</span></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="globalconfiguration">
-        <div class="inner-container-globalconfiguration">
-            <div class="line-title">global configuration</div>
-            <div class="items0global0conf">
-                <div class="item-conf" @click="() => {this.showAppereanceSection = true}"><img src="@/assets/svgassets/icons8-палитра-90.png" alt="">Appereance</div>
-                <div class="item-conf"><img src="@/assets/svgassets/icons8-накладка-дверного-замка-100.png" alt=""> <span>Security</span></div>
-                <div class="item-conf"><img src="@/assets/svgassets/icons8-кали-линукс-wh.svg" alt=""><span>Other</span></div>
-            </div>
-        </div>
-    
-    </div>
-
-    <div class="global-section-of-appereance" v-if="showAppereanceSection">
-        <div class="inner-section-box">
-            <div class="line-title-section-of-appereance">Appereance</div>
-            <div class="selectThemeBox">
-                <span>select accent color</span>
-                <div class="inner-content-accent-colors">
-                    <div 
-                    v-for="it in listItemsAccentColor" 
-                    class="item-theme-color" 
-                    :class="it.acc" 
-                    :key="it.id"
-                    @click="setAccentColor(it.vl)"
-                    ></div>
-                </div>
             </div>
         </div>
     </div>
@@ -500,8 +498,8 @@ $color-text-izumrud: #00ff80;
     .globalconfiguration {
         width: 25%;
         height: 100%;
-        background-color:#000101;
-        border-right: 1px solid #111;
+        background: rgba(0, 0, 0, 0.8);
+        // border-right: 1px solid #111;
 
 
         .inner-container-globalconfiguration {
