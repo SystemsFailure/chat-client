@@ -138,13 +138,10 @@ $color-text-izumrud: #00ff80;
     width: 100%;
     height: 40px;
     position: fixed;
-
-    // background: rgba(5, 5, 5, 0.85);
     background: rgb(7, 7, 7);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 15px 15px 30px 0px rgba(255, 0, 200, 1);
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
-    border-top: 1px solid rgba(30, 30, 30, 0.6);
 
 
     z-index: 12;

@@ -22,6 +22,7 @@
         ></BannerBottomComp>
 
         <MiniListLastChatsComp 
+        class="defined-compotent-minilist"
         v-if="showMiniListComp" 
         @MiniChatBindMiniUsersListFunction="functionBindingMiniListUsersByMiniChat"
         ></MiniListLastChatsComp>

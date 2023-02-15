@@ -188,20 +188,22 @@ export default {
     margin-right: 20px;
     margin-bottom: 60px; 
     background-color: rgba($color: #0e0d0d, $alpha: .3);
-
     backdrop-filter: blur(8.2px);
     -webkit-backdrop-filter: blur(8.2px);
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     text-align: center;
-
     border-bottom-right-radius: 24px;
     border-bottom-left-radius: 24px;
     padding: 20px;
     z-index: 11;
+    opacity: 0;
+    &:hover {
+        opacity: 1;
+        transition: .4s;
+    }
 
     .btn-expand-to-express-mini-menu {
         width: 50px;

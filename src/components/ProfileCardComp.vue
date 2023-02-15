@@ -123,7 +123,7 @@ $color-text-izumrud: #00ff80;
 
 .content-card {
     width: 400px;
-    height: 70%;
+    height: 50%;
     margin: 0;
     top: 50%;
     left: 50%;
