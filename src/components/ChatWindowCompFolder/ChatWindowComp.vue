@@ -74,6 +74,7 @@
                                             require('@/assets/svgassets/icons8-скачать-файл-96.png') 
                                             :
                                             require('@/assets/svgassets/icons8-счастливый-файл-96.png')"
+                                            @click="downloadFile(n.fileobj_url)"
                                         >
                                         <div class="inner-box-data-of-file">
                                             <span>
@@ -332,6 +333,18 @@ export default {
             }
         },
         //????? NOT USE NOT USE NOT USE
+
+        downloadFile(url) {
+            console.log(url, 'resp')
+            const xhr = new XMLHttpRequest()
+            xhr.responseType = 'blob'
+            xhr.onload = (event) => {
+                const blob = xhr.response
+                console.log(blob, event)
+            }
+            xhr.open('GET', url)
+            xhr.send()
+        },
 
         // Click on message-bubble function
         sl(it) {
@@ -610,6 +623,22 @@ export default {
             {
                 if(file)
                 {
+                    new Promise((res, rej) => {
+                        this.message_lst.push(
+                        {
+                            fromId: this.user_id, content: null,
+                            toId: this.user_to_id, size: file.size,
+                            namefile: file.name, 
+                            result: true,
+                            atCreated: new Date().toLocaleString(),
+                            atUpdated: new Date().toLocaleString(),
+                            fileobj_url: true,
+                        })
+                        res('successful send')
+                        rej('failure sending')
+                    }).then(() => {
+                        this.scrollDownChat()
+                    })
                     this.setFileObj(file)
                     this.setcountIndex(count)
                     this.setObjectUserData(data_)
