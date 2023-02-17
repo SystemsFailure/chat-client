@@ -60,7 +60,9 @@ const MessagesApi = {
             img_url: doc.data().img_url,
             img_name: doc.data().img_name,
             totalCount: doc.data().totalCount,
-            index: doc.data().index
+            index: doc.data().index,
+            fileobj_url: doc.data().fileobj_url,
+            namefile: doc.data().namefile,
         }
         mess_lst.push(data_message)
         })
@@ -204,6 +206,8 @@ const MessagesApi = {
           totalCount: doc.data().totalCount,
           index: doc.data().index,
           togetherId: doc.data().togetherId,
+          fileobj_url: doc.data().fileobj_url,
+          namefile: doc.data().namefile
         }
         arr.push(data_message)
       })
@@ -239,6 +243,8 @@ const MessagesApi = {
           totalCount: doc.data().totalCount,
           index: doc.data().index,
           togetherId: doc.data().togetherId,
+          fileobj_url: doc.data().fileobj_url,
+          namefile: doc.data().namefile
         }
         array.push(data_message)
       })

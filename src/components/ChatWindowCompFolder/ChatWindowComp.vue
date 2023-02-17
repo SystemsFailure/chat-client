@@ -64,20 +64,43 @@
                         <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
                             <div class="message-bubble">
 
+                                <div class="file-content"  v-if="n.fileobj_url">
+                                    <div 
+                                        class="inner-file-container"
+                                        :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" 
+                                    >
+                                        <img 
+                                            :src="n.result ?
+                                            require('@/assets/svgassets/icons8-скачать-файл-96.png') 
+                                            :
+                                            require('@/assets/svgassets/icons8-счастливый-файл-96.png')"
+                                        >
+                                        <div class="inner-box-data-of-file">
+                                            <span>
+                                                {{ n.namefile }}
+                                            </span>
+                                            <span>
+                                                {{ n.size }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div class="image-content" v-if="n.img_url">
-                                    <img 
-                                    :src="n.img_url" 
-                                    :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" 
-                                    @click="openImageToWindow(n.img_url)"
+                                    <img
+                                        :src="n.img_url" 
+                                        :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}"
+                                        @click="openImageToWindow(n.img_url)"
                                     >
                                     <div 
-                                    class="data-created-img" 
-                                    :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}"
-                                    ><span>{{ n.atCreated }}</span>
+                                        class="data-created-img" 
+                                        :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}"
+                                        ><span>{{ n.atCreated }}</span>
                                     </div>
                                 </div>
                                 
-                                <h6 v-else
+                                <h6 v-if="n.content"
                                     :id="n.id"
                                     @click="sl(n)"
                                     class="im-message-content"
@@ -882,6 +905,36 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                         z-index: 1;
                         // background-color:$color-back-message-bubble;
                         
+                        .file-content {
+                            display: grid;
+                            right: 0;
+
+                            .inner-file-container {
+                                background-color: #00cec7;
+                                border-radius: 10px;
+                                float: right;
+                                display:flex;
+                                align-items: center;
+                                padding: 10px;
+                                color: #fff;
+
+                                .inner-box-data-of-file {
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    margin-left: 10px;
+                                }
+
+                                img {
+                                    width: 40px;
+                                    height: 40px;
+                                    &:hover {
+                                        cursor: pointer;
+                                    }
+                                }
+                            }
+
+                        }
 
                         .image-content {
                             right: 0;

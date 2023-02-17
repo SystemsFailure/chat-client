@@ -65,7 +65,7 @@ const filexchange = {
                                     fromId: state.objectUserData.fromId,
                                     toId: state.objectUserData.toId != null && state.objectUserData.toId != 0 ? state.objectUserData.toId : false,
                                     togetherId: state.objectUserData.fromId + '-' + state.objectUserData.toId,
-                                    size: null,
+                                    size: state.file.size,
                                     result: true,
                                     atCreated: new Date().toLocaleString(),
                                     atUpdated: new Date().toLocaleString(),
@@ -74,6 +74,8 @@ const filexchange = {
                                     img_name: null,
                                     index: state.countIndex,
                                     fileobj_url: downloadURL,
+                                    download: false,
+                                    namefile: state.file.name,
                                 }, state.objectUserData)
                             }
                         });
