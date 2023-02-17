@@ -582,12 +582,15 @@ export default {
                 fromId: this.user_id,
             }
             const count = await this.createIndex()
+            // Если пользователь пытается отправить файл не img, message
             if(valuetype === 'file')
             {
                 if(file)
                 {
-                    console.log('f')
-
+                    this.setFileObj(file)
+                    this.setcountIndex(count)
+                    let url = this.uploadFileToCloud()
+                    console.log(url, 'url')
                 }
             } else {
                 if(file) 
@@ -685,11 +688,13 @@ export default {
             setuser_to_id: 'setuser_to_id',
         }),
         ...mapMutations('filexchange', {
-
+            setFileObj: 'setFileObj',
+            setoUser_object: 'setoUser_object',
+            setcountIndex: 'setcountIndex',
         }),
 
         ...mapActions('filexchange', {
-
+            uploadFileToCloud: 'uploadFileToCloud',
         }),
     },
 
