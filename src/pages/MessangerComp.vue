@@ -460,6 +460,7 @@ $color-text-izumrud: #00ff80;
             height: 100vh;
             float: left;
             margin-left: 4%;
+            border-right: 1px solid #111;
 
             .btn-add-new-contact-chat {
                     position: fixed;
@@ -517,7 +518,7 @@ $color-text-izumrud: #00ff80;
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
-                    background-color: rgba(10, 10, 10, 0.65);
+                    // background-color: rgba(10, 10, 10, 0.65);
 
 
                     span {

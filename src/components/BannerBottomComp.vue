@@ -128,6 +128,7 @@ $color-text-yellow: #ff6600;
 $color-text: #4e5f7d;
 $color-text-teal: #00cec7;
 $color-text-izumrud: #00ff80;
+$color-text-blue: #0071d3;
 
 * {
     margin: 0;
@@ -139,9 +140,9 @@ $color-text-izumrud: #00ff80;
     height: 40px;
     position: fixed;
     background: rgb(7, 7, 7);
-    box-shadow: 15px 15px 30px 0px rgba(255, 0, 200, 1);
-    backdrop-filter: blur(4.2px);
-    -webkit-backdrop-filter: blur(4.2px);
+    // box-shadow: 15px 15px 30px 0px rgba(255, 0, 200, 1);
+    // backdrop-filter: blur(4.2px);
+    // -webkit-backdrop-filter: blur(4.2px);
 
 
     z-index: 12;

@@ -27,6 +27,26 @@
                     ></div>
                 </div>
             </div>
+
+            <div class="light-sett-box">
+                <span>light settings</span>
+                <div class="inner-content-light">
+                    <div class="checkLight">
+                        <input type="checkbox" name="check-light-off-on" id="check-light-off-on-id" v-model="valueCheckboxLight">
+                        <span>on/off light shadow in messages</span>
+                    </div>
+                    <div class="intensity-box">
+                        <span>intensity light</span>
+
+                        <div class="wrapper-for-inp-range">
+                            <input type="range" name="range-intensity" id="range-intensity-id" value="0" max="15" min="0">
+                            <div class="count-value-box">
+                                <span id="count-value-box-id"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -163,10 +183,24 @@ export default {
             URLIMAGE: null,
 
             showAppereanceSection: true,
+
+            // sett models
+            valueCheckboxLight: '',
+        }
+    },
+
+    watch: {
+        valueCheckboxLight: {
+            handler(newValue) {
+                this.checkLightValueFunction(newValue)
+                // console.log('dadadd', newValue)
+            },
+            deep: true,
         }
     },
 
     mounted() {
+        this.settingsComponentDOMElements()
         UserApi.GetPersonalDataOfUser(this.userId).then(user => {
             if(user) {
                 document.getElementById('user-name-text').innerHTML = user[0].name
@@ -188,6 +222,63 @@ export default {
         ...mapMutations('themescontroller', {
             changeTheme: 'changeTheme',
         }),
+
+        settingsComponentDOMElements() {
+            this.settLightBoxElement()
+        },
+
+        // //////////////////////////////////// Здесь идет кастомная настройка в виде функций каждого элемента настроек
+        checkLightValueFunction(newValue) {
+            let rangeLight = document.getElementById('range-intensity-id')
+            let valueCurrentIntesity = document.getElementById('count-value-box-id')
+            if(newValue === false)
+            {
+                valueCurrentIntesity.style.color = '#333'
+                if(rangeLight.getAttribute('disabled') === null)
+                {
+                    rangeLight.setAttribute('disabled', 'disabled')
+                    localStorage.setItem('light-message', 'off')
+
+                } else {
+                    return
+                }
+            } else {
+                if(rangeLight.getAttribute('disabled'))
+                {
+                    localStorage.setItem('light-message', 'on')
+                    rangeLight.removeAttribute('disabled')
+                    valueCurrentIntesity.style.color = 'white'
+                }
+            }
+        },
+
+        // Настройка при входе (mounted cycle) inp, checkbox, currvaluetext, вооот...
+        settLightBoxElement() {
+            let valueCurrentIntesity = document.getElementById('count-value-box-id')
+            let rangeLight = document.getElementById('range-intensity-id')
+            rangeLight.addEventListener('input', () => {
+                valueCurrentIntesity.innerText = rangeLight.value
+            })
+            if(localStorage.getItem('light-message') === 'off')
+            {
+                // Здесь мы закрываем доступ к инпуту - делаем его серым и не кликабельным
+                valueCurrentIntesity.innerText = '0'
+                this.valueCheckboxLight = false
+                return
+            } else {
+                this.valueCheckboxLight = true
+                let valueLightFromLS = localStorage.getItem('value-intesity-light') 
+                if(valueLightFromLS)
+                {
+                    valueCurrentIntesity.innerText = valueLightFromLS
+                    rangeLight.value = valueLightFromLS
+
+                } else {
+                    valueCurrentIntesity.innerText = rangeLight.value
+                }
+            }
+        },
+        
         setAccentColor(vl) {
             // Установка темы
             if(vl === 'gray') {
@@ -289,41 +380,6 @@ export default {
             // TransitionApi.updateField()
         },
 
-        // fileToDataUri(field) {
-        //     return new Promise((resolve) => {
-        //         const reader = new FileReader();
-        //         reader.addEventListener("load", () => {
-        //         resolve(reader.result);
-        //         });
-        //         reader.readAsDataURL(field);
-        //     });
-        // },
-
-        // resizeImage(imgToResize, resizingFactor = 0.5) {
-        //     const canvas = document.createElement("canvas")
-        //     const context = canvas.getContext("2d")
-
-        //     const originalWidth = imgToResize.width
-        //     const originalHeight = imgToResize.height
-        //     console.log(imgToResize.width)
-
-        //     const canvasWidth = originalWidth * resizingFactor
-        //     const canvasHeight = originalHeight * resizingFactor
-
-        //     canvas.width = canvasWidth
-        //     canvas.height = canvasHeight
-
-        //     context.drawImage(
-        //         imgToResize,
-        //         0,
-        //         0,
-        //         originalWidth * resizingFactor,
-        //         originalHeight * resizingFactor
-        //     )
-
-        //     return canvas.toDataURL();
-        // },
-
         async setBackImage(event) {
             let file = event.target.files[0]
             let cortUrl = URL.createObjectURL(file)
@@ -353,19 +409,7 @@ export default {
                 console.log(err)
             })
 
-            
-
-
-
-
             this.$emit('setImageToBack', cortUrl)
-            // let reader = new FileReader()
-
-            // reader.readAsDataURL(file)
-
-            // reader.onload(function () {
-            //     alert(reader.result)
-            // })
         }
     }
 }
@@ -405,7 +449,7 @@ $color-text-izumrud: #00ff80;
     .global-section-of-appereance {
         width: 45%;
         height: 100%;
-        // background-color:#001011;
+        overflow: auto;
 
         .inner-section-box {
             width: 100%;
@@ -413,6 +457,135 @@ $color-text-izumrud: #00ff80;
             padding: 10px;
             display: flex;
             flex-direction: column;
+            overflow: auto;
+
+            .light-sett-box {
+                width: 100%;
+                height: 1000px;
+                padding: 10px;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                border: 1px solid #111;
+                margin-top: 10px;
+
+                span {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 10px;
+                    text-transform: uppercase;
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                }
+
+                .inner-content-light {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    padding: 15px;
+
+                    .checkLight {
+                        width: 100%;
+                        display: flex;
+
+                        input {
+
+                        }
+                        span {
+                            margin-left: 10px;
+                            justify-content: flex-start;
+                        }
+                    }
+
+                    .intensity-box {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        margin-top: 20px;
+
+                        .wrapper-for-inp-range {
+                            width: 100%;
+                            display: flex;
+
+                            .count-value-box {
+                                width: 50px;
+                                height: 30px;
+                                border: 1px solid #111;
+                                margin-left: 10px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                padding-top: 4px;
+
+                                #count-value-box-id {
+                                    font-size: 13px;
+                                    width: 100%;
+                                    height: 100%;
+
+                                    text-transform: lowercase;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                }
+                            }
+
+                            input[type="range"] {
+                                -webkit-appearance: none;
+                                appearance: none;
+                                background: transparent;
+                                cursor: pointer;
+                                width: 85%;
+                                z-index: 11;
+                            }
+                
+                            input[type="range"]::-webkit-slider-runnable-track {
+                                background: rgba($color: #2b2b2b, $alpha: .8);
+                                height: 3px;
+                
+                            }
+                
+                            input[type="range"]::-moz-range-track {
+                                background: #252525;
+                                height: 3px;
+                            }
+                
+                            input[type="range"]::-webkit-slider-thumb {
+                                // margin-top = (высота дорожки / 2) - (высота ползунка / 2)
+                                -webkit-appearance: none; /* Override default look */
+                                appearance: none;
+                                margin-top: -3px; /* Centers thumb on the track */
+                                background-color: rgb(45, 45, 45);
+                                height: 9px;
+                                width: 9px;    
+                                border-radius: 50%;
+                
+                
+                                &:hover {
+                                    background-color: teal;
+                                }
+                
+                            }
+                
+                            input[type="range"]::-moz-range-thumb {
+                                border: none; /*Removes extra border that FF applies*/
+                                border-radius: 0; /*Removes default border-radius that FF applies*/
+                                background-color: #111;
+                                height: 2rem;
+                                width: 1rem;
+                            }
+                        }
+
+
+                        span {
+                            margin-bottom: 10px;
+                            justify-content: flex-start;
+                        }
+                    }
+                }
+            }
 
             .line-title-section-of-appereance {
                 width: 100%;

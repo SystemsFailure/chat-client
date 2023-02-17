@@ -902,10 +902,9 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                     // background-color: #1e1c1cc6;
                 }
                 .im-message-content {
+                    // box-shadow: 0 0 10px #1D8BE1;
                     border-radius: 10px;
                     float: right;
-                    // background: $color-back-message-bubble;
-                    // background-color:$color-back-message-bubble;
                     background-size: 300% 300%;
                     word-wrap: break-word;
                     width: auto;
