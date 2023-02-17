@@ -589,8 +589,8 @@ export default {
                 {
                     this.setFileObj(file)
                     this.setcountIndex(count)
-                    let url = this.uploadFileToCloud()
-                    console.log(url, 'url')
+                    this.setObjectUserData(data_)
+                    this.uploadFileToCloud()
                 }
             } else {
                 if(file) 
@@ -609,6 +609,7 @@ export default {
                             img_url: file_url,
                             img_name: file_path,
                             index: count,
+                            fileobj_url: null,
                         }, data_).then(data => {
                             this.message_lst = data
                         }).catch(err => {
@@ -669,6 +670,7 @@ export default {
                 img_url: null,
                 img_name: null,
                 index: countMess,
+                fileobj_url: null,
             }
             await MessagesApi.createMessage(messageContent, data_).then( async () => {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.remove('anime-bubble-message')
@@ -689,7 +691,7 @@ export default {
         }),
         ...mapMutations('filexchange', {
             setFileObj: 'setFileObj',
-            setoUser_object: 'setoUser_object',
+            setObjectUserData: 'setObjectUserData',
             setcountIndex: 'setcountIndex',
         }),
 

@@ -1,10 +1,12 @@
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "@/main";
+import { MessagesApi } from "@/firebase-config/MessagesController";
 
 
 const filexchange = {
     state: () => ({
+        objectUserData: '',
         file: null,
         countIndex: null,
         progressUpload: '',
@@ -19,9 +21,12 @@ const filexchange = {
         setcountIndex(st, vl) {
             st.countIndex = vl
         },
+        setObjectUserData(st, vl) {
+            st.objectUserData = vl
+        }
     },
     actions: {
-        async uploadFileToCloud({state, getters, commit}) {
+        uploadFileToCloud({state, getters, commit}) {
             if(state.file === null)
             {
                 console.log(state.progressUpload, getters)
@@ -52,19 +57,34 @@ const filexchange = {
                         }
                     }, () => {
                         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                            console.log(downloadURL)
-                            return downloadURL
+                            if(state.objectUserData)
+                            {
+                                console.log(downloadURL)
+                                MessagesApi.createMessage({
+                                    content: null,
+                                    fromId: state.objectUserData.fromId,
+                                    toId: state.objectUserData.toId != null && state.objectUserData.toId != 0 ? state.objectUserData.toId : false,
+                                    togetherId: state.objectUserData.fromId + '-' + state.objectUserData.toId,
+                                    size: null,
+                                    result: true,
+                                    atCreated: new Date().toLocaleString(),
+                                    atUpdated: new Date().toLocaleString(),
+                                    view: null,
+                                    img_url: null,
+                                    img_name: null,
+                                    index: state.countIndex,
+                                    fileobj_url: downloadURL,
+                                }, state.objectUserData)
+                            }
                         });
                     }
                 );
-
-
         },
     },
     getters: {
         getprogressUpload(st) {
             return st.progressUpload
-        }
+        },
     },
 
     namespaced: true,
