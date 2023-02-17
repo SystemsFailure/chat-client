@@ -4,6 +4,7 @@ import playlistModule from '@/store/modules/playlistController'
 import toastModule from "./modules/toastModule";
 import contextmenu from "./modules/contextmenu";
 import themescontroller from "./modules/themesController";
+import filexchange from "./modules/fileExchangeModule";
 
 const store = createStore({
 
@@ -13,6 +14,7 @@ const store = createStore({
         toast: toastModule,
         contextmenu: contextmenu,
         themescontroller: themescontroller,
+        filexchange: filexchange,
     },
 
     state: () => ({

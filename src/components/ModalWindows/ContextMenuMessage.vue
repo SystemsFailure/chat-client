@@ -91,11 +91,12 @@ export default {
 <style lang="scss" scoped>
 
 .lclass-context-menu {
-    width: 170px;
+    width: 200px;
     height: auto;
     background: rgba($color: #090909, $alpha: 1.0);
     position: absolute;
     z-index: 15;
+    border-radius: 10px;
 
     .inner {
         width: 100%;

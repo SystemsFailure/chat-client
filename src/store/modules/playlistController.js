@@ -50,7 +50,7 @@ const playlistModule = {
         // secondary mutations sigment end
         // primary mutatuions sigment start
         // primary mutatuions sigment end
-
+///chat-files-object-package
     },
     actions: {
         async uploadImages(context) {

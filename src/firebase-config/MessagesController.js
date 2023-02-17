@@ -12,7 +12,6 @@ const MessagesApi = {
         await ChatApi.getChat({toID: data_.toId, fromID: user_id}).then(async chat => {
             if(chat)
             {
-              console.log(chat,'0003')
               let countIndex = chat[0].countOfMessages
               const storageRef = ref(storage, '/chat-files-package/users-photo-message_id - ' + user_id + countIndex)
               await uploadBytes(storageRef, file).then( async (snapshot) => {

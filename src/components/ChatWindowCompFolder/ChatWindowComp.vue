@@ -121,7 +121,7 @@ import { UserApi } from '@/firebase-config/UserController'
 import { ChatApi } from '@/firebase-config/ChatController'
 import { db } from '@/main'
 import { onSnapshot, Timestamp, where, query, collection} from "firebase/firestore"
-import { mapMutations, mapState } from 'vuex'
+import { mapMutations, mapState, mapActions } from 'vuex'
 import {validDOMElement} from '@/CustomValidation'
 
 export default {
@@ -575,35 +575,44 @@ export default {
             this.showDialogWindow = false
         },
 
-        async add_file_message(file) {
-            if(file) 
+        async add_file_message(file, valuetype) {
+            const data_ = {
+                message_lst: this.message_lst,
+                toId: this.user_to_id,
+                fromId: this.user_id,
+            }
+            const count = await this.createIndex()
+            if(valuetype === 'file')
             {
-                const data_ = {
-                    message_lst: this.message_lst,
-                    toId: this.user_to_id,
-                    fromId: this.user_id,
+                if(file)
+                {
+                    console.log('f')
+
                 }
-                const count = await this.createIndex()
-                await MessagesApi.uploadImageMessage(file, localStorage.getItem('user-id'), data_).then(({file_path, file_url}) => {
-                    MessagesApi.createMessage( {
-                        content: null,
-                        fromId: localStorage.getItem('user-id'),
-                        toId: this.user_to_id != null && this.user_to_id != 0 ? this.user_to_id : false,
-                        togetherId: this.user_id + '-' + this.user_to_id,
-                        size: null,
-                        result: true,
-                        atCreated: new Date().toLocaleString(),
-                        atUpdated: new Date().toLocaleString(),
-                        view: null,
-                        img_url: file_url,
-                        img_name: file_path,
-                        index: count,
-                    }, data_).then(data => {
-                        this.message_lst = data
-                    }).catch(err => {
-                        console.log(err)
+            } else {
+                if(file) 
+                {
+                    await MessagesApi.uploadImageMessage(file, localStorage.getItem('user-id'), data_).then(({file_path, file_url}) => {
+                        MessagesApi.createMessage( {
+                            content: null,
+                            fromId: localStorage.getItem('user-id'),
+                            toId: this.user_to_id != null && this.user_to_id != 0 ? this.user_to_id : false,
+                            togetherId: this.user_id + '-' + this.user_to_id,
+                            size: null,
+                            result: true,
+                            atCreated: new Date().toLocaleString(),
+                            atUpdated: new Date().toLocaleString(),
+                            view: null,
+                            img_url: file_url,
+                            img_name: file_path,
+                            index: count,
+                        }, data_).then(data => {
+                            this.message_lst = data
+                        }).catch(err => {
+                            console.log(err)
+                        })
                     })
-                })
+                }
             }
         },
 
@@ -674,6 +683,13 @@ export default {
         }),
         ...mapMutations({
             setuser_to_id: 'setuser_to_id',
+        }),
+        ...mapMutations('filexchange', {
+
+        }),
+
+        ...mapActions('filexchange', {
+
         }),
     },
 
@@ -835,11 +851,12 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                 width: 100%;
                 height: auto;
                 .container-hide-box {
-                    padding: 10px;
+                    padding: 15px;
+                    border-radius:10px;
                     width: auto;
                     height: auto;
                     background: rgba(10, 10, 10, 0.65);
-                    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                    font-size: 17px;
                     backdrop-filter: blur(4.2px);
                     -webkit-backdrop-filter: blur(4.2px);
                     z-index: 4;

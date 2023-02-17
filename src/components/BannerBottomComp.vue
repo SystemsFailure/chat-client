@@ -12,29 +12,29 @@
                             <transition name="fade-cycle">
                                 <div class="cycle-point-adapter" v-if="show_toggle_menu" @click="alertShow"></div>                            
                             </transition>
-
+<!-- 
                             <transition name="fade-menu">
                                 <div class="box-toggle-menu" v-if="show_toggle_menu" @click.stop.prevent>
                                     <div class="item-menu0 item-ofMenu-clip">
-                                        <i class="fi fi-bs-clip"></i>
+
+                                        <img 
+                                            src="@/assets/svgassets/icons8-загрузить-в-облако.gif" 
+                                        >
                                     </div>
                                     <div class="item-menu0 item-ofMenu-smile">
-                                        <i class="fi fi-bs-camera"></i>
+
                                     </div>
                                     <div class="item-menu0 item-ofMenu-voice">
-                                        <i class="fi fi-bs-smile"></i>
+
                                     </div>
                                 </div>
-                            </transition>
+                            </transition> -->
                         </div>
 
                         <div class="video-capture">
                             <img src="@/assets/svgassets/icons8-вложение-90.png" alt="">
                             <label for="myfile" class="label"></label>
-                            <input list="charachter" type="file" class="my" id="myfile" name="myfile" multiple @change="send_photo($event)">
-                            <datalist id="charachter">
-                                <option value="Процессор ARM изначально был разработан в компании Acorn Computers (Великобритания), который, по мысли разработчиков, должен был сменить процессор BBC Microcomputer, который использовался в образовательных целях. Для разработки инженеры Acorn решили использовать технологию RISC (reduced instruction set computer). А само название архитектуры ARM является сокращением от Advanced RISC Machine."></option>
-                            </datalist>
+                            <input type="file" class="my" id="myfile" name="myfile" multiple @change="send_file($event)">
                         </div>
 
                         <div @click="send_message" id="btn-send-data">
@@ -56,14 +56,20 @@ export default {
         return {
             model_message: 'hell0',
             inp_text_message: '',
-            show_toggle_menu: false,
         }
     },
 
     methods: {
-        send_photo(event) {
+
+        send_file(event) {
             let file = event.target.files[0]
-            this.$emit('add_file_messageFunction', file)
+            let typefile = file.name.split(".").splice(-1,1)[0]
+            if(typefile === 'exe')
+            {
+                this.$emit('add_file_messageFunction', file, 'file')
+            } else {
+                this.$emit('add_file_messageFunction', file, 'img')
+            }
         },
 
         send_message_key_enter(event) {
@@ -231,15 +237,42 @@ $color-text-blue: #0071d3;
                                 width: 35px;
                                 height: 35px;
                                 border-radius: 50%;
-
-                                background:$color-back-gray;
-                                // padding-top: 4px;
-
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
-
                                 margin: 5px;
+
+                                .labelsendfile {
+                                    width: 35px;
+                                    height: 35px;
+                                    background-color: none;
+                                    border-radius: 50%;
+                                    z-index: 10;
+                                    position: absolute;
+                                    background-color: #0071d3;
+
+                                    &:hover {
+                                        cursor: pointer;
+                                    }
+                                }
+                                
+                                .mysendfile {
+                                    // width: 0.1px;
+                                    // height: 0.1px;
+                                    width: 10px;
+                                    height: 10px;
+                                    opacity: 1;
+                                    overflow: hidden;
+                                    position: absolute;
+                                    z-index: 11; 
+                                }
+
+                                img {
+                                    width: 35px;
+                                    height: 35px;
+                                    border-radius: 50%;
+                                    object-fit: contain;
+                                }
 
                                 i {
                                     margin-top: 2px;

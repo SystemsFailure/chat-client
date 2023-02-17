@@ -23,9 +23,9 @@
 
                     <div class="useful-box-bottom">
                         <div class="btns-box">
-                            <div class="item-btn">Follow</div>
-                            <div class="item-btn">Add to chats</div>
-                            <div class="item-btn">Message</div>
+                            <!-- <div class="item-btn">Secret chat</div> -->
+                            <!-- <div class="item-btn">Add to chats</div> -->
+                            <!-- <div class="item-btn">Write</div> -->
                         </div>
                     </div>
 
@@ -325,14 +325,15 @@ $color-text-izumrud: #00ff80;
                     width: 80%;
 
                     display: flex;
-                    justify-content: space-between;
+                    justify-content: center;
                     align-items: center;
 
                     .item-btn {
-                        padding: 5px;
+                        margin-left: 10px;
+                        padding: 15px;
                         color: white;
-                        width: 100px;
-                        height: 40px;
+                        // width: 100px;
+                        // height: 40px;
 
                         display: flex;
                         align-items: center;
