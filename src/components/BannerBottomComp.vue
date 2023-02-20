@@ -8,29 +8,6 @@
                 <div class="outer-container">
                     <div class="agent-container">
 
-                        <div class="universal-btn" @click='show_and_hide_menuToggle'>
-                            <transition name="fade-cycle">
-                                <div class="cycle-point-adapter" v-if="show_toggle_menu" @click="alertShow"></div>                            
-                            </transition>
-<!-- 
-                            <transition name="fade-menu">
-                                <div class="box-toggle-menu" v-if="show_toggle_menu" @click.stop.prevent>
-                                    <div class="item-menu0 item-ofMenu-clip">
-
-                                        <img 
-                                            src="@/assets/svgassets/icons8-загрузить-в-облако.gif" 
-                                        >
-                                    </div>
-                                    <div class="item-menu0 item-ofMenu-smile">
-
-                                    </div>
-                                    <div class="item-menu0 item-ofMenu-voice">
-
-                                    </div>
-                                </div>
-                            </transition> -->
-                        </div>
-
                         <div class="video-capture">
                             <img src="@/assets/svgassets/icons8-вложение-90.png" alt="">
                             <label for="myfile" class="label"></label>
@@ -50,16 +27,45 @@
 </template>
 
 <script>
-
+import {mapActions} from 'vuex'
 export default {
     data() {
         return {
             model_message: 'hell0',
             inp_text_message: '',
+            med: null,
         }
     },
 
+    mounted() {
+        // this.recorder()
+        
+    },
+
     methods: {
+        ...mapActions('audioDriver', {
+            recorder: 'recorder'
+        }),
+
+        startRecordVoice() {
+            navigator.mediaDevices.getUserMedia({audio: true})
+            .then(strean => {
+                const mediaRecorder = new MediaRecorder(strean)
+                this.med = mediaRecorder
+                let voice = []
+                mediaRecorder.start()
+
+                mediaRecorder.addEventListener('dataavailable', (event) => {
+                    voice.push(event.data)
+                    console.log(event.data)
+                })
+
+            })
+        },
+
+        stopRecordVoice() {
+            this.med.stop()
+        },
 
         send_file(event) {
             let file = event.target.files[0]
@@ -174,7 +180,16 @@ $color-text-blue: #0071d3;
                     height: 40px;
                     align-items: center;
 
-
+                    .stop-unv-btn {
+                        width: 32px;
+                        height: 32px;
+                        border-radius: 50%;
+                        padding-top: 2px;
+                        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                        backdrop-filter: blur(4.2px);
+                        -webkit-backdrop-filter: blur(4.2px);
+                        background-color: $color-back-gray;
+                    }
                     .universal-btn {
                         width: 32px;
                         height: 32px;
@@ -189,7 +204,6 @@ $color-text-blue: #0071d3;
                         display: flex;
                         justify-content: center;
                         align-items: center;
-
                         cursor: pointer;
                         .cycle-point-adapter {
                             width: 10px;

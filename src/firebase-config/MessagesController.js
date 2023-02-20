@@ -63,6 +63,9 @@ const MessagesApi = {
             index: doc.data().index,
             fileobj_url: doc.data().fileobj_url,
             namefile: doc.data().namefile,
+            answered: doc.data().answered,
+            answeredText: doc.data().answeredText,
+            idAnsweredMessageDomElement: doc.data().idAnsweredMessageDomElement,
         }
         mess_lst.push(data_message)
         })
@@ -207,7 +210,11 @@ const MessagesApi = {
           index: doc.data().index,
           togetherId: doc.data().togetherId,
           fileobj_url: doc.data().fileobj_url,
-          namefile: doc.data().namefile
+          namefile: doc.data().namefile,
+          answered: doc.data().answered,
+          answeredText: doc.data().answeredText,
+          idAnsweredMessageDomElement: doc.data().idAnsweredMessageDomElement,
+          
         }
         arr.push(data_message)
       })
@@ -244,7 +251,10 @@ const MessagesApi = {
           index: doc.data().index,
           togetherId: doc.data().togetherId,
           fileobj_url: doc.data().fileobj_url,
-          namefile: doc.data().namefile
+          namefile: doc.data().namefile,            
+          answered: doc.data().answered,
+          answeredText: doc.data().answeredText,
+          idAnsweredMessageDomElement: doc.data().idAnsweredMessageDomElement,
         }
         array.push(data_message)
       })

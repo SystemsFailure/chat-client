@@ -63,6 +63,16 @@ export default {
             addToast: 'addToast',
         }),
         async onItem(vl) {
+            if(vl === 'answer')
+            {
+                this.$emit('answerOnMessageFunction', this.idSelectedMessage)
+                this.$emit('closeContextmenuFunction', false)
+            }
+            if(vl === 'copy')
+            {
+                this.$emit('copyTextFromMessageFunction', this.idSelectedMessage)
+                this.$emit('closeContextmenuFunction', false)
+            }
             if(vl === 'select')
             {
                 console.log('select', this.idSelectedMessage)

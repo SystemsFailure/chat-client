@@ -7,6 +7,8 @@
             id="context-menu-vclass-mess"
             @closeContextmenuFunction="(val) => {this.visibileContextMenuMess = val}"
             @visSelSysFunction="selectionMessagesFunction"
+            @copyTextFromMessageFunction="copyTextFromMessage"
+            @answerOnMessageFunction="answerOnMS"
             ></ContextMenuMessage>
         </Transition>
     
@@ -100,8 +102,22 @@
                                         ><span>{{ n.atCreated }}</span>
                                     </div>
                                 </div>
+
+                                <div class="answered-message-content" v-if="n.answered">
+                                    <div 
+                                        class="inner-answered-message"
+                                        :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" 
+                                    >
+                                        <div class="answer-box" @click="scrollViewToElement(n.idAnsweredMessageDomElement)">
+                                            {{ this.sliceText(n.answeredText) }}
+                                        </div>
+                                        <div class="text-message">
+                                            {{ n.content }}
+                                        </div>
+                                    </div>
+                                </div>
                                 
-                                <h6 v-if="n.content"
+                                <h6 v-if="n.content && !n.answered"
                                     :id="n.id"
                                     @click="sl(n)"
                                     class="im-message-content"
@@ -126,6 +142,14 @@
                         </div>
                     </div>
                 </div>
+
+                <AnswerOnMessage
+                    v-if="visibleAnswerWindow"
+                    @closeAnswerWindowFunction="this.visibleAnswerWindow = false"
+                    @scrollViewToElementFunction="scrollViewToElement"
+                    :messageText="messageText"
+                    :messageIdForAnswer="messageIdForAnswer"
+                ></AnswerOnMessage>
             </div>
 
         </div>
@@ -140,6 +164,7 @@ import MiniListLastChatsComp from '@/components/ModalWindows/MiniListLastChatsCo
 import MiniChatComp from '@/components/ModalWindows/MiniChatComp.vue'
 import viewPhotoWindow from '@/components/ModalWindows/viewPhotoWindow.vue'
 import ContextMenuMessage from '@/components/ModalWindows/ContextMenuMessage.vue'
+import AnswerOnMessage from '@/components/ModalWindows/AnswerOnMessage.vue'
 import { MessagesApi } from '@/firebase-config/MessagesController'
 import { UserApi } from '@/firebase-config/UserController'
 import { ChatApi } from '@/firebase-config/ChatController'
@@ -171,6 +196,11 @@ export default {
             visibleScroll: false,
 
             currentMesssageBackgroundByTheme: '',
+
+            visibleAnswerWindow: false,
+            messageText: '',
+            messageIdForAnswer: null,
+            
         }
     },
     // Явно даю понять, что есть такой эмит компоненту .. - .. иначе будет предупреждение (Warning) ⚠️⚠️⚠️
@@ -346,6 +376,46 @@ export default {
             xhr.send()
         },
 
+        scrollViewToElement(vl_id_element) {
+            const el = document.getElementById(vl_id_element)
+            if(vl_id_element)
+            {
+                if(el)
+                {
+                    el.scrollIntoView({block: 'center', inline: 'center', behavior: 'smooth'})
+                    let parentDOMElement = el.parentNode
+                    if(parentDOMElement) {
+                        parentDOMElement.style.backgroundColor = '#111'
+                        setTimeout(() => {
+                            parentDOMElement.style.backgroundColor = ''
+                        }, 1000);
+                    }
+                }
+            }
+        },
+
+        answerOnMS(vl_id_message) {
+            let domElementMessage = document.getElementById(vl_id_message)
+            if(domElementMessage)
+            {
+                this.messageIdForAnswer = vl_id_message
+                this.messageText = domElementMessage.textContent
+                this.visibleAnswerWindow = true
+            }
+        },
+
+        copyTextFromMessage(vl_id_message) {
+            let domElementMessage = document.getElementById(vl_id_message)
+            if(domElementMessage)
+            {
+                navigator.clipboard.writeText(domElementMessage.textContent).then(() => {
+                    console.log('domElementMessage from this element been copid text')
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        },
+
         // Click on message-bubble function
         sl(it) {
             console.log('it - ', it)
@@ -358,7 +428,7 @@ export default {
             let message = document.getElementById(vl)
             if(message)
             {
-                message.style.backgroundColor = 'teal'
+                message.style.backgroundColor = '#333 !important'
             }
         },
 
@@ -633,6 +703,9 @@ export default {
                             atCreated: new Date().toLocaleString(),
                             atUpdated: new Date().toLocaleString(),
                             fileobj_url: true,
+                            answered: false,
+                            answeredText: null,
+                            idAnsweredMessageDomElement: this.messageIdForAnswer,
                         })
                         res('successful send')
                         rej('failure sending')
@@ -662,6 +735,9 @@ export default {
                             img_name: file_path,
                             index: count,
                             fileobj_url: null,
+                            answered: false,
+                            answeredText: null,
+                            idAnsweredMessageDomElement: this.messageIdForAnswer,
                         }, data_).then(data => {
                             this.message_lst = data
                         }).catch(err => {
@@ -679,17 +755,23 @@ export default {
             new Promise((resolve, failure) => {
                 this.message_lst.push(
                     {
-                        fromId: this.user_id, content: text,
-                        toId: this.user_to_id, size: new Blob([text]).size, 
+                        fromId: this.user_id, 
+                        content: text,
+                        toId: this.user_to_id, 
+                        size: new Blob([text]).size, 
                         result: true,
                         atCreated: new Date().toLocaleString(),
                         atUpdated: new Date().toLocaleString(),
+                        answered: false,
+                        answeredText: null,
+                        idAnsweredMessageDomElement: this.messageIdForAnswer,
                     })
                 resolve('success')
                 failure('failure')
             }).then(() => {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('anime-bubble-message')
                 this.scrollDownChat()
+                this.visibleAnswerWindow = false
             })
             if(this.user_to_id && this.user_id) {
                 await ChatApi.getChat({toID: this.user_to_id, fromID: this.user_id}).then( async chat => {
@@ -723,6 +805,10 @@ export default {
                 img_name: null,
                 index: countMess,
                 fileobj_url: null,
+                // Это для ответа... на сообщение
+                answered: this.messageText != '' && this.messageText != 'default message' ? true : false,
+                answeredText: this.messageText != '' && this.messageText != 'default message' ? this.messageText : null,
+                idAnsweredMessageDomElement:  this.messageText != '' && this.messageText != 'default message' ? this.messageIdForAnswer : null,
             }
             await MessagesApi.createMessage(messageContent, data_).then( async () => {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.remove('anime-bubble-message')
@@ -733,6 +819,15 @@ export default {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('failure-bubble-message')
                 localStorage.setItem('fail-message', messageContent)
             })
+        },
+
+        sliceText(text) {
+            if (!text) text = 'default message'
+            var sliced = text.slice(0,120);
+            if (sliced.length < text.length) {
+                sliced += '...';
+            }
+            return sliced
         },
 
         ...mapMutations('contextmenu', {
@@ -761,6 +856,7 @@ export default {
         MiniChatComp,
         viewPhotoWindow,
         ContextMenuMessage,
+        AnswerOnMessage,
     }
 }
 </script>
@@ -769,6 +865,7 @@ export default {
 
 .failure-bubble-message {
     background: #ff0000;
+
 }
 
 .anime-bubble-message {
@@ -883,11 +980,12 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                 top: 0;
                 position: absolute;
                 width: 71%;
-                height: 50px;
+                height: 60px;
                 background: rgb(7, 7, 7);
                 display: flex;
                 align-items: center;
                 padding: 15px;
+                z-index: 15;
                 .count-sel-mess {
                     color: wheat;
                 }
@@ -934,6 +1032,47 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                         z-index: 1;
                         // background-color:$color-back-message-bubble;
                         
+                        .answered-message-content {
+                            display: grid;
+                            right: 0;
+
+                            .inner-answered-message {
+                                background-color: #326866;
+                                border-radius: 10px;
+                                float: right;
+                                display:flex;
+                                // align-items: center;
+                                flex-direction: column;
+                                // justify-content: center;
+                                padding: 10px;
+                                color: #fff;
+                                max-width: 47%;
+                                padding: 8px 12px 8px 12px;
+
+                                .answer-box {
+                                    width: 100%;
+                                    height: 50%;
+                                    font-weight: 600;
+                                    color: rgb(168, 168, 168);
+                                    font-size: 13px;
+                                    font-family: system-ui;
+                                    line-height: 20px;
+
+                                    &:hover{
+                                        cursor: pointer;
+                                        opacity: .7;
+                                        transition: .5s;
+                                    }
+                                }
+
+                                .text-message {
+                                    background-size: 300% 300%;
+                                    word-wrap: break-word;
+                                    height: auto;
+                                }
+                            }
+                        }
+
                         .file-content {
                             display: grid;
                             right: 0;

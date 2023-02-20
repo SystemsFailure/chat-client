@@ -5,6 +5,7 @@ import toastModule from "./modules/toastModule";
 import contextmenu from "./modules/contextmenu";
 import themescontroller from "./modules/themesController";
 import filexchange from "./modules/fileExchangeModule";
+import audioDriver from './modules/audioDriver'
 
 const store = createStore({
 
@@ -15,6 +16,7 @@ const store = createStore({
         contextmenu: contextmenu,
         themescontroller: themescontroller,
         filexchange: filexchange,
+        audioDriver: audioDriver,
     },
 
     state: () => ({
@@ -45,6 +47,7 @@ const store = createStore({
         },
         setcurrentChatUserId(state, value) {
             state.currentChatUserId = value
+            
         },
         clearcurrentChatUserId(state) {
             state.currentChatUserId = null
