@@ -106,6 +106,59 @@ const UserApi = {
         return dataUser
     },
 
+    getFollowers: async(USERID) => {
+        let arrayFollowers = []
+        await UserApi.getIDFollowers(USERID).then(async arr => {
+            if(arr) 
+            {
+                for (let el of arr) {
+                    const ref = doc(db, 'users', el)
+                    const user = await getDoc(ref)
+                    const data = {
+                        id: user.id,
+                        name: user.data().name,
+                        email: user.data().email,
+                        online: user.data().online,
+                        img_url: user.data().image_url,
+                        lastmessage: user.data().lastMessageId,
+                        countNotReadMessages: user.data().countNotReadMessages,
+                        arrayChats: user.data().arrayChats,
+                        arrayFollowers: user.data().arrayFollowers,
+                        arrayFollowing: user.data().arrayFollowing,
+                        arrayNotReadMessages: user.data().arrayNotReadMessages,
+                        arrayConfigurations: user.data().arrayConfigurations,
+                        arrayMusicsFastAccess: user.data().arrayMusicsFastAccess,
+                        arrayPlaylists: user.data().arrayPlaylists,
+                        city: user.data().city,
+                        country: user.data().country,
+                        bio_info: user.data().bio_info,
+                        status: user.data().status,
+                        atCreated: user.data().atCreated,
+                    }
+                    arrayFollowers.push(data)   
+                }
+            } else {
+                console.log('nope')
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+        console.log(arrayFollowers, 'daddadaad')
+        return arrayFollowers
+    },
+
+    getIDFollowers: async(USERID) => {
+        const ref = doc(db, 'users', USERID)
+        if(ref)
+        {
+            const docum = await getDoc(ref)
+            if(docum.exists()) {
+                const arrayIDS = docum.data().arrayFollowers
+                return arrayIDS
+            }
+        }
+    },
+
     getAllChats: async(userId) => {
         let users = []
         const docRef = doc(db, "users", userId)

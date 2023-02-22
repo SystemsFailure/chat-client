@@ -426,6 +426,9 @@ export default {
                     for (let index = 0; index < 10; index++) {
                         if(elcomparison === listAllMessElements[listAllMessElements.length - [index]])
                         {
+                            ////////////////////////////////////////////////////////
+                            /// Проверка если элемент является answer элементом ////
+                            ////////////////////////////////////////////////////////
                             if (el.classList[1] === 'answered-mess-id-j')
                             {
                                 let parentDOMElement = el.parentNode.parentNode.parentNode

@@ -3,6 +3,10 @@
         v-if="visibleListContactsWindow"
         @closeListContactsWindowFunction="() => {this.visibleListContactsWindow = false}"
     ></ListContacts>
+    <ListFollowers
+        v-if="visibleListFollowersWindow"
+        @closeListFollowersWindowFunction="() => {this.visibleListFollowersWindow = false}"
+    ></ListFollowers>
     <div class="main-viewProfile-comp">
 
         <div class="inline-line">
@@ -64,7 +68,7 @@
 
                 <div class="info-block-section">
                     <div class="wrapper-container">
-                        <div class="wrap-box" id="followers-box-id">
+                        <div class="wrap-box" id="followers-box-id" @click="() => {this.visibleListFollowersWindow = true}">
                             <span id="follower-id"></span>
                             <h5>followers</h5>
                         </div>
@@ -118,6 +122,7 @@
 </template>
 <script>
 import ListContacts from '@/components/ModalWindows/ListContacts.vue'
+import ListFollowers from '@/components/ModalWindows/ListFollowers.vue'
 
 import {mapActions, mapMutations, mapState} from 'vuex'
 import { UserApi } from '@/firebase-config/UserController.js'
@@ -134,6 +139,7 @@ export default {
             playlistList: [],
             showSpiner: false,
             visibleListContactsWindow: false,
+            visibleListFollowersWindow: false,
         }
     },
 
@@ -164,6 +170,7 @@ export default {
         Swiper,
         SwiperSlide,
         ListContacts,
+        ListFollowers,
     },
     setup() {
         return {
