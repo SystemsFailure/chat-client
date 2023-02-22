@@ -13,7 +13,7 @@
             >
                 edit
             </div>
-            <div class="cancel-btn btn-">
+            <div class="cancel-btn btn-" @click="this.$emit('closeEditMessageWindow', false)">
                 cancel
             </div>
         </div>
@@ -33,6 +33,21 @@ export default {
         currentMessageEditId: {},
     },
 
+    mounted() {
+        const textareaElem = document.getElementById('textarea-for-edit-mess-id')
+        textareaElem.focus()
+
+        textareaElem.addEventListener('keydown', (e) => {
+            // if(e.code === 'Enter' || !e.shiftKey) {
+            //     this.editMessage()
+            // }
+            if(e.code === 'Escape')
+            {
+                this.$emit('closeEditMessageWindow', false)
+            }  
+        })
+    },
+
     methods: {
         editMessage() {
             if(this.currentMessageEditId)
@@ -41,7 +56,7 @@ export default {
                 {
                     let newContent = document.getElementById('textarea-for-edit-mess-id').value
                     MessagesApi.editMessage(this.currentMessageEditId, newContent).then(() => {
-                        this.$emit('updateChatFunction')
+                        this.$emit('updateMessage', this.currentMessageEditId, newContent, 'edit')
                         this.$emit('closeEditMessageWindow', false)
                     })
                 }

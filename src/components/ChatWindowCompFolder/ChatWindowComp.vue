@@ -4,7 +4,7 @@
         id="editMessWindow-id"
         v-bind:currmessText="currmessText"
         v-bind:currentMessageEditId="currentMessageEditId"
-        @updateChatFunction="() => {this.getLimitedMessagePage(this.user_to_id)}"
+        @updateMessage="updateMessage"
         @closeEditMessageWindow="(vl) => {this.visibleEditMessageWindow = vl}"
     ></EditMessageWindow>
 
@@ -14,13 +14,13 @@
             <ContextMenuMessage
             v-show="visibileContextMenuMess" 
             id="context-menu-vclass-mess"
-            @closeContextmenuFunction="(val) => {this.visibileContextMenuMess = val}"
+            @closeContextmenuFunction="closeContextMenuMess"
             @visSelSysFunction="selectionMessagesFunction"
             @copyTextFromMessageFunction="copyTextFromMessage"
             @answerOnMessageFunction="answerOnMS"
             @editMessageFunction="editMessage"
             @showEditMessWindowFunction="() => {this.visibleEditMessageWindow = true}"
-            @updateChatFunctionHelper="() => {this.getLimitedMessagePage(this.user_to_id)}"
+            @updateMessageHelper="updateMessage"
             ></ContextMenuMessage>
         </Transition>
     
@@ -265,12 +265,6 @@ export default {
             this.closeEditWindow(e)
         })
 
-        document.addEventListener('keydown', (e) => {
-            if(e.code === 'Escape') {
-                this.closeEditWindow(e)
-            }
-        })
-
         // При монтировании, если toId не нулл (т.е выбран какой-то чат, то мы получаем пакет сообщений)
         // if(this.user_to_id)
         // {
@@ -498,7 +492,6 @@ export default {
         hideScrollEffect() {
             if(this.visibleScroll)
             {
-                console.log('visibleScroll == true')
                 this.visibleScroll = false
                 var styleElement = document.createElement("style");
                 styleElement.appendChild(document.createTextNode(
@@ -524,6 +517,14 @@ export default {
                 }
             }
         },
+        // Этот метод вызвается в компоненте ContextMenuMessage как this.$emit('closeWindow...', false)
+        closeContextMenuMess(val) {
+            this.visibileContextMenuMess = val
+            const generalListMessages_ = document.getElementById('block-chat-window-id')
+            generalListMessages_.style.overflow = 'hidden'
+            generalListMessages_.style.paddingRight = '0px'
+        },
+
         positionCursor(e){
             let x = 0
             let y = 0
@@ -537,7 +538,6 @@ export default {
                 x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
                 y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
             }
-            console.log(x, y)
             return {x: x, y: y}
         },
 
@@ -735,13 +735,13 @@ export default {
             }
             this.$nextTick(() => {
                 // this.setbackgroundAllMessagesVlDefault()
-                console.log('rendered list')
             })
         },
 
         hideDetailDataMessage() {
             this.showDialogWindow = false
         },
+
         // Основной метод, получить все сообщения текущего чата
         async getLimitedMessagePage(vl_curr_user_toId) {
             this.setuser_to_id(vl_curr_user_toId)
@@ -754,9 +754,31 @@ export default {
                 resolve('success')
                 failure('failure')
             }).then(() => {
+                this.settings()    
                 this.scrollDownChat()
-                this.settings()
             })
+        },
+
+        // Эта функция для обнавления конкретного сообщения, что бы не обновлять весь чат, и не соответственно не дергать все окно ChatWidnow (Здесь не обновляется список сообщений)
+        // Список обновился, но мы не обновляем сразу, только, dom элемент, потом уже пользователь сам все обновить (например перезагрузив страницу)
+        updateMessage(messId, newContent, additionalValue) {
+            if(additionalValue === 'edit')
+            {
+                let message = document.getElementById(messId)
+                if(message)
+                {
+                    message.textContent = newContent
+                }
+            } 
+            if(additionalValue === 'delete')
+            {
+                // let message = document.getElementById(messId+'inner-container')
+                let message = document.getElementById(messId)
+                if(message)
+                {
+                    message.parentNode.parentNode.style.display = 'none'
+                }
+            }
         },
 
         // Функция редактирования сообщения
@@ -854,7 +876,7 @@ export default {
                         result: true,
                         atCreated: new Date().toLocaleString(),
                         atUpdated: new Date().toLocaleString(),
-                        answered: this.messageText != '' && this.messageText != 'default message' ? true : false,
+                        answered:  this.messageText != '' && this.messageText != 'default message' ? true : false,
                         answeredText: this.messageText != '' && this.messageText != 'default message' ? this.messageText : null,
                         idAnsweredMessageDomElement:  this.messageText != '' && this.messageText != 'default message' ? this.messageIdForAnswer : null,
                     })
@@ -904,6 +926,7 @@ export default {
             }
             await MessagesApi.createMessage(messageContent, data_).then( async () => {
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.remove('anime-bubble-message')
+                this.messageText = ''
                 if(chatID === null) {console.log('chatID is null'); return}
                 await ChatApi.updataField(chatID)
             }).catch(err => {

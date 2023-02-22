@@ -91,10 +91,11 @@ export default {
                 {
                     this.deleteMessageById()
                     this.addToast(
-                        {id: this.idSelectedMessage, icon: 'delete document', textContent: 'Request been sended by successful', type: 'red', typeOf: 'delete'},
+                        {id: this.idSelectedMessage, icon: 'delete document', textContent: 'The document has been deleted', type: 'red', typeOf: 'delete',  bottContent: 'The document (message) was successfully deleted from the block, it is impossible to restore it'},
+
                     )
                     this.$emit('closeContextmenuFunction', false)
-                    this.$emit('updateChatFunctionHelper')
+                    this.$emit('updateMessageHelper', this.idSelectedMessage, null, 'delete')
                     // let {chatid} = await this.getChatId()
                     // console.log('chatid', chatid)
                     // ChatApi.decrimentField(chatid)

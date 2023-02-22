@@ -192,7 +192,6 @@ const MessagesApi = {
       )
       const documentSnapshots = await getDocs(first)
       const lastElement = documentSnapshots.docs[documentSnapshots.docs.length - 1];
-      console.log('start 1 page')
       documentSnapshots.forEach(doc => {
         let data_message = {
           id: doc.id,

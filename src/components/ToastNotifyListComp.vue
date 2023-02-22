@@ -35,16 +35,14 @@
                             </div>
                             
                             <div class="progress-upload" v-if="it.typeOf === 'file'">
-                                <div class="procent-value" id="procent-value-id">{{ '100%' }}</div>
-                                <div class="progress-inline" id="progress-inline-id"></div>
+                                <div class="procent-value" id="procent-value-id">{{ '58%' }}</div>
+
+                                <div class="progress-empty" id="progress-empty-id">
+                                    <div class="progress-inline" id="progress-inline-id"></div>
+                                </div>
                             </div>
                         </div>
-        
-
                     </div>
-
-    
-
                 </div>
 
             </div>
@@ -57,9 +55,9 @@ export default {
     data() {
         return {
             ToastsList: [
-                {id: 0, icon: 'delete document', textContent: 'Document been deleted', type: 'red', typeOf: 'delete',  bottContent: 'The document (message) was successfully deleted from the block, it is impossible to restore it'},
-                {id: 1, icon: 'delete document', textContent: 'file uploading', type: 'blue', typeOf: 'file',  bottContent: 'The file has been successfully uploaded to the cloud, copy the link'},
-                {id: 2, icon: 'delete document', textContent: 'Request been sended by successful', type: 'green', typeOf: 'send', bottContent: 'The request was sent successfully, please wait for feedback'},
+                {id: 0, icon: 'delete document', textContent: 'The document has been deleted', type: 'red', typeOf: 'delete',  bottContent: 'The document (message) was successfully deleted from the block, it is impossible to restore it'},
+                {id: 1, icon: 'delete document', textContent: 'File uploading', type: 'blue', typeOf: 'file',  bottContent: 'The file has been successfully uploaded to the cloud, copy the link'},
+                {id: 2, icon: 'delete document', textContent: 'Request was sent successfully', type: 'green', typeOf: 'send', bottContent: 'The request was sent successfully, please wait for feedback'},
             ],
         }
     },
@@ -80,7 +78,7 @@ export default {
     },
 
     mounted() {
-        // this.ToastsList = this.isList
+        this.ToastsList = this.isList
         console.log(this.isList, this.ToastsList, 'bomba')
     },
     methods: {
@@ -190,11 +188,18 @@ export default {
                             padding: 5px;
                             margin-left: 5px;
                             margin-top: 5px;
-                            .progress-inline {
+
+                            .progress-empty {
+                                background-color: #222;
                                 width: 100%;
-                                height: 2px;
-                                background-color: aqua;
                                 margin-top: 5px;
+
+
+                                .progress-inline {
+                                    width: 58%;
+                                    height: 2px;
+                                    background-color: aqua;
+                                }
                             }
 
                             .procent-value {
