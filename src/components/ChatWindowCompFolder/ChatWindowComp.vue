@@ -1,4 +1,13 @@
 <template>
+    <EditMessageWindow
+        v-if="visibleEditMessageWindow"
+        id="editMessWindow-id"
+        v-bind:currmessText="currmessText"
+        v-bind:currentMessageEditId="currentMessageEditId"
+        @updateChatFunction="() => {this.getLimitedMessagePage(this.user_to_id)}"
+        @closeEditMessageWindow="(vl) => {this.visibleEditMessageWindow = vl}"
+    ></EditMessageWindow>
+
     <div class="main-window-chat" id="globalID-chat">
         <img src="@/assets/svgassets/icons8-кали-линукс-wh.svg" alt="" id="kali-logo-chat">
         <Transition name="fade-comp-settChatId-v">
@@ -9,6 +18,9 @@
             @visSelSysFunction="selectionMessagesFunction"
             @copyTextFromMessageFunction="copyTextFromMessage"
             @answerOnMessageFunction="answerOnMS"
+            @editMessageFunction="editMessage"
+            @showEditMessWindowFunction="() => {this.visibleEditMessageWindow = true}"
+            @updateChatFunctionHelper="() => {this.getLimitedMessagePage(this.user_to_id)}"
             ></ContextMenuMessage>
         </Transition>
     
@@ -52,7 +64,7 @@
                 <div class="generl-list-messages" id="block-chat-window-id"  @click="cl" @scroll="lv">
                     <div class="selected-mess-sys" v-if="visibileSelSys">
                         <span class="count-sel-mess">Выбрано:  {{ sel_mess.length }}</span>
-                        <img src="@/assets/svgassets/icons8-удалить.svg" alt="" @click="() => {this.visibileSelSys = false}">
+                        <img src="@/assets/svgassets/icons8-удалить.svg" alt="" @click="closeSelectionWindow()">
                     </div>
                     <div class="outer-container">
                         <div v-show="showDialogWindow" class="container-hide-box" id="query1">
@@ -66,10 +78,17 @@
                         <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
                             <div class="message-bubble">
 
-                                <div class="file-content"  v-if="n.fileobj_url">
+                                <div 
+                                        class="file-content"  
+                                        v-if="n.fileobj_url"
+                                    >
                                     <div 
                                         class="inner-file-container"
-                                        :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" 
+                                        :style="n.fromId === user_id 
+                                        ? 
+                                        {'margin-left' : 'auto', 'background-color' : `${currentMesssageBackgroundByTheme}`} 
+                                        : 
+                                        {'margine-left' : '0'}" 
                                     >
                                         <img 
                                             :src="n.result ?
@@ -106,7 +125,10 @@
                                 <div class="answered-message-content" v-if="n.answered">
                                     <div 
                                         class="inner-answered-message"
-                                        :style="n.fromId === user_id ? {'margin-left' : 'auto'} : {'margine-left' : '0'}" 
+                                        :style="n.fromId === user_id ?
+                                        {'margin-left' : 'auto', 'background-color' : `${currentMesssageBackgroundByTheme}`}
+                                        :
+                                        {'margine-left' : '0'}" 
                                     >
                                         <div class="answer-box" @click="scrollViewToElement(n.idAnsweredMessageDomElement)">
                                             {{ this.sliceText(n.answeredText) }}
@@ -157,6 +179,7 @@
     </div>
 </template>
 <script>
+import EditMessageWindow from '@/components/ModalWindows/EditMessageWindow.vue'
 import BannerUpComp from '@/components/BannerUpComp.vue'
 import BannerBottomComp from '@/components/BannerBottomComp.vue'
 import SettingsMenuChatIdComp from '@/components/SettingsMenuChatIdComp.vue'
@@ -183,6 +206,11 @@ export default {
             visibileContextMenuMess: false,
             // Система выбранных сообщений tyre/false - vis
             visibileSelSys: false,
+
+            // model for editMessWindow
+            visibleEditMessageWindow: false,
+            currmessText: '',
+            currentMessageEditId: '',
 
             message_lst: [],
             sel_mess: [],
@@ -234,7 +262,21 @@ export default {
         document.addEventListener('click', e => {
             this.hideContextMenu(e)
             this.hideScrollEffect()
+            this.closeEditWindow(e)
         })
+
+        document.addEventListener('keydown', (e) => {
+            if(e.code === 'Escape') {
+                this.closeEditWindow(e)
+            }
+        })
+
+        // При монтировании, если toId не нулл (т.е выбран какой-то чат, то мы получаем пакет сообщений)
+        // if(this.user_to_id)
+        // {
+        //     this.getLimitedMessagePage(this.user_to_id)
+        // }
+
         // Здесь устанавливается onSnapshoot для слежения за index - это колл-во сообщений в чате, которое меняется каждый раз когда оправляется сообщение
         await UserApi.getAllChats(this.user_id).then((el) => {
             el.forEach(ele => {
@@ -269,22 +311,11 @@ export default {
             console.log(err)
         })
     },
+
     watch: {
         user_to_id: {
             async handler() {
-                this.setuser_to_id(this.user_to_id)
-                const data_ = { toId: this.user_to_id, fromId: this.user_id, }
-                const {lastElement, array} = await MessagesApi.getLimitedPage(data_) || {}
-                new Promise((resolve, failure) => {
-                    this.message_lst = []
-                    this.message_lst = array.reverse()
-                    this.lastMessage = lastElement
-                    resolve('success')
-                    failure('failure')
-                }).then(() => {
-                    this.scrollDownChat()
-                    this.settings()
-                })
+                this.getLimitedMessagePage(this.user_to_id)
             },
             deep: true,
         },
@@ -315,6 +346,7 @@ export default {
             deep: true,
         }
     },
+
     methods: {
         // Настройка темы
         settings() {
@@ -394,6 +426,22 @@ export default {
             }
         },
 
+        DeepLevelSearch( ) {
+
+        },
+
+        // Close functions
+        closeEditWindow(e) {
+            let element = document.getElementById('editMessWindow-id')
+            let contextMenuMessElem = document.getElementById('context-menu-vclass-mess')
+            const withinBorderies = e.composedPath().includes(element);
+            const withinMenuContext = e.composedPath().includes(contextMenuMessElem);
+            if(!withinBorderies && !withinMenuContext) {
+                this.visibleEditMessageWindow = false
+            }
+            
+        },
+
         answerOnMS(vl_id_message) {
             let domElementMessage = document.getElementById(vl_id_message)
             if(domElementMessage)
@@ -417,8 +465,13 @@ export default {
         },
 
         // Click on message-bubble function
+        // Сей час функция используется только для выбора сообщения, если открыта система выбора сообщений
         sl(it) {
             console.log('it - ', it)
+            if(this.visibileSelSys)
+            {
+                this.selectionMessagesFunction(it.id)
+            }
         },
 
         selectionMessagesFunction(vl) {
@@ -428,7 +481,17 @@ export default {
             let message = document.getElementById(vl)
             if(message)
             {
-                message.style.backgroundColor = '#333 !important'
+                message.parentNode.style.backgroundColor = '#111'
+            }
+        },
+
+        closeSelectionWindow() {
+            this.sel_mess = []
+            this.visibileSelSys = false
+            let lst_message_bubble = document.getElementsByClassName('message-bubble')
+            for (let index = 0; index < lst_message_bubble.length; index++) {
+                const element = lst_message_bubble[index];
+                element.style.backgroundColor = ''
             }
         },
 
@@ -448,7 +511,6 @@ export default {
             if(this.visibileContextMenuMess === true)
             {
                 // Здесь обрабатывается прверка находится ли элемент под курсором во время нажатия
-                console.log('visibileContextMenuMess == ', 'true')
                 let contextMenuMessElem = document.getElementById('context-menu-vclass-mess')
                 const withinBoundaries = e.composedPath().includes(contextMenuMessElem)
                 if(!withinBoundaries)
@@ -680,6 +742,36 @@ export default {
         hideDetailDataMessage() {
             this.showDialogWindow = false
         },
+        // Основной метод, получить все сообщения текущего чата
+        async getLimitedMessagePage(vl_curr_user_toId) {
+            this.setuser_to_id(vl_curr_user_toId)
+            const data_ = { toId: vl_curr_user_toId, fromId: this.user_id, }
+            const {lastElement, array} = await MessagesApi.getLimitedPage(data_) || {}
+            new Promise((resolve, failure) => {
+                this.message_lst = []
+                this.message_lst = array.reverse()
+                this.lastMessage = lastElement
+                resolve('success')
+                failure('failure')
+            }).then(() => {
+                this.scrollDownChat()
+                this.settings()
+            })
+        },
+
+        // Функция редактирования сообщения
+        editMessage(messageId) {
+            if(messageId)
+            {
+                let message = document.getElementById(messageId)
+                if(message)
+                {
+                    let currmessContent = message.textContent
+                    this.currmessText = currmessContent
+                    this.currentMessageEditId = messageId
+                }
+            }
+        },
 
         async add_file_message(file, valuetype) {
             const data_ = {
@@ -762,9 +854,9 @@ export default {
                         result: true,
                         atCreated: new Date().toLocaleString(),
                         atUpdated: new Date().toLocaleString(),
-                        answered: false,
-                        answeredText: null,
-                        idAnsweredMessageDomElement: this.messageIdForAnswer,
+                        answered: this.messageText != '' && this.messageText != 'default message' ? true : false,
+                        answeredText: this.messageText != '' && this.messageText != 'default message' ? this.messageText : null,
+                        idAnsweredMessageDomElement:  this.messageText != '' && this.messageText != 'default message' ? this.messageIdForAnswer : null,
                     })
                 resolve('success')
                 failure('failure')
@@ -857,6 +949,7 @@ export default {
         viewPhotoWindow,
         ContextMenuMessage,
         AnswerOnMessage,
+        EditMessageWindow,
     }
 }
 </script>
@@ -1050,6 +1143,8 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                                 padding: 8px 12px 8px 12px;
 
                                 .answer-box {
+                                    border-left: 1px solid #00cec7;
+                                    padding-left: 10px;
                                     width: 100%;
                                     height: 50%;
                                     font-weight: 600;
@@ -1066,6 +1161,7 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                                 }
 
                                 .text-message {
+                                    margin-top: 7px;
                                     background-size: 300% 300%;
                                     word-wrap: break-word;
                                     height: auto;

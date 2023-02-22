@@ -63,6 +63,12 @@ export default {
             addToast: 'addToast',
         }),
         async onItem(vl) {
+            if(vl === 'edit')
+            {
+                this.$emit('editMessageFunction', this.idSelectedMessage)
+                this.$emit('closeContextmenuFunction', false)
+                this.$emit('showEditMessWindowFunction')
+            }
             if(vl === 'answer')
             {
                 this.$emit('answerOnMessageFunction', this.idSelectedMessage)
@@ -88,6 +94,7 @@ export default {
                         {id: this.idSelectedMessage, icon: 'delete document', textContent: 'Request been sended by successful', type: 'red', typeOf: 'delete'},
                     )
                     this.$emit('closeContextmenuFunction', false)
+                    this.$emit('updateChatFunctionHelper')
                     // let {chatid} = await this.getChatId()
                     // console.log('chatid', chatid)
                     // ChatApi.decrimentField(chatid)

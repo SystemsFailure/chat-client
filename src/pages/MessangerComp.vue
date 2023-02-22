@@ -364,7 +364,7 @@ export default {
         NotificationsComp, dialogChatDeleted,
         CreateMusicWindow, CreatePlaylistWindow,
         PersonalAudioListComp,
-        ViewPlaylistComp, ToastNotifyListComp
+        ViewPlaylistComp, ToastNotifyListComp,
     }
 
 }

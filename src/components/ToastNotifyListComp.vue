@@ -12,28 +12,39 @@
                     }"
                 >
                     <div
-                        class="frame-icon"
-                    >
-                    <!-- #44444473 -->
-                    <img v-if="it.typeOf === 'delete'" src="@/assets/toasts/icons8-мусор-90.png" alt="">
-                    <img v-if="it.typeOf === 'message'" src="@/assets/toasts/icons8-новое-сообщение.png" alt="">
-                    <img v-if="it.typeOf === 'send'" src="@/assets/toasts/icons8-добавить-пользователя-96.png" alt="">
-
-
-                    </div>
-    
-                    <div 
-                        class="text-content"
-                    >
-                    {{ it.textContent }}
-                    </div>
-    
-                    <div
                         class="close-btn-toast"
                         @click="() => {}"
                     >
-                    <img src="@/assets/svgassets/icons8-удалить.svg" alt="">
+                        <img src="@/assets/svgassets/icons8-удалить.svg" alt="">
                     </div>
+
+                    <div class="wrapper">
+                        <div class="frame-icon">
+                            <img v-if="it.typeOf === 'delete'" src="@/assets/toasts/icons8-отмена.svg" alt="">
+                            <img v-if="it.typeOf === 'file'" src="@/assets/toasts/icons8-загрузить-96.png" alt="">
+                            <img v-if="it.typeOf === 'send'" src="@/assets/toasts/icons8-проверено.svg" alt="">
+                        </div>
+
+                        <div class="inner-wrapper">
+                            <div class="text-content">
+                                {{ it.textContent }}
+                            </div>
+
+                            <div class="text-bottom-content">
+                                {{ it.bottContent }}
+                            </div>
+                            
+                            <div class="progress-upload" v-if="it.typeOf === 'file'">
+                                <div class="procent-value" id="procent-value-id">{{ '100%' }}</div>
+                                <div class="progress-inline" id="progress-inline-id"></div>
+                            </div>
+                        </div>
+        
+
+                    </div>
+
+    
+
                 </div>
 
             </div>
@@ -46,9 +57,9 @@ export default {
     data() {
         return {
             ToastsList: [
-                // {id: 0, icon: 'delete document', textContent: 'Document been deleted', type: 'red', typeOf: 'delete'},
-                {id: 0, icon: 'delete document', textContent: 'New message', type: 'blue', typeOf: 'message'},
-                // {id: 0, icon: 'delete document', textContent: 'Request been sended by successful', type: 'green', typeOf: 'send'},
+                {id: 0, icon: 'delete document', textContent: 'Document been deleted', type: 'red', typeOf: 'delete',  bottContent: 'The document (message) was successfully deleted from the block, it is impossible to restore it'},
+                {id: 1, icon: 'delete document', textContent: 'file uploading', type: 'blue', typeOf: 'file',  bottContent: 'The file has been successfully uploaded to the cloud, copy the link'},
+                {id: 2, icon: 'delete document', textContent: 'Request been sended by successful', type: 'green', typeOf: 'send', bottContent: 'The request was sent successfully, please wait for feedback'},
             ],
         }
     },
@@ -69,7 +80,7 @@ export default {
     },
 
     mounted() {
-        this.ToastsList = this.isList
+        // this.ToastsList = this.isList
         console.log(this.isList, this.ToastsList, 'bomba')
     },
     methods: {
@@ -83,13 +94,13 @@ export default {
 // #ff0000
 
 .fail {
-    background: linear-gradient(90deg, rgba(255,0,0,0.958420868347339) 0%, rgba(255,0,0,0.6278886554621849) 18%, rgba(28,28,33,0.5690651260504201) 45%);
+    background: linear-gradient(41deg, rgba(4,4,4,1) 0%, rgba(52,0,0,0.8995973389355743) 100%, rgba(52,223,109,0.9920343137254902) 100%);
 }
 .neutrally {
-    background: linear-gradient(90deg, rgba(0, 94, 255, 0.958) 0%, rgba(0, 68, 255, 0.628) 18%, rgba(28,28,33,0.5690651260504201) 45%);
+    background: linear-gradient(41deg, rgba(4,4,4,1) 0%, rgba(0,32,47,0.8995973389355743) 100%, rgba(52,223,109,0.9920343137254902) 100%);
 }
 .succ {
-    background: linear-gradient(90deg, rgba(0, 255, 94, 0.958) 0%, rgba(0, 255, 55, 0.628) 18%, rgba(28,28,33,0.5690651260504201) 45%);
+    background: linear-gradient(41deg, rgba(4,4,4,1) 0%, rgba(0,47,31,0.8995973389355743) 100%, rgba(52,223,109,0.9920343137254902) 100%);
 }
 
 .toasts-notify-class {
@@ -97,13 +108,6 @@ export default {
     right: 10px;
     top: 30px;
     width: 400px;
-    // padding: 5px;
-    // height: 600px;
-    // background-color: rgba($color: rgb(0, 0, 0), $alpha: .5);
-    // background: linear-gradient(90deg, rgba(252,34,34,1) 0%, rgba(255,0,0,1) 0%, rgba(28,28,33,1) 40%);4
-    // background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(255,0,0,0.3925945378151261) 18%, rgba(28,28,33,0.6446953781512605) 40%);
-    // background: linear-gradient(90deg, rgba(255,0,0,0.9556197478991597) 0%, rgba(255,0,0,0.48783263305322133) 18%, rgba(28,28,33,0.6138830532212884) 40%);
-    // background: linear-gradient(90deg, rgba(255,0,0,0.958420868347339) 0%, rgba(255,0,0,0.6278886554621849) 18%, rgba(28,28,33,0.5690651260504201) 45%);
     z-index: 11;
     .outside {
         width: 100%;
@@ -116,43 +120,105 @@ export default {
             // overflow: auto;
             .it {
                 width: 100%;
-                height: 50px;
+                padding: 10px;
                 display: flex;
-                align-items: center;
-                // border-radius: 10px;
+                flex-direction: column;
+                justify-content: center;
+                border-radius: 10px;
                 padding-left: 20px;
                 margin-top: 10px;
                 z-index: 50;
-                color: white;
-                font-size: 12px;
+                color: #888;
+                font-family: Lato,sans-serif;
+                font-weight: 700;
+                font-size: 11px;
                 text-transform: uppercase;
-
-                .frame-icon {
-                    
-                    img {
-                        width: 30px;
-                        height: 30px;
-                    }
-                }
-    
-                .text-content {
-                    margin-left: 10px;
-                    display: flex;
-                    flex-direction: column;
-                }
-    
+                letter-spacing: .02em;
+                position: relative;
                 .close-btn-toast {
-                    margin-left: auto;
-                    margin-right: 20px;
+                    position: absolute;
+                    top: 0;
+                    width: 50%;
+                    right: 0;
+                    display: flex;
+                    align-items: center;
                     img {
                         width: 12px;
                         height: 12px;
+                        margin-left: auto;
+                        margin-right: 10px;
+                        margin-top: 10px;
 
                         &:hover {
                             cursor: pointer;
                         }
                     }
                 }
+
+                .wrapper {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+
+                    .frame-icon {
+                        
+                        img {
+                            width: 30px;
+                            height: 30px;
+                            opacity: .7;
+                        }
+                    }
+
+                    .inner-wrapper {
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                        flex-direction: column;
+                        padding: 10px;
+
+                        .text-content {
+                            margin-left: 10px;
+                            display: flex;
+                            flex-direction: column;
+                        }
+
+                        .progress-upload {
+                            width: 100%;
+                            display:flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            padding: 5px;
+                            margin-left: 5px;
+                            margin-top: 5px;
+                            .progress-inline {
+                                width: 100%;
+                                height: 2px;
+                                background-color: aqua;
+                                margin-top: 5px;
+                            }
+
+                            .procent-value {
+                                margin-left: auto;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            }
+                        }
+    
+                        .text-bottom-content {
+                            margin-top: 5px;
+                            display: flex;
+                            flex-direction: column;
+                            margin-left: 10px;
+                            font-size: 11px;
+                            padding-right: 10px;
+                            text-transform: lowercase;
+                        }
+                    }
+        
+                }
+
+
             }
         }
     }
