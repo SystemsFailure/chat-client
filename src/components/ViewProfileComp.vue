@@ -1,4 +1,8 @@
 <template>
+    <ListContacts 
+        v-if="visibleListContactsWindow"
+        @closeListContactsWindowFunction="() => {this.visibleListContactsWindow = false}"
+    ></ListContacts>
     <div class="main-viewProfile-comp">
 
         <div class="inline-line">
@@ -33,7 +37,7 @@
                             <span class="city">Chicago</span>
                         </div>
                         <div class="r0-w1-class">
-                            <div class="wrap-box" id="contacts-box-id">
+                            <div class="wrap-box" id="contacts-box-id" @click="visibleListContactsWindow = true">
                                 <i class="fi fi-ss-users"></i>
                                 <h5>contacts</h5>
                                 <span id="contacts-id"></span>
@@ -113,6 +117,8 @@
     </div>
 </template>
 <script>
+import ListContacts from '@/components/ModalWindows/ListContacts.vue'
+
 import {mapActions, mapMutations, mapState} from 'vuex'
 import { UserApi } from '@/firebase-config/UserController.js'
 import { Pagination } from 'swiper'
@@ -127,6 +133,7 @@ export default {
             titleId: localStorage.getItem('user-id'),
             playlistList: [],
             showSpiner: false,
+            visibleListContactsWindow: false,
         }
     },
 
@@ -155,7 +162,8 @@ export default {
 
     components: {
         Swiper,
-        SwiperSlide
+        SwiperSlide,
+        ListContacts,
     },
     setup() {
         return {

@@ -122,7 +122,13 @@
                                     </div>
                                 </div>
 
-                                <div class="answered-message-content" v-if="n.answered">
+                                <div 
+                                    class="answered-message-content" 
+                                    v-if="n.answered" 
+                                    @contextmenu="test($event, n.id, n)"
+                                    @click="sl(n)"
+
+                                >
                                     <div 
                                         class="inner-answered-message"
                                         :style="n.fromId === user_id ?
@@ -134,15 +140,17 @@
                                             {{ this.sliceText(n.answeredText) }}
                                         </div>
                                         <div class="text-message">
-                                            {{ n.content }}
+                                            <span :id="n.id">
+                                                {{ n.content }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <h6 v-if="n.content && !n.answered"
                                     :id="n.id"
-                                    @click="sl(n)"
                                     class="im-message-content"
+                                    @click="sl(n)"
                                     @contextmenu="test($event, n.id, n)"
                                     @mouseover="showDetailDataMessage($event, n.id)"
                                     @mouseout="hideDetailDataMessage($event)"
