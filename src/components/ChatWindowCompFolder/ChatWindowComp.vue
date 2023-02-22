@@ -75,7 +75,7 @@
                             <h5  class="mess-content-example" style="color: white;" id="q5"></h5>
                         </div>
 
-                        <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content">
+                        <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content" :id="'inner'+n.id">
                             <div class="message-bubble">
 
                                 <div 
@@ -125,9 +125,7 @@
                                 <div 
                                     class="answered-message-content" 
                                     v-if="n.answered" 
-                                    @contextmenu="test($event, n.id, n)"
                                     @click="sl(n)"
-
                                 >
                                     <div 
                                         class="inner-answered-message"
@@ -135,12 +133,15 @@
                                         {'margin-left' : 'auto', 'background-color' : `${currentMesssageBackgroundByTheme}`}
                                         :
                                         {'margine-left' : '0'}" 
+                                        @mouseover="showDetailDataMessage($event, n.id)"
+                                        @mouseout="hideDetailDataMessage($event)"
+                                        @contextmenu="test($event, n.id, n)"
                                     >
                                         <div class="answer-box" @click="scrollViewToElement(n.idAnsweredMessageDomElement)">
                                             {{ this.sliceText(n.answeredText) }}
                                         </div>
-                                        <div class="text-message">
-                                            <span :id="n.id">
+                                        <div class="text-message answered-class-j">
+                                            <span :id="n.id" class="answ-class answered-mess-id-j">
                                                 {{ n.content }}
                                             </span>
                                         </div>
@@ -412,18 +413,62 @@ export default {
 
         scrollViewToElement(vl_id_element) {
             const el = document.getElementById(vl_id_element)
+            const listAllMessElements = document.getElementsByClassName('inner-container')
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// Элемент сравнения (если элемент последний в списке всех сообщений, либо предпоследний и так далее на 5 позиций по списку с конца, то не скроллим до него) ////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            const elcomparison = document.getElementById('inner'+vl_id_element)
             if(vl_id_element)
             {
                 if(el)
                 {
-                    el.scrollIntoView({block: 'center', inline: 'center', behavior: 'smooth'})
-                    let parentDOMElement = el.parentNode
-                    if(parentDOMElement) {
-                        parentDOMElement.style.backgroundColor = '#111'
-                        setTimeout(() => {
-                            parentDOMElement.style.backgroundColor = ''
-                        }, 1000);
+                    for (let index = 0; index < 10; index++) {
+                        if(elcomparison === listAllMessElements[listAllMessElements.length - [index]])
+                        {
+                            if (el.classList[1] === 'answered-mess-id-j')
+                            {
+                                let parentDOMElement = el.parentNode.parentNode.parentNode
+                                if(parentDOMElement) {
+                                    parentDOMElement.style.backgroundColor = '#111'
+                                    setTimeout(() => {
+                                        parentDOMElement.style.backgroundColor = ''
+                                    }, 1000);
+                                }
+                                return
+                            } else {
+                                let parentDOMElement = el.parentNode
+                                if(parentDOMElement) {
+                                    parentDOMElement.style.backgroundColor = '#111'
+                                    setTimeout(() => {
+                                        parentDOMElement.style.backgroundColor = ''
+                                    }, 1000);
+                                }
+                                return
+                            }
+                        }
                     }
+                    if (el.classList[1] === 'answered-mess-id-j')
+                    {
+                        el.scrollIntoView({block: 'center', inline: 'center', behavior: 'smooth'})
+                        let parentDOMElement = el.parentNode.parentNode.parentNode
+                        if(parentDOMElement) {
+                            parentDOMElement.style.backgroundColor = '#111'
+                            setTimeout(() => {
+                                parentDOMElement.style.backgroundColor = ''
+                            }, 1000);
+                        }
+                    } else {
+                        el.scrollIntoView({block: 'center', inline: 'center', behavior: 'smooth'})
+                        let parentDOMElement = el.parentNode
+                        if(parentDOMElement) {
+                            parentDOMElement.style.backgroundColor = '#111'
+                            setTimeout(() => {
+                                parentDOMElement.style.backgroundColor = ''
+                            }, 1000);
+                        }
+                    }
+
                 }
             }
         },
@@ -448,6 +493,9 @@ export default {
             let domElementMessage = document.getElementById(vl_id_message)
             if(domElementMessage)
             {
+                if(domElementMessage.classList[1] === 'answered-mess-id-j') {
+                    console.log('dont can to answer on the answer')
+                }
                 this.messageIdForAnswer = vl_id_message
                 this.messageText = domElementMessage.textContent
                 this.visibleAnswerWindow = true
@@ -784,6 +832,9 @@ export default {
                 let message = document.getElementById(messId)
                 if(message)
                 {
+                    if(message.parentNode.classList[1] === 'answered-class-j') {
+                        message.parentNode.parentNode.parentNode.parentNode.parentNode.style.display = 'none'
+                    }
                     message.parentNode.parentNode.style.display = 'none'
                 }
             }
@@ -891,7 +942,12 @@ export default {
                 resolve('success')
                 failure('failure')
             }).then(() => {
-                document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('anime-bubble-message')
+                // анимация отправки сообщения
+                if(this.messageText != '' && this.messageText != 'default message') {
+                    document.getElementsByClassName('inner-answered-message')[document.getElementsByClassName('inner-answered-message').length - 1].classList.add('anime-bubble-message')
+                } else {
+                    document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('anime-bubble-message')
+                }
                 this.scrollDownChat()
                 this.visibleAnswerWindow = false
             })
