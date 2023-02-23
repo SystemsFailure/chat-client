@@ -7,12 +7,22 @@
         v-if="visibleListFollowersWindow"
         @closeListFollowersWindowFunction="() => {this.visibleListFollowersWindow = false}"
     ></ListFollowers>
+    <ListFollowing
+        v-if="visibleListFollowingWindow"
+        @closeListFollowingWindowFunction="() => {this.visibleListFollowingWindow = false}"
+    ></ListFollowing>
+    <ListPlaylists
+        v-if="visibleListPlaylistsWindow"
+        @closeListPlaylistWindowFunction="() => {this.visibleListPlaylistsWindow = false}"
+        @showViewPlaylistCompFunction="() => {this.$emit('showViewPlaylistCompFunction', true)}"
+    ></ListPlaylists>
+
     <div class="main-viewProfile-comp">
 
         <div class="inline-line">
-                <span>Detail info</span>
-                <span class="uuid-span" style="margin-left: 20px;">ID : UC39PXZKT8HABLOT7SLC</span>
-                <span class="online-offline" style="margin-left: 20px;"><div class="cycle"></div> online</span>
+            <span>Detail info</span>
+            <span class="uuid-span" style="margin-left: 20px;">ID : UC39PXZKT8HABLOT7SLC</span>
+            <span class="online-offline" style="margin-left: 20px;"><div class="cycle"></div> online</span>
         </div>
 
         <div class="inner-content">
@@ -72,18 +82,18 @@
                             <span id="follower-id"></span>
                             <h5>followers</h5>
                         </div>
-                        <div class="wrap-box" id="following-box-id">
+                        <div class="wrap-box" id="following-box-id" @click="() => {this.visibleListFollowingWindow = true}">
                             <span id="following-id"></span>
                             <h5>following</h5>
                         </div>
-                        <div class="wrap-box" id="playlists-box-id">
+                        <div class="wrap-box" id="playlists-box-id" @click="() => {this.visibleListPlaylistsWindow = true}">
                             <span id="playlists-id"></span>
                             <h5>playlists</h5>
                         </div>
-                        <div class="wrap-box" id="posts-box-id">
+                        <!-- <div class="wrap-box" id="posts-box-id">
                             <span id="posts-id"></span>
                             <h5>posts</h5>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -100,20 +110,26 @@
 
                 <div class="content-conteiner">
                     <div class="custom-playlist">
-                        <div class="line-title"><span>playlists</span> <span class="text-more">show more</span></div>
+                        <div class="line-title">
+                            <span>playlists</span>
+                            <!-- <span class="text-more">show more</span> -->
+                        </div>
 
                         <div class="playlist_" v-for="playlist in playlistList" :key="playlist.id" @click="createNewPlaylist(playlist.name, playlist)">
                             <img :src="playlist.imgUrl !=null ? playlist.imgUrl : require('@/assets/playlist.png')" alt="" srcset="">
-                            <div class="title-playlist"><span>{{ playlist.name }}</span></div>
+                            <div class="title-playlist">
+                                <span id="name-pl-id">{{ playlist.name }}</span>
+                                <span>{{ playlist.description }}</span>
+                            </div>
                             <div class="avtor-title"><span>{{ playlist.avtor }}</span></div>
                         </div>
 
                     </div>
                 </div>
 
-                <!-- <div class="line-bottom">
+                <div class="line-bottom">
                     <div class="upload-music" @click="() => {this.$emit('showCreateMusicWindowFunction', true)}"><span>upload new music</span></div>
-                </div> -->
+                </div>
             </div>
             
         </div>
@@ -123,6 +139,8 @@
 <script>
 import ListContacts from '@/components/ModalWindows/ListContacts.vue'
 import ListFollowers from '@/components/ModalWindows/ListFollowers.vue'
+import ListFollowing from '@/components/ModalWindows/ListFollowing.vue'
+import ListPlaylists from '@/components/ModalWindows/ListPlaylists.vue'
 
 import {mapActions, mapMutations, mapState} from 'vuex'
 import { UserApi } from '@/firebase-config/UserController.js'
@@ -140,6 +158,8 @@ export default {
             showSpiner: false,
             visibleListContactsWindow: false,
             visibleListFollowersWindow: false,
+            visibleListFollowingWindow: false,
+            visibleListPlaylistsWindow: false,
         }
     },
 
@@ -160,9 +180,9 @@ export default {
             document.getElementById('avatar-profile-id').src = user[0].img_url || '@/assets/user_profile.png'
             document.getElementById('follower-id').textContent = user[0].arrayFollowers.length
             document.getElementById('following-id').textContent = user[0].arrayFollowing.length
-            document.getElementById('playlists-id').textContent = user[0].arrayFollowing.length
-            document.getElementById('posts-id').textContent = user[0].arrayFollowing.length
+            document.getElementById('playlists-id').textContent = this.playlistList.length
             document.getElementById('contacts-id').textContent = 3
+            // document.getElementById('posts-id').textContent = user[0].arrayFollowing.length
         })
     },
 
@@ -171,6 +191,8 @@ export default {
         SwiperSlide,
         ListContacts,
         ListFollowers,
+        ListFollowing,
+        ListPlaylists,
     },
     setup() {
         return {
@@ -370,22 +392,29 @@ $color-back: rgba(0, 0, 0, 0.8);
                             align-items: center;
                             color: white;
                             font-size: 8px;
-                            margin-top: 5px;
+                            margin-bottom: 5px;
                         }
                         
                         .title-playlist {
                             margin-top: 8px;
                             width: 100%;
                             display: flex;
-                            align-items: center;
+                            flex-direction: column;
+                            justify-content: center;
+                            // align-items: center;
                             color: white;
                             font-size: 8px;
+
+                            #name-pl-id {
+                                margin-bottom: 5px;
+                            }
                         }
 
                         img {
                             width: 100px;
                             height: 100px;
-                            object-fit: contain;
+                            // object-fit: contain;
+                            object-fit: cover;
 
                         }
 

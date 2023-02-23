@@ -17,9 +17,14 @@ const playlistModule = {
         musicsList: [],
         musicsListLV: [],
 
+        playlistData: {},
+
     }),
     mutations: {
         // secondary mutatuions sigment start
+        setplaylistData(st, vl) {
+            st.playlistData = vl
+        },
         setplaylistId(state, id) {
             state.playlistID = id
         },
@@ -141,11 +146,24 @@ const playlistModule = {
                 }
                 context.state.playlistList.push(data)
             });
-            context.state.playlistList.push({ id: 'addPlaylistSuka', title: 'new playlist', img_url: 'addPlaylist4.png', arrayMusic: [], desc: '', avtor: 'add playlist'})
+            context.state.playlistList.push({ id: 'addPlaylistSuka', title: 'new playlist', img_url: 'addPlaylist4.png', arrayMusic: [], description: 'Just create new playlist ;)', avtor: 'add playlist'})
 
         },
         async getLimitPlaylist() {
 
+        },
+
+        async getPLData({state, commit}) {
+            if(state.playlistID != null)
+            {
+                const playlist_ = doc(db, "playlist", state.playlistID);
+                await getDoc(playlist_).then(playlist => {
+                    let dataPL = {
+                        imgUrl: playlist.data().imgUrl,
+                    }
+                    commit('setplaylistData', dataPL)
+                })
+            }
         },
 
         async getDataFromPlaylist(context) {

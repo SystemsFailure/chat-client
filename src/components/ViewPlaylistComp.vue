@@ -5,7 +5,7 @@
             <!-- <i class="fi fi-ss-cross" style="color: red;" @click="pauseAudio()"></i> -->
         </div>
         <div class="img-view">
-            <img :src="require('@/assets/Tumblr.jpeg')" alt="" id="img-view-id">
+            <img src="" alt="" id="img-view-id" width="800" height="270">
             <div class="mix">
                 <img src="@/assets/svgassets/icons8-воспроизведение-50.png" alt="" title="play by list">
             </div>
@@ -15,7 +15,12 @@
                 <audio :src="it.url" :id="it.id" class="audioList"></audio>
                 <div class="img-box-it">
                     <!-- <img src="@/assets/playlist.png" alt=""> -->
-                    <img src="@/assets/svgassets/icons8-воспроизведение-50.png" alt="" @click="PlayerplaySong(it.id)">
+                    <div class="wrap-container-start-song" :id="it.id+'playbtn'">
+                        <img src="@/assets/svgassets/icons8-воспроизведение-50.png" alt="" @click="PlayerplaySong(it)">
+                    </div>
+                    <div class="stop-song-btns-class" :id="it.id+'stopbtn'">
+                        <img src="@/assets/svgassets/icons8-пауза-60.png" alt="" @click="StopSong(it)">
+                    </div>
                 </div>
                 <div class="inner-content">
                     <span class="name-music">
@@ -36,31 +41,70 @@ export default {
             listSongs: [],
         }
     },
-    mounted() {
-        this.getDataFromPlaylist().then(() => {
+    async mounted() {
+        await this.getPLData().then(() => {
+            console.log(this.playlistData.imgUrl)
+            document.getElementById('img-view-id').src = this.playlistData.imgUrl
+        })
+        await this.getDataFromPlaylist().then(() => {
             this.listSongs = this.musicsListLV
         })
+        this.setDefaultStopBtns()
     },
     methods: {
         ...mapActions('playlist', {
             getDataFromPlaylist: 'getDataFromPlaylist',
+            getPLData: 'getPLData',
         }),
         ...mapMutations('player', {
             stopAudio: 'stopAudio',
             setMusicsInArray: 'setMusicsInArray',
             setCurrentSongId: 'setCurrentSongId',
         }),
-        PlayerplaySong(id) {
+        setDefaultStopBtns(id) {
+            let listStopBtns = document.getElementsByClassName('stop-song-btns-class')
+            let listStartBtns = document.getElementsByClassName('wrap-container-start-song')
+
+            if(listStopBtns && listStartBtns)
+            {
+                for (const el of listStopBtns) {
+                    el.style.display = 'none'
+                }
+                for (const el of listStartBtns) {
+                    if(id+'playbtn' != el.id+'play-btn')
+                    {
+                        el.style.display = 'flex'
+                    }
+                }
+            }
+        },
+        PlayerplaySong(it) {
+            this.setDefaultStopBtns(it.id)
+            let stopBtn = document.getElementById(it.id+'stopbtn')
+            if(stopBtn)
+            {
+                event.target.parentNode.style.display = 'none'
+                stopBtn.style.display = 'flex'
+            }
             this.setMusicsInArray(this.listSongs)
-            this.setCurrentSongId(id)
+            this.setCurrentSongId(it.id)
         },
         pauseAudio() {
             this.stopAudio()
-        }
+        },
+        StopSong(it) {
+            let startBtn = document.getElementById(it.id+'playbtn')
+            if(startBtn)
+            {
+                event.target.parentNode.style.display = 'none'
+                startBtn.style.display = 'flex'
+            }
+        },
     },
     computed: {
         ...mapState('playlist', {
             musicsListLV: 'musicsListLV',
+            playlistData: 'playlistData',
         })
     },
 }
@@ -71,7 +115,7 @@ export default {
     position: absolute;
     width: 800px;
     height: 600px;
-    background-color: rgba($color: #000000, $alpha: 1);
+    background-color: rgba($color: #000000, $alpha: .9);
     margin: 0;
     top: 50%;
     left: 50%;
@@ -79,7 +123,6 @@ export default {
     transform: translate(-50%, -50%);
     // padding: 10px;
     z-index: 12;
-    border: 1px solid #333;
 
     font-family: Lato,sans-serif;
     font-weight: 700;
@@ -100,7 +143,14 @@ export default {
             align-items: center;
             border-radius: 5px;
 
+            &:hover {
+                cursor: pointer;
+                opacity: .6;
+                background-color: #111;
+            }
+
             .img-box-it {
+                display: flex;
                 img {
                     width: 15px;
                     height: 15px;
@@ -172,7 +222,8 @@ export default {
         #img-view-id {
             width:100%;
             height: 100%;
-
+            // object-fit: contain;
+            object-fit: cover;
         }
 
         
