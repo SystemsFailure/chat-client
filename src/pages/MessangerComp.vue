@@ -59,7 +59,7 @@
                                 v-for="item in filteredUsers"
                                 v-bind:key="item.id"
                                 class="item-list"
-                                @click="open_item_of_list_users($event, item.id, item)"
+                                @click="open_item_of_list_users(item.id, item)"
                                 :class="
                                     [
                                         this.id_currect_user === item.id? backcolorUserItemLink : ''
@@ -94,6 +94,7 @@
                     @showCreateMusicWindowFunction="() => {this.showCreateMusicWindow = true}"
                     @showDialogWindowCreatePlalistFunction="(value) => {this.showDialogCreatePlaylist = value}"
                     @showViewPlaylistCompFunction="(val) => {this.showViewPlaylistComp = val}"
+                    @openChatIdFunction="(vlId, it) => {this.open_item_of_list_users(vlId, it)}"
                     ></ViewProfileComp>
                 <Transition name="up-profile-card-slide">
                     <MusicMenuComp v-show="false"></MusicMenuComp>
@@ -289,18 +290,13 @@ export default {
             })
         },
 
-        open_item_of_list_users(event, user_to_id, item) {
+        open_item_of_list_users(user_to_id, item) {
             const user_ = this.list_users.filter(user => user.id === user_to_id)
             this.$store.state.user_data = user_
 
             this.i_user_to_id = user_to_id
             this.id_currect_user = user_to_id
-
-            // console.log(item)
             this.$store.commit('changeProfile', item)
-            this.$nextTick(() => {
-                
-            })
         },
 
 

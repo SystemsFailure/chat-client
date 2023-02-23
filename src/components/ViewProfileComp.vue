@@ -2,6 +2,7 @@
     <ListContacts 
         v-if="visibleListContactsWindow"
         @closeListContactsWindowFunction="() => {this.visibleListContactsWindow = false}"
+        @openChatId="(vl, it) => {this.$emit('openChatIdFunction', vl, it); this.visibleListContactsWindow = false}"
     ></ListContacts>
     <ListFollowers
         v-if="visibleListFollowersWindow"
@@ -163,12 +164,12 @@ export default {
         }
     },
 
-    mounted() {
+    async mounted() {
         this.setCerrentUserId(localStorage.getItem('user-id'))
-        this.getAllPlayList().then(() => {
+        await this.getAllPlayList().then(() => {
             this.playlistList = this.playlistList_
         })
-        UserApi.GetPersonalDataOfUser(this.titleId).then(user => {
+        await UserApi.GetPersonalDataOfUser(this.titleId).then(user => {
             if (!user) {
                 console.log('user not found')
                 return
@@ -181,7 +182,7 @@ export default {
             document.getElementById('follower-id').textContent = user[0].arrayFollowers.length
             document.getElementById('following-id').textContent = user[0].arrayFollowing.length
             document.getElementById('playlists-id').textContent = this.playlistList.length
-            document.getElementById('contacts-id').textContent = 3
+            document.getElementById('contacts-id').textContent = user[0].arrayChats.length
             // document.getElementById('posts-id').textContent = user[0].arrayFollowing.length
         })
     },

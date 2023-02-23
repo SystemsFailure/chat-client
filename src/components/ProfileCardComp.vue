@@ -17,8 +17,8 @@
 
                 <div class="userful-info">
                     <div class="items-info-boxes">
-                        <div class="item-inf"><h4>Followers</h4><span>{{n.arrayFollowers.length}}</span></div>
-                        <div class="item-inf"><h4>Following</h4><span>{{n.arrayFollowing.length}}</span></div>
+                        <div class="item-inf"><h4>follow</h4></div>
+                        <div class="item-inf"><h4>message</h4></div>
                     </div>
 
                     <div class="useful-box-bottom">
@@ -52,14 +52,14 @@
                             <span style="color: rgb(0, 251, 255);">25</span>
                             <span class="following-id">contacts</span>
                         </div>
-                        <div class="following-box-id">
+                        <!-- <div class="following-box-id">
                             <span style="color: rgb(0, 251, 255);">405</span>
                             <span class="following-id">musics</span>
                         </div>
                         <div class="following-box-id">
                             <span style="color: rgb(0, 251, 255);">53</span>
                             <span class="following-id">posts</span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -297,12 +297,20 @@ $color-text-izumrud: #00ff80;
                 height: 50%;
 
                 .item-inf {
-                    padding: 5px;
+                    padding: 10px;
                     display: flex;
                     align-items: center;
                     flex-direction: column;
                     justify-content: center;
+                    border: 1px solid rgba($color: #000000, $alpha: .0);
+                    font-size: 10px;
 
+                    &:hover {
+                        cursor: pointer;
+                        border: 1px solid #3f71c8;
+                        transition: .3s;
+                        
+                    }
 
 
                     h4 {

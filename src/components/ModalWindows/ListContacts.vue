@@ -18,7 +18,9 @@
                     </div>
 
                     <div class="unfolow-box">
-                        <div class="btn-unfollow">unfollow</div>
+                        <div class="btn-unfollow"
+                            @click="this.$emit('openChatId', it.id, it)"
+                        >message</div>
                     </div>
 
                 </div>

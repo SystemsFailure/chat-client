@@ -78,6 +78,10 @@
                         <div v-for="n in message_lst" v-bind:key="n.id" class="inner-container" ref="content" :id="'inner'+n.id">
                             <div class="message-bubble">
 
+                                <!-- FILE ELEMENT -->
+                                <!-- FILE ELEMENT -->
+                                <!-- FILE ELEMENT -->
+
                                 <div 
                                         class="file-content"  
                                         v-if="n.fileobj_url"
@@ -108,6 +112,9 @@
                                     </div>
                                 </div>
 
+                                <!-- IMAGE ELEMENT -->
+                                <!-- IMAGE ELEMENT -->
+                                <!-- IMAGE ELEMENT -->
 
                                 <div class="image-content" v-if="n.img_url">
                                     <img
@@ -122,6 +129,10 @@
                                     </div>
                                 </div>
 
+                                <!-- ANSWERED ELEMENT -->
+                                <!-- ANSWERED ELEMENT -->
+                                <!-- ANSWERED ELEMENT -->
+
                                 <div 
                                     class="answered-message-content" 
                                     v-if="n.answered" 
@@ -132,21 +143,35 @@
                                         :style="n.fromId === user_id ?
                                         {'margin-left' : 'auto', 'background-color' : `${currentMesssageBackgroundByTheme}`}
                                         :
-                                        {'margine-left' : '0'}" 
-                                        @mouseover="showDetailDataMessage($event, n.id)"
-                                        @mouseout="hideDetailDataMessage($event)"
-                                        @contextmenu="test($event, n.id, n)"
+                                        {'margine-left' : '0'}"
+                                        @mouseenter="showDetailDataMessage2($event, n.id)"
+                                        @mouseleave="hideDetailDataMessage($event)"
+                                        @contextmenu="test($event, n.id, n)" 
                                     >
-                                        <div class="answer-box" @click="scrollViewToElement(n.idAnsweredMessageDomElement)">
+                                        <!-- TRIGGER  -->
+                                        <!-- <div 
+                                            class="trigger"
+                                        ></div> -->
+
+                                        <div 
+                                            class="answer-box" 
+                                            @click="scrollViewToElement(n.idAnsweredMessageDomElement)"    
+                                        >
                                             {{ this.sliceText(n.answeredText) }}
                                         </div>
                                         <div class="text-message answered-class-j">
-                                            <span :id="n.id" class="answ-class answered-mess-id-j">
+                                            <span 
+                                            :id="n.id" class="answ-class answered-mess-id-j"
+                                            >
                                                 {{ n.content }}
                                             </span>
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- DEFAULT ELEMENT -->
+                                <!-- DEFAULT ELEMENT -->
+                                <!-- DEFAULT ELEMENT -->
                                 
                                 <h6 v-if="n.content && !n.answered"
                                     :id="n.id"
@@ -169,6 +194,7 @@
                                     }"
                                     >{{n.content}}
                                 </h6>
+
                             </div>
                         </div>
                     </div>
@@ -745,6 +771,55 @@ export default {
             this.showSettingsChatId = result
         },
 
+        showDetailDataMessage2(event, id) {
+            let message = document.getElementById('query1');
+            let q1 = document.getElementById('q1');
+            let q2 = document.getElementById('q2');
+            let q3 = document.getElementById('q3');
+            let q4 = document.getElementById('q4');
+            let mess_OnId = 0
+
+            message.style = "position:fixed";
+            this.showDialogWindow = true
+            mess_OnId = this.message_lst.filter(mess => {
+                return mess.id === id
+            })
+            q1.innerHTML = mess_OnId[0].result !== 'Success' 
+            ? "result" + " : " + "<font color=#00cec7>"+mess_OnId[0].result+"</font>" 
+            : "result" + " : " + "<font color=red>"+mess_OnId[0].result+"</font>"
+            q2.innerText = "time" + " : " + mess_OnId[0].atCreated
+            q3.innerText = "size" + " : " + mess_OnId[0].size + 'kb'
+            q4.innerText = mess_OnId[0].view ? "Viewed" + " : " +  'Yah' : "Viewed" + " : " +   'No'
+            
+
+            let {x, y} = this.positionCursor()
+            //Данная переменная должна инициализиоваться после присвоение элементу display = flex, иначе первое значение width будет 0
+            let coordsTarget = event.target.getBoundingClientRect()
+            let PerfomanceWidthScreen = window.innerWidth / 2
+            //Справа или слева будет распологаться контекстное меню
+            if(x > PerfomanceWidthScreen)
+            {
+                if(y > 600)
+                {
+                    message.style.top = (y - coordsTarget.height) + 'px'
+                    message.style.left = x + 'px'
+                } else {
+                    message.style.top = y + 'px'
+                    message.style.left = (x - coordsTarget.width) + 'px'
+                }
+            } else {
+                if(y > 700)
+                {
+                    message.style.top = (y - coordsTarget.height) + 'px'
+                    message.style.left = x + 'px'
+                }else {
+                    message.style.top = y + 'px'
+                    message.style.left = x + 'px'
+                }
+            }
+            event.preventDefault()
+        },
+
         showDetailDataMessage(event, id) {
             let message = document.getElementById('query1');
             let q1 = document.getElementById('q1');
@@ -992,12 +1067,17 @@ export default {
                 idAnsweredMessageDomElement:  this.messageText != '' && this.messageText != 'default message' ? this.messageIdForAnswer : null,
             }
             await MessagesApi.createMessage(messageContent, data_).then( async () => {
-                document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.remove('anime-bubble-message')
+                if(this.messageText != '' && this.messageText != 'default message') {
+                    document.getElementsByClassName('inner-answered-message')[document.getElementsByClassName('inner-answered-message').length - 1].classList.remove('anime-bubble-message')
+                } else {
+                    document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.remove('anime-bubble-message')
+                }
                 this.messageText = ''
                 if(chatID === null) {console.log('chatID is null'); return}
                 await ChatApi.updataField(chatID)
             }).catch(err => {
                 console.log(err)
+                // document.getElementsByClassName('inner-answered-message')[document.getElementsByClassName('inner-answered-message').length - 1].classList.add('failure-bubble-message')
                 document.getElementsByClassName('im-message-content')[document.getElementsByClassName('im-message-content').length - 1].classList.add('failure-bubble-message')
                 localStorage.setItem('fail-message', messageContent)
             })
@@ -1219,18 +1299,35 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                             display: grid;
                             right: 0;
 
+                            background-size: 300% 300%;
+                            width: auto;
+                            height: auto;
+                            position: relative;
+
                             .inner-answered-message {
+                                width: fit-content;
+                                height: auto;
+
                                 background-color: #326866;
                                 border-radius: 10px;
-                                float: right;
+                                // float: right;
                                 display:flex;
-                                // align-items: center;
                                 flex-direction: column;
-                                // justify-content: center;
-                                padding: 10px;
                                 color: #fff;
                                 max-width: 47%;
                                 padding: 8px 12px 8px 12px;
+                                position: relative;
+
+                                .trigger {
+                                    position: absolute;
+                                    width: 100%;
+                                    height: 100%;
+                                    margin: 0;
+                                    border-radius: 10px;
+                                    // background-color: #00ff80;
+                                    transform: translateX(-10px) translateY(-10px);
+                                }
+
 
                                 .answer-box {
                                     border-left: 1px solid #00cec7;
@@ -1243,18 +1340,20 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                                     font-family: system-ui;
                                     line-height: 20px;
 
-                                    &:hover{
-                                        cursor: pointer;
-                                        opacity: .7;
-                                        transition: .5s;
-                                    }
+                                    // &:hover{
+                                    //     cursor: pointer;
+                                    //     opacity: .7;
+                                    //     transition: .5s;
+                                    // }
                                 }
 
                                 .text-message {
+                                    width: auto;
+                                    height: auto;
                                     margin-top: 7px;
                                     background-size: 300% 300%;
                                     word-wrap: break-word;
-                                    height: auto;
+
                                 }
                             }
                         }
@@ -1350,7 +1449,7 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                     font-size: 13px;
                     font-family: system-ui;
                     line-height: 20px;
-                    }
+                }
             }
         }
     }
