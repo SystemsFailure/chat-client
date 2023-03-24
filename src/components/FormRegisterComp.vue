@@ -1,7 +1,7 @@
 <template>
     <div class="content">
       <div class="loaderAndText-container">
-        <p>Welcome to FOYF!
+        <p>Welcome to Kali-messanger!
           <br>Let’s begin the adventure</p>
     
           <div class="loader-container">
@@ -112,6 +112,7 @@ export default {
     },
 
   methods: {
+
     checkEmail() {
         let regex = new RegExp('[a-z0-9]+@[a-z]');
         if(regex.test(this.queryEm)) this.resultInputEnter = true
@@ -201,7 +202,6 @@ $color-text-izumrud: #00ff80;
 
 .loaderAndText-container {
     width: 100%;
-    // background: red;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -209,7 +209,6 @@ $color-text-izumrud: #00ff80;
     .loader-container {
       width: 33%;
       height: 30px;
-      // background: #00cec7;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -267,7 +266,7 @@ $color-text-izumrud: #00ff80;
   padding: 30px 30px;
   width: 500px;
   background: ($color-back);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(55, 55, 55, 0.3);
   border-radius: 6px;
 }
 

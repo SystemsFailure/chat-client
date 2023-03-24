@@ -11,8 +11,10 @@
 
                 <div class="left-box-list-users">
 
+                    <SearchUsersBoxComp v-if="false" style="width: 65%; border: none; background:none;border-left: 1px solid teal;"></SearchUsersBoxComp>
+
                     <div class="inp-searching">
-                        <SearchUsersBoxComp style="width: 65%; border: none; background:none;border-left: 1px solid teal;"></SearchUsersBoxComp>
+                        <input id="inp-search-uid" type="text" placeholder="search by name" v-model="searchParam" @keydown="searchingUsersByCurrentParams($event)">
                     </div>
 
                     <div class="lst-box">
@@ -37,12 +39,12 @@
 
                     <div class="sett-container">
                         <div class="a-box">
-                            <div class="title-conf-func"><span>City</span></div>
+                            <div class="title-conf-func"><span>Contry</span></div>
                             <div class="one-top-inp">
-                                <select name="" id="selec-id-a" style="border-left: 1px solid teal;">
-                                    <option value="">USA</option>
-                                    <option value="">Brasialia</option>
-                                    <option value="">Germany</option>
+                                <select name="" id="selec-id-a" style="border-left: 1px solid teal;" @change="updatefieldAtributes($event, 'country')">
+                                    <option value="USA">USA</option>
+                                    <option value="Brasilian">Brasialia</option>
+                                    <option value="Germany">Germany</option>
                                 </select>
                             </div>
 
@@ -50,13 +52,13 @@
                                 <div class="one1-block">
                                     <div class="title-block"><span>followers by</span></div>
                                     <div class="inp-block">
-                                        <input type="text" id="selec-id-b" placeholder="by 0" style="border-left: 1px solid teal;">
+                                        <input type="number" id="selec-id-b" placeholder="by 0" style="border-left: 1px solid teal;" v-model.number="atributesSort.followersBy">
                                     </div>
                                 </div>
                                 <div class="two2-block">
                                     <div class="title-block"><span>followers to</span></div>
                                     <div class="inp-block">
-                                        <input type="text" id="selec-id-b" placeholder="to infinity" style="border-left: 1px solid teal;">
+                                        <input type="number" id="selec-id-b" placeholder="to infinity" style="border-left: 1px solid teal;" v-model.number="atributesSort.followersTo">
                                     </div>
                                 </div>
 
@@ -65,9 +67,9 @@
                             <div class="three-block-functionality">
                                 <div class="title-block-c"><span>name</span></div>
                                 <div class="inp-block-three">
-                                    <select name="" id="selec-id-c">
-                                        <option value="">ASC</option>
-                                        <option value="">DESK</option>
+                                    <select name="" id="selec-id-c" v-model="atributesSort.sortByName">
+                                        <option value="asc">asc</option>
+                                        <option value="desc">desc</option>
                                     </select>
                                 </div>
                             </div>
@@ -75,16 +77,16 @@
                             <div class="three-block-functionality">
                                 <div class="title-block-c"><span>online</span></div>
                                 <div class="inp-block-three">
-                                    <select name="" id="selec-id-c">
-                                        <option value="">online</option>
-                                        <option value="">offline</option>
+                                    <select name="" id="selec-id-c" v-model="atributesSort.online">
+                                        <option value="online">online</option>
+                                        <option value="offline">offline</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="three-block-functionality">
                                 <div class="inp-block-three">
-                                    <div name="" id="selec-id-btn" @click="searchingUsersByCurrentParams">
+                                    <div name="" id="selec-id-btn" @click="sortSearchUser">
                                         Confirm
                                     </div>
                                 </div>
@@ -103,16 +105,26 @@ import customNotifyWindow from '@/components/UI/customNotifyWindow.vue'
 import { UserApi } from '@/firebase-config/UserController';
 import { NotifyApi } from '@/firebase-config/NotificationController'
 import IError from '@/IError';
+import globalSearching from '@/firebase-config/globalSearching';
 
 export default {
     data() {
         return {
             list_users: [],
+            searchParam: '',
             IUserId: localStorage.getItem('user-id') || null,
             allSettingsForSortingAndFilter: [
                 {},
             ],
             showCustomDialogWindow: false,
+
+            atributesSort: {
+                country: 'USA',
+                followersBy: 0,
+                followersTo: 1,
+                sortByName: 'asc',
+                online: 'online',
+            }
         };
     },
 
@@ -127,8 +139,33 @@ export default {
     },
 
     methods: {
-        searchingUsersByCurrentParams() {
-            console.log('searching...')
+        updatefieldAtributes(event, key) {
+            this.atributesSort[key] = event.target?.value
+        },
+        async sortSearchUser() {
+            console.log(this.atributesSort)
+            let found_users = await globalSearching.globalSorted(this.atributesSort)
+            this.list_users = found_users
+        },
+
+        async searchingUsersByCurrentParams(event) {
+            if(event.keyCode === 13) {
+                // Search users by name
+                if(this.searchParam.length != 0 && this.searchParam != '') {
+                    let inp_doc = document.getElementById('inp-search-uid')
+                    if(!inp_doc) {console.log('not found input element'); return;}
+                    if(inp_doc.focus) {
+                                let found_users = await globalSearching.search_users_by_name(this.searchParam)
+                                if(found_users.length === 0) {console.log('so user with name: ' + `${this.searchParam}` + ' not found'); return;}
+                                else this.list_users = found_users
+                    } else {
+                        console.log('no focus')
+                    }
+                } else {
+                    this.filterAllUsers()
+                    alert('You writed not valid of data')
+                }
+            }
         },
         async filterAllUsers() {
             await UserApi.getAllUsers().then(async array => {
@@ -189,14 +226,14 @@ export default {
     backdrop-filter: blur(4.2px);
     -webkit-backdrop-filter: blur(4.2px);
 
-    padding: 0 15px 15px 15px;
+    padding: 0px 15px 15px 15px;
     .inside-container-content {
         width: 100%;
         height: 100%;
         // background-color: black;
 
         .inside-box {
-            margin-top: 20px;
+            // margin-top: 20px;
             width: 100%;
             height: calc(100% - 75px - 50px);
             // background-color: aquamarine;
@@ -214,6 +251,15 @@ export default {
                     align-items: center;
                     justify-content: center;
                     // background-color: red;
+
+                    #inp-search-uid {
+                        width: 100%;
+                        padding: 10px;
+                        background: none;
+                        outline: none;
+                        color: #fff;
+                        border: 1px solid #222;
+                    }
                     
                 }
 

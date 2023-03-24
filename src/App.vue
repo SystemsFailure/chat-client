@@ -27,7 +27,7 @@ export default {
 
 
 body {
-  background-image: url(./assets/36548.jpg);
+  background-image: url(./assets/kit.png);
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;

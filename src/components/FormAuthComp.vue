@@ -191,30 +191,25 @@ $color-text-izumrud: #00ff80;
 }
 
 .content{
-
   position: fixed;
-
   margin-top: 15%;
-
   display: flex;
   flex-direction: column;
   text-align: start;
   padding: 30px 30px;
   width: 500px;
   background: ($color-back);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(55, 55, 55, 0.3);
   border-radius: 6px;
 
   .loaderAndText-container {
     width: 100%;
-    // background: red;
     display: flex;
     justify-content: space-between;
 
     .loader-container {
       width: 33%;
       height: 50px;
-      // background: #00cec7;
       display: flex;
       align-items: center;
       justify-content: center;
