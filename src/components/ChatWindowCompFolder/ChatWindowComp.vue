@@ -19,10 +19,10 @@
             @copyTextFromMessageFunction="copyTextFromMessage"
             @answerOnMessageFunction="answerOnMS"
             @editMessageFunction="editMessage"
-            @showEditMessWindowFunction="() => {this.visibleEditMessageWindow = true}"
             @updateMessageHelper="updateMessage"
             ></ContextMenuMessage>
         </Transition>
+        <!-- @showEditMessWindowFunction="() => {this.visibleEditMessageWindow = true}" -->
     
 
         <BannerUpComp 
@@ -33,6 +33,7 @@
         <BannerBottomComp 
         @sendMessage="add_message" 
         @add_file_messageFunction="add_file_message"
+        v-bind:focusOn_messageInput="focusOn_messageInput"
         ></BannerBottomComp>
 
         <MiniListLastChatsComp 
@@ -264,6 +265,8 @@ export default {
             messageText: '',
             messageIdForAnswer: null,
             
+            // focuses models: 
+            focusOn_messageInput: 0,
         }
     },
     // Явно даю понять, что есть такой эмит компоненту .. - .. иначе будет предупреждение (Warning) ⚠️⚠️⚠️
@@ -284,6 +287,9 @@ export default {
             themeSchemaRed: 'themeSchemaRed',
             currTheme: 'currTheme',
         }),
+        ...mapState('contextmenu', {
+            curr_messageInstance: 'curr_messageInstance',
+        })
     },
 
     async mounted() {
@@ -528,6 +534,7 @@ export default {
                 this.messageIdForAnswer = vl_id_message
                 this.messageText = domElementMessage.textContent
                 this.visibleAnswerWindow = true
+                this.focusOn_messageInput ++
             }
         },
 
@@ -607,6 +614,8 @@ export default {
             this.visibileContextMenuMess = val
             const generalListMessages_ = document.getElementById('block-chat-window-id')
             generalListMessages_.style.overflow = 'hidden'
+            generalListMessages_.style.overflowX = 'hidden'
+            // generalListMessages_.style.overflowX = 'auto'
             generalListMessages_.style.paddingRight = '0px'
         },
 
@@ -626,7 +635,8 @@ export default {
             return {x: x, y: y}
         },
 
-        test (event, id) {
+        test (event, id, messageInstance) {
+            this.setcurr_messageInstance(messageInstance)
             this.setidSelectedMessage(id)
             let contextMenuMessElem = document.getElementById('context-menu-vclass-mess')
             let generalListMessages = document.getElementById('block-chat-window-id')
@@ -920,6 +930,10 @@ export default {
 
         // Функция редактирования сообщения
         editMessage(messageId) {
+            if(this.curr_messageInstance.fromId != localStorage.getItem('user-id')) {
+                console.log('you cant to change by content not your message')
+                return;
+            }
             if(messageId)
             {
                 let message = document.getElementById(messageId)
@@ -928,6 +942,7 @@ export default {
                     let currmessContent = message.textContent
                     this.currmessText = currmessContent
                     this.currentMessageEditId = messageId
+                    this.visibleEditMessageWindow = true
                 }
             }
         },
@@ -1094,6 +1109,7 @@ export default {
 
         ...mapMutations('contextmenu', {
             setidSelectedMessage: 'setidSelectedMessage',
+            setcurr_messageInstance: 'setcurr_messageInstance',
         }),
         ...mapMutations({
             setuser_to_id: 'setuser_to_id',
@@ -1237,7 +1253,7 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
             width: 100%;
             height: 100%;
             overflow:scroll;
-            overflow-x: hidden;
+            overflow-x: hidden !important;
 
             .selected-mess-sys {
                 top: 0;
@@ -1449,12 +1465,27 @@ $cool-back-gradient-color: linear-gradient(45deg, #ff216d, #2196f3);
                     font-size: 13px;
                     font-family: system-ui;
                     line-height: 20px;
+
+                    // animation-duration: .5s;
+                    // animation: slidein;
                 }
             }
         }
     }
     }
 }
+
+// @keyframes slidein {
+//   from {
+//     margin-left: 100%;
+//     width: 300%;
+//   }
+
+//   to {
+//     margin-left: 0%;
+//     width: 100%;
+//   }
+// }
 
 
 .fade-comp-settChatId-v-enter-active,

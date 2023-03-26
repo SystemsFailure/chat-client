@@ -4,11 +4,15 @@ const contextmenu = {
     state: () => ({
         idSelectedMessage: undefined,
         editedText: undefined,
+        curr_messageInstance: undefined,
     }),
 
     mutations: {
         setidSelectedMessage(st, vl) {
             st.idSelectedMessage = vl
+        },
+        setcurr_messageInstance(st, vl) {
+            st.curr_messageInstance = vl
         }
     },
 

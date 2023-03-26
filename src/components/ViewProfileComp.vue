@@ -41,15 +41,15 @@
                         </div>
                         <div class="r0-w1-class">
                             <i class="fi fi-bs-link"></i>
-                            <span class="status">{{ slice_field('working') }}</span>
+                            <span class="status" id="status-prof-id"></span>
                         </div>
                         <div class="r0-w1-class">
                             <i class="fi fi-bs-flag"></i>
-                            <span class="country">United States</span>
+                            <span class="country" id="country-prof-id"></span>
                         </div>
                         <div class="r0-w1-class">
                             <i class="fi fi-bs-building"></i>
-                            <span class="city">Chicago</span>
+                            <span class="city" id="city-prof-id"></span>
                         </div>
                         <div class="r0-w1-class">
                             <div class="wrap-box" id="contacts-box-id" @click="visibleListContactsWindow = true">
@@ -64,10 +64,10 @@
                 <div class="about-me-block">
                     <div class="bio-info-box">
                         <!-- <div class="name-box"><span>Anna Leonhard</span></div> -->
-                        <div class="proffession-box"><span>ML Developer</span></div>
+                        <div class="proffession-box"><span id="speciality-profile-id"></span></div>
 
                         <div class="r0-w1-class-bio">
-                            <span class="bio">Logic can take you from point A to point B, and imagination can take you anywhere.</span>
+                            <span class="bio" id="biograpthy-profile-id">Logic can take you from point A to point B, and imagination can take you anywhere.</span>
                         </div>
                     </div>
                 </div>
@@ -128,9 +128,9 @@
                     </div>
                 </div>
 
-                <div class="line-bottom">
+                <!-- <div class="line-bottom">
                     <div class="upload-music" @click="() => {this.$emit('showCreateMusicWindowFunction', true)}"><span>upload new music</span></div>
-                </div>
+                </div> -->
             </div>
             
         </div>
@@ -177,7 +177,13 @@ export default {
             let namebox = document.getElementById('username-id')
             namebox.innerHTML = this.slice_field(user[0].name)
             namebox.setAttribute('title', user[0].name)
-            
+            document.getElementById('biograpthy-profile-id').textContent = user[0].bio_info
+            document.getElementById('status-prof-id').textContent = this.slice_field(user[0].status)
+            document.getElementById('country-prof-id').textContent = this.slice_field(user[0].country)
+            document.getElementById('city-prof-id').textContent = this.slice_field(user[0].city)
+
+
+            // document.getElementById('speciality-profile-id').textContent = user[0]
             document.getElementById('avatar-profile-id').src = user[0].img_url || '@/assets/user_profile.png'
             document.getElementById('follower-id').textContent = user[0].arrayFollowers.length
             document.getElementById('following-id').textContent = user[0].arrayFollowing.length
@@ -308,6 +314,10 @@ $color-back: rgba(0, 0, 0, 0.8);
         .profile-title {
             width: 100%;
             height: auto;
+            display: flex;
+            flex-direction: column;
+            // justify-content: center;
+            align-items: center;
 
             .about-me-block {
                 width: 100%;
@@ -341,13 +351,13 @@ $color-back: rgba(0, 0, 0, 0.8);
             }
 
             .content-conteiner {
-                width: 100%;
+                width: 90%;
                 height: 100%;
-                padding: 5px;
+                padding: 10px;
                 display: flex;
                 align-items: center;
-                margin-top: 10px;
-                // border-top: 1px solid #333;
+                margin-top: 20px;
+                border: 1px solid #111;
 
 
                 .custom-playlist {
@@ -362,8 +372,10 @@ $color-back: rgba(0, 0, 0, 0.8);
 
                     .line-title {
                         width: 100%;
-                        padding-left: 40px;
+                        // padding-left: 40px;
                         margin-bottom: 10px;
+                        display: flex;
+                        justify-content: center;
                         
                         .text-more {
                             text-transform:lowercase;

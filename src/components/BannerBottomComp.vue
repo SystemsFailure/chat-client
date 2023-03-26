@@ -37,6 +37,19 @@ export default {
         }
     },
 
+    props: {
+        focusOn_messageInput: {}
+    },
+
+    watch: {
+        focusOn_messageInput: {
+            handler() {
+                document.getElementById('message-input').focus()
+            },
+            deep: true,
+        }
+    },
+
     mounted() {
         // this.recorder()
         
