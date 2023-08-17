@@ -1,3 +1,10 @@
+Current project is very bad
+The code in it is highly dependent and not clean
+Acts as a simple warm-up training project
+Do not use this project as a reason for refusal, it is educational
+
+
+
 # test-client
 
 ## Project setup
